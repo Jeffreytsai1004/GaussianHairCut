@@ -4,6 +4,41 @@
 
 本仓库包含了 Gaussian Haircut 的官方实现，这是一种基于股线的人体头发重建方法，用于单目视频。
 
+## 预览
+
+重建过程包括以下主要阶段：
+
+1. **预处理阶段**
+   - 视频帧提取和整理
+   - COLMAP相机重建
+   - 头发和身体分割
+   - 图像质量评估和筛选
+   - 方向图计算
+   - 人脸关键点检测
+   - FLAME头部模型拟合
+
+2. **重建阶段**
+   - 3D高斯体重建
+   - FLAME网格拟合
+   - 场景裁剪和优化
+   - 头发股线重建
+
+3. **可视化阶段**
+   - 导出重建的股线
+   - Blender渲染可视化
+   - 生成结果视频
+
+预期输出：
+```
+[your_scene_folder]/
+├── raw.mp4                    # 输入视频
+├── 3d_gaussian_splatting/     # 3D高斯体重建结果
+├── flame_fitting/             # FLAME头部模型拟合结果
+├── strands_reconstruction/    # 头发股线重建中间结果
+├── curves_reconstruction/     # 最终头发股线结果
+└── visualization/            # 渲染结果和视频
+```
+
 ## 入门指南
 
 ### Linux 平台

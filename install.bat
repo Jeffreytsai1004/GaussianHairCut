@@ -58,18 +58,18 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-REM 检查CUDA版本
-nvcc --version 2>nul | findstr "release 11.8" >nul
-IF %ERRORLEVEL% NEQ 0 (
-    echo ERROR: CUDA 11.8 not found or version mismatch
-    exit /b 1
-)
-
 REM 检查COLMAP是否可用
 colmap -h >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
     echo ERROR: COLMAP installation appears to be broken
     echo Please try reinstalling COLMAP
+    exit /b 1
+)
+
+REM 检查CUDA版本
+nvcc --version 2>nul | findstr "release 11.8" >nul
+IF %ERRORLEVEL% NEQ 0 (
+    echo ERROR: CUDA 11.8 not found or version mismatch
     exit /b 1
 )
 
