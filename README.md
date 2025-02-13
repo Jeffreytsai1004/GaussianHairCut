@@ -105,7 +105,7 @@
 6. **克隆仓库并运行安装脚本**
 
     ```cmd
-    git clone git@github.com:eth-ait/GaussianHaircut.git
+    git clone https://github.com/Jeffreytsai1004/GaussianHairCut
     cd GaussianHaircut
     # 在CMD中运行:
     install.bat
