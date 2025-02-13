@@ -100,7 +100,7 @@
       如果显示帮助信息，则安装成功
 
 5. **安装 micromamba**
-    - 从 https://mamba.readthedocs.io/en/latest/installation.html 下载并安装
+    - 从 [https://mamba.readthedocs.io/en/latest/installation.html](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html) 下载并安装
 
 6. **克隆仓库并运行安装脚本**
 
