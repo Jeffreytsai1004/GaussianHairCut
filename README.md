@@ -71,6 +71,7 @@
 1. **安装 CUDA 11.8**
     - 从 https://developer.nvidia.com/cuda-11-8-0-download-archive 下载并安装
     - 默认安装路径：C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
+    - 确保CUDA版本与系统兼容
 
 2. **安装 Blender 3.6**
     - 从 https://www.blender.org/download/lts/3-6 下载并安装
@@ -83,34 +84,43 @@
 
 4. **安装 COLMAP**
     - 从 https://github.com/colmap/colmap/releases 下载并安装
-    - 下载最新的Windows安装包(例如：COLMAP-3.8-windows-cuda.zip)
-    - 解压到一个不含空格的路径(例如：C:\COLMAP)
-    - 确保CUDA版本与系统安装的CUDA 11.8匹配
-    - 将解压目录(C:\COLMAP)添加到系统环境变量PATH中:
+    - 下载CUDA版本的COLMAP (例如：COLMAP-3.8-windows-cuda.zip)
+    - 解压到不含空格的路径 (例如：C:\COLMAP)
+    - 将COLMAP目录添加到系统PATH:
       1. 打开"系统属性" > "环境变量"
       2. 在"系统变量"中找到"Path"
       3. 点击"编辑" > "新建"
-      4. 添加COLMAP目录路径(C:\COLMAP)
-      5. 点击"确定"保存更改
-    - 重启PowerShell或CMD以使PATH更改生效
-    - 验证安装：
-      ```cmd
-      colmap -h
-      ```
-      如果显示帮助信息，则安装成功
+      4. 添加COLMAP目录路径
+      5. 点击"确定"保存
+    - 重启终端使PATH生效
 
 5. **安装 micromamba**
-    - 从 [https://mamba.readthedocs.io/en/latest/installation.html](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html) 下载并安装
+    - 从 https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html 下载
 
-6. **克隆仓库并运行安装脚本**
+6. **下载预训练模型和资源**
+    ```cmd
+    # 在PowerShell中运行:
+    .\download_resource.bat
+    ```
+    这将下载并解压以下资源到resource目录:
+    ```
+    resource/
+    ├── NeuralHaircut/          # Neural Haircut预训练模型
+    ├── Matte-Anything/         # SAM和GroundingDINO模型
+    ├── openpose/               # OpenPose模型
+    └── hyperIQA/              # 图像质量评估模型
+    ```
 
+7. **克隆仓库并运行安装脚本**
     ```cmd
     git clone https://github.com/Jeffreytsai1004/GaussianHairCut
-    cd GaussianHaircut
-    # 在CMD中运行:
-    install.bat
-    # 或在PowerShell中运行:
+    cd GaussianHairCut
+    # 先下载所需要的资源
+    .\download_resource.bat
+    # 运行安装脚本
     .\install.bat
+    # 运行重建脚本
+    .\run.bat
     ```
 
 ## 重建

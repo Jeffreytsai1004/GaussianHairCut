@@ -124,9 +124,9 @@ git clone https://github.com/SSL92/hyperIQA
 
 REM 创建环境
 CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\gaussian_splatting_hair python=3.8 pytorch=2.0.0 torchvision pytorch-cuda=11.8 cmake ninja setuptools=58.2.0 -c pytorch -c nvidia -c conda-forge -y
-CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\matte_anything pytorch=2.0.0 pytorch-cuda=11.8 torchvision tensorboard timm=0.5.4 opencv=4.5.3 mkl=2024.0 setuptools=58.2.0 easydict wget scikit-image gradio=3.46.1 fairscale -c pytorch -c nvidia -c conda-forge -y
+CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\matte_anything pytorch=2.0.0 pytorch-cuda=11.8 torchvision tensorboard timm=0.5.4 opencv=4.5.3 mkl=2024.0 setuptools=58.2.0 easydict wget scikit-image gradio=3.46.1 fairscale supervision==0.22.0 -c pytorch -c nvidia -c conda-forge -y
 CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\openpose python=3.8 cmake=3.20 -c conda-forge -y
-CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\pixie-env python=3.8 pytorch=2.0.0 torchvision pytorch-cuda=11.8 fvcore pytorch3d==0.7.5 kornia matplotlib -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -c bottler -c iopath -y
+CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\pixie-env python=3.8 pytorch=2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.8 fvcore pytorch3d==0.7.5 kornia matplotlib -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -c bottler -c iopath -y
 
 REM 安装 gaussian_splatting_hair 环境
 CALL "%MICROMAMBA_EXE%" activate -p %MAMBA_ROOT_PREFIX%\envs\gaussian_splatting_hair
@@ -143,55 +143,58 @@ cd %PROJECT_DIR%\ext\kaolin
 pip install -e .
 cd %PROJECT_DIR%
 
+REM 检查resource目录
+IF NOT EXIST "%PROJECT_DIR%\resource" (
+    echo ERROR: resource directory not found
+    echo Please ensure the resource directory exists with required files:
+    echo.
+    echo resource/
+    echo ├── NeuralHaircut/
+    echo │   ├── diffusion_prior/
+    echo │   └── PIXIE/
+    echo ├── Matte-Anything/
+    echo │   ├── sam_vit_h_4b8939.pth
+    echo │   ├── groundingdino_swint_ogc.pth
+    echo │   └── model.pth
+    echo └── openpose/
+    echo     └── models/
+    exit /b 1
+)
+
 REM 下载 Neural Haircut 文件
 cd %PROJECT_DIR%\ext\NeuralHaircut
-gdown --folder https://drive.google.com/drive/folders/1TCdJ0CKR3Q6LviovndOkJaKm8S1T9F_8
+xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\*" .
 cd pretrained_models\diffusion_prior
-gdown 1_9EOUXHayKiGH5nkrayncln3d6m1uV7f
+xcopy /Y "%PROJECT_DIR%\resource\NeuralHaircut\diffusion_prior\*" .
 cd ..\..\PIXIE
-gdown 1mPcGu62YPc4MdkT8FFiOCP629xsENHZf
-tar -xf pixie_data.tar.gz
-del pixie_data.tar.gz
+xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\PIXIE\*" .
 
 REM 安装 Matte-Anything 环境
 CALL activate_matte_anything.bat
 cd %PROJECT_DIR%\ext\Matte-Anything
 
-REM 修改pytorch文件以支持Windows
-IF EXIST "%CONDA_PREFIX%\Lib\site-packages\torch\include\torch\csrc\jit\runtime\argument_spec.h" (
-    echo Patching argument_spec.h...
-    powershell -Command "(gc '%CONDA_PREFIX%\Lib\site-packages\torch\include\torch\csrc\jit\runtime\argument_spec.h') -replace 'static constexpr size_t DEPTH_LIMIT = 128;', 'static const size_t DEPTH_LIMIT = 128;' | Out-File -encoding ASCII '%CONDA_PREFIX%\Lib\site-packages\torch\include\torch\csrc\jit\runtime\argument_spec.h'"
-)
-IF EXIST "%CONDA_PREFIX%\Lib\site-packages\torch\include\pybind11\cast.h" (
-    echo Patching cast.h...
-    powershell -Command "(gc '%CONDA_PREFIX%\Lib\site-packages\torch\include\pybind11\cast.h') -replace 'explicit operator type&\(\) { return \*\(this->value\); }', 'explicit operator type&() { return *((type*)this->value); }' | Out-File -encoding ASCII '%CONDA_PREFIX%\Lib\site-packages\torch\include\pybind11\cast.h'"
-)
-
-REM 安装SAM
+REM 安装SAM和detectron2
 pip install git+https://github.com/facebookresearch/segment-anything.git
-
-REM 安装detectron2
-pip install 'git+https://github.com/facebookresearch/detectron2.git@v0.6'
-pip install -e GroundingDINO
-pip install supervision==0.22.0
-mkdir pretrained
-cd pretrained
-curl -LO https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
-curl -LO https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+pip install 'git+https://github.com/facebookresearch/detectron2.git'
+cd GroundingDINO
+pip install -e .
 cd ..
-gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
+pip install supervision==0.22.0
 
-REM 安装 OpenPose
-CALL activate_openpose.bat
+mkdir pretrained 2>nul
+cd pretrained
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\*" .
+cd ..
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\model.pth" .
+
+REM 安装 OpenPose 模型
 cd %PROJECT_DIR%\ext\openpose
-gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
-tar -xf models.tar.gz
-del models.tar.gz
-mkdir build
-cd build
-CALL "%VS2019_VCVARS%"
-cmake .. -DBUILD_PYTHON=true -DUSE_CUDNN=off -G "Visual Studio 16 2019" -A x64
-cmake --build . --config Release
+xcopy /E /I /Y "%PROJECT_DIR%\resource\openpose\models\*" models\
+
+REM 复制 hyperIQA 模型
+cd %PROJECT_DIR%\ext\hyperIQA
+mkdir pretrained 2>nul
+xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\pretrained\*" pretrained\
 
 REM 安装 PIXIE 环境
 CALL activate_pixie-env.bat
