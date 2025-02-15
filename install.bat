@@ -50,11 +50,20 @@ REM 检查COLMAP
 where colmap >nul 2>nul
 IF %ERRORLEVEL% NEQ 0 (
     echo ERROR: COLMAP not found in PATH
+    echo.
     echo Please follow these steps to install COLMAP:
     echo 1. Download COLMAP from https://github.com/colmap/colmap/releases
     echo 2. Extract to a path without spaces (e.g., C:\COLMAP)
-    echo 3. Add the COLMAP directory to your system PATH
-    echo 4. Restart your terminal and try again
+    echo 3. Add the COLMAP directory to your system PATH:
+    echo    a. Open "System Properties" ^> "Environment Variables"
+    echo    b. Under "System Variables", find and select "Path"
+    echo    c. Click "Edit" ^> "New"
+    echo    d. Add your COLMAP directory path (e.g., C:\COLMAP)
+    echo    e. Click "OK" to save
+    echo 4. Open a new terminal window and try again
+    echo.
+    echo Note: If you've just added COLMAP to PATH, you need to open
+    echo a new terminal window for the changes to take effect.
     exit /b 1
 )
 
