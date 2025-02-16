@@ -1,6 +1,57 @@
 ﻿@echo off
 setlocal enabledelayedexpansion
 
+REM 清理旧的资源目录
+IF EXIST "resource" (
+    echo 清理旧的资源目录...
+    rmdir /s /q "resource"
+)
+
+REM 清理错误路径的资源
+IF EXIST "NeuralHaircut" rmdir /s /q "NeuralHaircut"
+IF EXIST "Matte-Anything" rmdir /s /q "Matte-Anything"
+IF EXIST "openpose" rmdir /s /q "openpose"
+IF EXIST "hyperIQA" rmdir /s /q "hyperIQA"
+
+REM 定义模型信息
+SET "MODEL_NEURAL_HAIRCUT_NAME=Neural Haircut模型"
+SET "MODEL_NEURAL_HAIRCUT_PATH=resource\NeuralHaircut\diffusion_prior\model.pt"
+SET "MODEL_NEURAL_HAIRCUT_URL=1_9EOUXHayKiGH5nkrayncln3d6m1uV7f"
+
+SET "MODEL_PIXIE_NAME=PIXIE模型数据"
+SET "MODEL_PIXIE_PATH=resource\NeuralHaircut\PIXIE\pixie_data"
+SET "MODEL_PIXIE_URL=1mPcGu62YPc4MdkT8FFiOCP629xsENHZf"
+
+SET "MODEL_PIXIE_FACE_NAME=PIXIE Face模型"
+SET "MODEL_PIXIE_FACE_PATH=resource\NeuralHaircut\PIXIE\pixie_data\pixie_data"
+SET "MODEL_PIXIE_FACE_URL=https://github.com/yfeng95/PIXIE/raw/master/fetch_model.sh"
+
+SET "MODEL_MATTE_NAME=Matte-Anything模型"
+SET "MODEL_MATTE_PATH=resource\Matte-Anything\model.pth"
+SET "MODEL_MATTE_URL=1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW"
+
+SET "MODEL_SAM_NAME=SAM模型"
+SET "MODEL_SAM_PATH=resource\Matte-Anything\sam_vit_h_4b8939.pth"
+SET "MODEL_SAM_URL=https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth"
+
+SET "MODEL_DINO_NAME=GroundingDINO模型"
+SET "MODEL_DINO_PATH=resource\Matte-Anything\groundingdino_swint_ogc.pth"
+SET "MODEL_DINO_URL=https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth"
+
+SET "MODEL_OPENPOSE_NAME=OpenPose模型"
+SET "MODEL_OPENPOSE_PATH=resource\openpose\models\pose\coco\pose_iter_584000.caffemodel"
+SET "MODEL_OPENPOSE_URL=1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV"
+
+SET "MODEL_HYPERIQA_NAME=hyperIQA模型"
+SET "MODEL_HYPERIQA_PATH=resource\hyperIQA\pretrained\hyperIQA.pth"
+SET "MODEL_HYPERIQA_URL=1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE"
+
+REM 下载设置
+SET "RETRY_COUNT=3"
+SET "TIMEOUT_SECONDS=600"
+SET "CURL_OPTS=--connect-timeout 30 --max-time %TIMEOUT_SECONDS% --retry %RETRY_COUNT% -L -C -"
+SET "MIN_FILE_SIZE=1000000"
+
 REM 设置当前目录
 SET PROJECT_DIR=%~dp0
 cd %PROJECT_DIR%
@@ -64,7 +115,7 @@ cd resource
 mkdir NeuralHaircut\diffusion_prior 2>nul
 mkdir NeuralHaircut\PIXIE 2>nul
 mkdir Matte-Anything 2>nul
-mkdir openpose\models 2>nul
+mkdir openpose\models\pose\coco 2>nul
 mkdir hyperIQA\pretrained 2>nul
 
 REM 验证已有文件
@@ -72,59 +123,73 @@ echo 正在检查已有资源文件...
 SET MISSING_FILES=0
 SET /A TOTAL_FILES=6
 SET /A EXISTING_FILES=0
+SET MISSING_LIST=
 
-IF EXIST "NeuralHaircut\diffusion_prior\model.pt" (
-    echo [√] Neural Haircut模型已存在
+REM Neural Haircut 模型检查
+IF EXIST "%MODEL_NEURAL_HAIRCUT_PATH%" (
+    echo [√] %MODEL_NEURAL_HAIRCUT_NAME%已存在
     SET /A EXISTING_FILES+=1
 ) ELSE (
-    echo [×] 缺少Neural Haircut模型
+    echo [×] 缺少%MODEL_NEURAL_HAIRCUT_NAME%
     SET /A MISSING_FILES+=1
+    SET MISSING_LIST=!MISSING_LIST!%MODEL_NEURAL_HAIRCUT_NAME%, 
 )
 
-IF EXIST "NeuralHaircut\PIXIE\pixie_data" (
-    echo [√] PIXIE模型数据已存在
+REM PIXIE 模型检查
+IF EXIST "%MODEL_PIXIE_PATH%" (
+    echo [√] %MODEL_PIXIE_NAME%已存在
     SET /A EXISTING_FILES+=1
 ) ELSE (
-    echo [×] 缺少PIXIE模型数据
+    echo [×] 缺少%MODEL_PIXIE_NAME%
     SET /A MISSING_FILES+=1
+    SET MISSING_LIST=!MISSING_LIST!%MODEL_PIXIE_NAME%, 
 )
 
-IF EXIST "Matte-Anything\sam_vit_h_4b8939.pth" (
-    echo [√] SAM模型已存在
+REM SAM 模型检查
+IF EXIST "%MODEL_SAM_PATH%" (
+    echo [√] %MODEL_SAM_NAME%已存在
     SET /A EXISTING_FILES+=1
 ) ELSE (
-    echo [×] 缺少SAM模型
+    echo [×] 缺少%MODEL_SAM_NAME%
     SET /A MISSING_FILES+=1
+    SET MISSING_LIST=!MISSING_LIST!%MODEL_SAM_NAME%, 
 )
 
-IF EXIST "Matte-Anything\groundingdino_swint_ogc.pth" (
-    echo [√] GroundingDINO模型已存在
+REM GroundingDINO 模型检查
+IF EXIST "%MODEL_DINO_PATH%" (
+    echo [√] %MODEL_DINO_NAME%已存在
     SET /A EXISTING_FILES+=1
 ) ELSE (
-    echo [×] 缺少GroundingDINO模型
+    echo [×] 缺少%MODEL_DINO_NAME%
     SET /A MISSING_FILES+=1
+    SET MISSING_LIST=!MISSING_LIST!%MODEL_DINO_NAME%, 
 )
 
-IF EXIST "openpose\models\pose\coco" (
-    echo [√] OpenPose模型已存在
+REM OpenPose 模型检查
+IF EXIST "%MODEL_OPENPOSE_PATH%" (
+    echo [√] %MODEL_OPENPOSE_NAME%已存在
     SET /A EXISTING_FILES+=1
 ) ELSE (
-    echo [×] 缺少OpenPose模型
+    echo [×] 缺少%MODEL_OPENPOSE_NAME%
     SET /A MISSING_FILES+=1
+    SET MISSING_LIST=!MISSING_LIST!%MODEL_OPENPOSE_NAME%, 
 )
 
-IF EXIST "hyperIQA\pretrained\hyperIQA.pth" (
-    echo [√] hyperIQA模型已存在
+REM hyperIQA 模型检查
+IF EXIST "%MODEL_HYPERIQA_PATH%" (
+    echo [√] %MODEL_HYPERIQA_NAME%已存在
     SET /A EXISTING_FILES+=1
 ) ELSE (
-    echo [×] 缺少hyperIQA模型
+    echo [×] 缺少%MODEL_HYPERIQA_NAME%
     SET /A MISSING_FILES+=1
+    SET MISSING_LIST=!MISSING_LIST!%MODEL_HYPERIQA_NAME%, 
 )
 
 echo.
 echo 已存在 %EXISTING_FILES%/%TOTAL_FILES% 个模型文件
 IF %MISSING_FILES% GTR 0 (
     echo 需要下载 %MISSING_FILES% 个模型文件
+    echo 缺少的模型: !MISSING_LIST:~0,-2!
     echo.
     echo ************************************************************
     echo *                  开始下载所需资源文件                     *
@@ -136,89 +201,69 @@ IF %MISSING_FILES% GTR 0 (
     exit /b 0
 )
 
-REM 设置下载重试次数和超时时间
-SET RETRY_COUNT=3
-SET TIMEOUT_SECONDS=600
-SET CURL_OPTS=--connect-timeout 30 --max-time %TIMEOUT_SECONDS% --retry %RETRY_COUNT% -L -C -
-
 REM 设置代理选项（可选）
 IF DEFINED HTTP_PROXY (
     SET CURL_OPTS=%CURL_OPTS% --proxy %HTTP_PROXY%
     SET REQUESTS_CA_BUNDLE=%PROJECT_DIR%\certs\cacert.pem
 )
 
-REM 添加文件大小检查
-SET MIN_FILE_SIZE=1000000  REM 1MB
-
 REM 下载 Neural Haircut 文件
-cd NeuralHaircut
-IF EXIST "diffusion_prior\model.pt" (
-    echo 跳过Neural Haircut模型下载...
+cd resource\NeuralHaircut
+IF EXIST "%MODEL_NEURAL_HAIRCUT_PATH%" (
+    echo 跳过%MODEL_NEURAL_HAIRCUT_NAME%下载...
 ) ELSE (
-    echo 正在下载Neural Haircut文件...
-    python -m gdown --folder "https://drive.google.com/drive/folders/1TCdJ0CKR3Q6LviovndOkJaKm8S1T9F_8" --continue
+    echo 正在下载%MODEL_NEURAL_HAIRCUT_NAME%...
+    cd diffusion_prior
+    python -m gdown "%MODEL_NEURAL_HAIRCUT_URL%"
+    cd ..\..
 )
 
-cd diffusion_prior
-IF EXIST "model.pt" (
-    echo 跳过扩散先验模型下载...
-) ELSE (
-    echo 正在下载扩散先验模型...
-    python -m gdown "1_9EOUXHayKiGH5nkrayncln3d6m1uV7f"
-)
-
-cd ..\PIXIE
+REM 下载 PIXIE 文件
+cd NeuralHaircut\PIXIE
 IF EXIST "pixie_data.tar" (
     echo PIXIE模型已存在，跳过下载...
 ) ELSE (
     echo 正在下载PIXIE模型...
-    python -m gdown "1mPcGu62YPc4MdkT8FFiOCP629xsENHZf"
-    
-    REM 使用7-Zip解压tar.gz文件
-    IF NOT EXIST pixie_data.tar.gz (
-        echo 错误：下载pixie_data.tar.gz失败
-        exit /b 1
-    )
-    7z x pixie_data.tar.gz -y
-    7z x pixie_data.tar -y
-    del pixie_data.tar.gz
-    del pixie_data.tar
+    python -m gdown "%MODEL_PIXIE_URL%"
+    echo 正在下载PIXIE Face模型...
+    curl -L "%MODEL_PIXIE_FACE_URL%" -o fetch_model.sh
+    bash fetch_model.sh
 )
 
 REM 下载 Matte-Anything 文件
 cd ..\..\Matte-Anything
 echo 正在下载Matte-Anything文件...
-IF EXIST "sam_vit_h_4b8939.pth" (
-    echo SAM模型已存在，跳过下载...
+IF EXIST "%MODEL_SAM_PATH%" (
+    echo %MODEL_SAM_NAME%已存在，跳过下载...
 ) ELSE (
-    echo 正在下载SAM模型...
-    curl %CURL_OPTS% -o sam_vit_h_4b8939.pth https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+    echo 正在下载%MODEL_SAM_NAME%...
+    curl %CURL_OPTS% -o "%MODEL_SAM_PATH%" "%MODEL_SAM_URL%"
     IF %ERRORLEVEL% NEQ 0 (
-        echo 错误：下载SAM模型失败
+        echo 错误：下载%MODEL_SAM_NAME%失败
         exit /b 1
     )
 )
-IF EXIST "groundingdino_swint_ogc.pth" (
-    echo GroundingDINO模型已存在，跳过下载...
+IF EXIST "%MODEL_DINO_PATH%" (
+    echo %MODEL_DINO_NAME%已存在，跳过下载...
 ) ELSE (
-    echo 正在下载GroundingDINO模型...
-    curl -L --retry 5 -C - -o groundingdino_swint_ogc.pth https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+    echo 正在下载%MODEL_DINO_NAME%...
+    curl -L --retry 5 -C - -o "%MODEL_DINO_PATH%" "%MODEL_DINO_URL%"
 )
-IF EXIST "model.pth" (
-    echo Matte-Anything模型已存在，跳过下载...
+IF EXIST "%MODEL_MATTE_PATH%" (
+    echo %MODEL_MATTE_NAME%已存在，跳过下载...
 ) ELSE (
-    echo 正在下载Matte-Anything模型...
-    python -m gdown "1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW" -O model.pth
+    echo 正在下载%MODEL_MATTE_NAME%...
+    python -m gdown "%MODEL_MATTE_URL%" -O model.pth
 )
 
 REM 下载 OpenPose 模型
-cd ..\openpose
+cd ..\openpose\models\pose\coco
 echo 正在下载OpenPose模型...
-IF EXIST "models\pose_iter_584000.caffemodel" (
-    echo OpenPose模型已存在，跳过下载...
+IF EXIST "%MODEL_OPENPOSE_PATH%" (
+    echo %MODEL_OPENPOSE_NAME%已存在，跳过下载...
 ) ELSE (
     echo 正在下载OpenPose模型...
-    python -m gdown "1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV" -O models.tar.gz
+    python -m gdown "%MODEL_OPENPOSE_URL%" -O models.tar.gz
     IF NOT EXIST models.tar.gz (
         echo 错误：下载models.tar.gz失败
         exit /b 1
@@ -230,16 +275,16 @@ IF EXIST "models\pose_iter_584000.caffemodel" (
 )
 
 REM 下载 hyperIQA 模型
-cd ..\hyperIQA\pretrained
+cd ..\..\..\..\..\hyperIQA\pretrained
 echo 正在下载hyperIQA模型...
-IF EXIST "hyperIQA.pth" (
-    echo hyperIQA模型已存在，跳过下载...
+IF EXIST "%MODEL_HYPERIQA_PATH%" (
+    echo %MODEL_HYPERIQA_NAME%已存在，跳过下载...
 ) ELSE (
-    echo 正在下载hyperIQA模型...
-    python -m gdown "1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE"
+    echo 正在下载%MODEL_HYPERIQA_NAME%...
+    python -m gdown "%MODEL_HYPERIQA_URL%"
 )
 
-cd ..\..
+cd ..\..\..
 echo.
 IF %ERRORLEVEL% EQU 0 (
     echo ************************************************************
@@ -256,21 +301,21 @@ IF %ERRORLEVEL% EQU 0 (
 
 REM 验证下载的文件完整性
 echo 正在验证下载文件...
-cd %PROJECT_DIR%\resource
+cd %PROJECT_DIR%
 SET VERIFY_FAILED=0
 
-IF NOT EXIST "NeuralHaircut\diffusion_prior\model.pt" (
-    echo [×] 缺少扩散先验模型文件
+IF NOT EXIST "%MODEL_NEURAL_HAIRCUT_PATH%" (
+    echo [×] 缺少%MODEL_NEURAL_HAIRCUT_NAME%
     SET /A VERIFY_FAILED+=1
 ) ELSE (
-    echo [√] 扩散先验模型文件验证成功
+    echo [√] %MODEL_NEURAL_HAIRCUT_NAME%验证成功
 )
 
-IF NOT EXIST "NeuralHaircut\PIXIE\pixie_data" echo 警告：缺少PIXIE模型数据
-IF NOT EXIST "Matte-Anything\sam_vit_h_4b8939.pth" echo 警告：缺少SAM模型文件
-IF NOT EXIST "Matte-Anything\groundingdino_swint_ogc.pth" echo 警告：缺少GroundingDINO模型文件
-IF NOT EXIST "openpose\models\pose\coco" echo 警告：缺少OpenPose姿态模型
-IF NOT EXIST "hyperIQA\pretrained\hyperIQA.pth" echo 警告：缺少hyperIQA模型文件
+IF NOT EXIST "%MODEL_PIXIE_PATH%" echo 警告：缺少%MODEL_PIXIE_NAME%
+IF NOT EXIST "%MODEL_SAM_PATH%" echo 警告：缺少%MODEL_SAM_NAME%
+IF NOT EXIST "%MODEL_DINO_PATH%" echo 警告：缺少%MODEL_DINO_NAME%
+IF NOT EXIST "%MODEL_OPENPOSE_PATH%" echo 警告：缺少%MODEL_OPENPOSE_NAME%
+IF NOT EXIST "%MODEL_HYPERIQA_PATH%" echo 警告：缺少%MODEL_HYPERIQA_NAME%
 
 IF %VERIFY_FAILED% GTR 0 (
     echo.

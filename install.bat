@@ -96,50 +96,43 @@ mkdir cache\gdown 2>nul
 mkdir cache\torch 2>nul
 mkdir cache\huggingface 2>nul
 
-REM 创建ext目录
+REM 创建ext目录并克隆仓库
 mkdir ext 2>nul
 cd ext
 
-REM 克隆外部库
-git clone --depth 1 https://github.com/CMU-Perceptual-Computing-Lab/openpose
-cd openpose
-git submodule update --init --recursive --remote
+REM 克隆必要的仓库
+git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
+cd openpose && git submodule update --init --recursive --remote
 cd ..
 
 git clone https://github.com/hustvl/Matte-Anything
-cd Matte-Anything
-git clone https://github.com/IDEA-Research/GroundingDINO.git
+cd Matte-Anything && git clone https://github.com/IDEA-Research/GroundingDINO.git
 cd ..
 
-git clone https://github.com/egorzakharov/NeuralHaircut.git --recursive
+git clone git@github.com:egorzakharov/NeuralHaircut.git --recursive
 git clone https://github.com/facebookresearch/pytorch3d
-cd pytorch3d
-git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
+cd pytorch3d && git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
 cd ..
 
 git clone https://github.com/camenduru/simple-knn
-cd diff_gaussian_rasterization_hair\third_party
-git clone https://github.com/g-truc/glm
-cd glm
-git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
-cd ..\..\..
+cd diff_gaussian_rasterization_hair/third_party && git clone https://github.com/g-truc/glm
+cd glm && git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
+cd ../..
 
 git clone --recursive https://github.com/NVIDIAGameWorks/kaolin
-cd kaolin
-git checkout v0.15.0
+cd kaolin && git checkout v0.15.0
 cd ..
 
 git clone https://github.com/SSL92/hyperIQA
+cd ..
 
 REM 创建环境
-CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\gaussian_splatting_hair python=3.8 pytorch=2.0.0 torchvision pytorch-cuda=11.8 cmake ninja setuptools=58.2.0 -c pytorch -c nvidia -c conda-forge -y
-CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\matte_anything pytorch=2.0.0 pytorch-cuda=11.8 torchvision tensorboard timm=0.5.4 opencv=4.5.3 mkl=2024.0 setuptools=58.2.0 easydict wget scikit-image gradio=3.46.1 fairscale supervision==0.22.0 -c pytorch -c nvidia -c conda-forge -y
-CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\openpose python=3.8 cmake=3.20 -c conda-forge -y
-CALL "%MICROMAMBA_EXE%" create -p %MAMBA_ROOT_PREFIX%\envs\pixie-env python=3.8 pytorch=2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.8 fvcore pytorch3d==0.7.5 kornia matplotlib -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -c bottler -c iopath -y
+CALL "%MICROMAMBA_EXE%" env create -f environment.yml
 
 REM 安装 gaussian_splatting_hair 环境
 CALL "%MICROMAMBA_EXE%" activate -p %MAMBA_ROOT_PREFIX%\envs\gaussian_splatting_hair
-pip install -r requirements.txt
+
+REM 安装外部库
 cd %PROJECT_DIR%\ext\pytorch3d
 pip install -e .
 cd %PROJECT_DIR%\ext\NeuralHaircut\npbgpp
@@ -160,23 +153,60 @@ IF NOT EXIST "%PROJECT_DIR%\resource" (
     echo resource/
     echo ├── NeuralHaircut/
     echo │   ├── diffusion_prior/
+    echo │   │   └── model.pt
     echo │   └── PIXIE/
+    echo │       └── pixie_data/
     echo ├── Matte-Anything/
     echo │   ├── sam_vit_h_4b8939.pth
     echo │   ├── groundingdino_swint_ogc.pth
     echo │   └── model.pth
-    echo └── openpose/
-    echo     └── models/
+    echo ├── openpose/
+    echo │   └── models/
+    echo │       └── pose/
+    echo │           └── coco/
+    echo │               └── pose_iter_584000.caffemodel
+    echo └── hyperIQA/
+    echo     └── pretrained/
+    echo         └── hyperIQA.pth
     exit /b 1
 )
 
-REM 下载 Neural Haircut 文件
-cd %PROJECT_DIR%\ext\NeuralHaircut
-xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\*" .
-cd pretrained_models\diffusion_prior
-xcopy /Y "%PROJECT_DIR%\resource\NeuralHaircut\diffusion_prior\*" .
-cd ..\..\PIXIE
-xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\PIXIE\*" .
+REM 复制模型文件到对应位置
+echo 正在复制模型文件...
+
+REM 创建必要的目录
+mkdir "%PROJECT_DIR%\ext\NeuralHaircut\diffusion_prior" 2>nul
+mkdir "%PROJECT_DIR%\ext\PIXIE" 2>nul
+mkdir "%PROJECT_DIR%\ext\Matte-Anything\pretrained" 2>nul
+mkdir "%PROJECT_DIR%\ext\openpose\models\pose\coco" 2>nul
+mkdir "%PROJECT_DIR%\ext\hyperIQA\pretrained" 2>nul
+
+REM Neural Haircut
+xcopy /Y "%PROJECT_DIR%\resource\NeuralHaircut\diffusion_prior\model.pt" "%PROJECT_DIR%\ext\NeuralHaircut\diffusion_prior\"
+
+REM PIXIE
+cd "%PROJECT_DIR%\ext\PIXIE"
+7z x "%PROJECT_DIR%\resource\NeuralHaircut\PIXIE\pixie_data.tar.gz" -y
+7z x pixie_data.tar -y
+del pixie_data.tar
+
+REM Matte-Anything
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\sam_vit_h_4b8939.pth" "%PROJECT_DIR%\ext\Matte-Anything\pretrained\"
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\groundingdino_swint_ogc.pth" "%PROJECT_DIR%\ext\Matte-Anything\pretrained\"
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\model.pth" "%PROJECT_DIR%\ext\Matte-Anything\"
+
+REM OpenPose
+xcopy /Y "%PROJECT_DIR%\resource\openpose\models\pose_iter_584000.caffemodel" "%PROJECT_DIR%\ext\openpose\models\pose\coco\"
+
+REM hyperIQA
+xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\pretrained\hyperIQA.pth" "%PROJECT_DIR%\ext\hyperIQA\pretrained\"
+
+REM 安装 PIXIE 环境
+CALL activate_pixie-env.bat
+cd %PROJECT_DIR%\ext\NeuralHaircut\PIXIE
+echo 正在安装PIXIE依赖...
+pip install pyyaml==5.4.1
+pip install git+https://github.com/1adrianb/face-alignment.git@54623537fd9618ca7c15688fd85aba706ad92b59
 
 REM 安装 Matte-Anything 环境
 CALL activate_matte_anything.bat
@@ -205,18 +235,6 @@ CALL "%VS2019_VCVARS%"
 cmake .. -DBUILD_PYTHON=true -DUSE_CUDNN=off -DBUILD_CAFFE=false -G "Visual Studio 16 2019" -A x64
 cmake --build . --config Release
 cd %PROJECT_DIR%
-
-REM 复制 hyperIQA 模型
-cd %PROJECT_DIR%\ext\hyperIQA
-mkdir pretrained 2>nul
-xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\pretrained\*" pretrained\
-
-REM 安装 PIXIE 环境
-CALL activate_pixie-env.bat
-cd %PROJECT_DIR%\ext\PIXIE
-echo 正在安装PIXIE依赖...
-pip install pyyaml==5.4.1
-pip install git+https://github.com/1adrianb/face-alignment.git@54623537fd9618ca7c15688fd85aba706ad92b59
 
 REM 检查资源文件是否已下载
 IF NOT EXIST "resource" (
