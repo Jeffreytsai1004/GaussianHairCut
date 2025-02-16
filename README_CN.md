@@ -45,21 +45,16 @@
 ```
 resource/
 ├── NeuralHaircut/
-│   ├── diffusion_prior/
-│   │   └── model.pt          # 扩散先验模型
+│   ├── pretrained_models/
+│   │   ├── diffusion_prior/
+│   │   │   └── dif_ckpt.pt          ## 扩散先验模型
+│   │   └── strand_prior/
+│   │       └── strand_ckpt.pt       ## 股线先验模型
 │   └── PIXIE/
-│       └── pixie_data/       # PIXIE模型数据
+│       └── pixie_data/
 ├── Matte-Anything/
-│   ├── sam_vit_h_4b8939.pth  # SAM模型
-│   ├── groundingdino_swint_ogc.pth  # GroundingDINO模型
-│   └── model.pth             # Matte-Anything模型
 ├── openpose/
-│   └── models/
-│       ├── pose/             # OpenPose姿态模型
-│       └── face/             # OpenPose人脸模型
 └── hyperIQA/
-    └── pretrained/
-        └── hyperIQA.pth      # 图像质量评估模型
 ```
 
 ## 环境配置

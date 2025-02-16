@@ -16,12 +16,12 @@ REM 确保以下环境变量可用:
 REM PROJECT_DIR 和 DATA_PATH
 
 REM 检查必要的环境变量
-IF "%PROJECT_DIR%"=="" (
-    echo ERROR: PROJECT_DIR environment variable is not set
+IF NOT DEFINED PROJECT_DIR (
+    echo 错误：未设置PROJECT_DIR环境变量
     exit /b 1
 )
-IF "%DATA_PATH%"=="" (
-    echo ERROR: DATA_PATH environment variable is not set
+IF NOT DEFINED DATA_PATH (
+    echo 错误：未设置DATA_PATH环境变量
     exit /b 1
 )
 IF NOT EXIST "%BLENDER_DIR%" (

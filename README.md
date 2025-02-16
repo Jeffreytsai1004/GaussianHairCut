@@ -45,21 +45,16 @@ Required resource structure:
 ```
 resource/
 ├── NeuralHaircut/
-│   ├── diffusion_prior/
-│   │   └── model.pt          # Diffusion prior model
+│   ├── pretrained_models/
+│   │   ├── diffusion_prior/
+│   │   │   └── dif_ckpt.pt          ## Diffusion prior model
+│   │   └── strand_prior/
+│   │       └── strand_ckpt.pt       ## Strand prior model
 │   └── PIXIE/
-│       └── pixie_data/       # PIXIE model data
+│       └── pixie_data/
 ├── Matte-Anything/
-│   ├── sam_vit_h_4b8939.pth  # SAM model
-│   ├── groundingdino_swint_ogc.pth  # GroundingDINO model
-│   └── model.pth             # Matte-Anything model
 ├── openpose/
-│   └── models/
-│       ├── pose/             # OpenPose pose models
-│       └── face/             # OpenPose face models
 └── hyperIQA/
-    └── pretrained/
-        └── hyperIQA.pth      # Image quality assessment model
 ```
 
 ## Getting Started

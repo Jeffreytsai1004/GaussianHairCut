@@ -91,6 +91,18 @@ IF %ERRORLEVEL% EQU 0 (
     exit /b 1
 )
 
+REM 检查必要的环境变量
+IF NOT DEFINED PROJECT_DIR (
+    echo 错误：未设置PROJECT_DIR环境变量
+    exit /b 1
+)
+
+IF NOT DEFINED VS2019_VCVARS (
+    echo 错误：未设置VS2019_VCVARS环境变量
+    echo 请设置VS2019_VCVARS指向Visual Studio 2019的vcvars64.bat
+    exit /b 1
+)
+
 REM 创建缓存目录
 mkdir cache\gdown 2>nul
 mkdir cache\torch 2>nul
@@ -147,27 +159,21 @@ cd %PROJECT_DIR%
 
 REM 检查resource目录
 IF NOT EXIST "%PROJECT_DIR%\resource" (
-    echo ERROR: resource directory not found
-    echo Please ensure the resource directory exists with required files:
+    echo 错误：未找到resource目录
+    echo 请确保resource目录存在且包含以下必需文件：
     echo.
     echo resource/
     echo ├── NeuralHaircut/
-    echo │   ├── diffusion_prior/
-    echo │   │   └── model.pt
+    echo │   ├── pretrained_models/
+    echo │   │   ├── diffusion_prior/
+    echo │   │   │   └── dif_ckpt.pt
+    echo │   │   └── strand_prior/
+    echo │   │       └── strand_ckpt.pt
     echo │   └── PIXIE/
     echo │       └── pixie_data/
     echo ├── Matte-Anything/
-    echo │   ├── sam_vit_h_4b8939.pth
-    echo │   ├── groundingdino_swint_ogc.pth
-    echo │   └── model.pth
     echo ├── openpose/
-    echo │   └── models/
-    echo │       └── pose/
-    echo │           └── coco/
-    echo │               └── pose_iter_584000.caffemodel
     echo └── hyperIQA/
-    echo     └── pretrained/
-    echo         └── hyperIQA.pth
     exit /b 1
 )
 
@@ -175,31 +181,20 @@ REM 复制模型文件到对应位置
 echo 正在复制模型文件...
 
 REM 创建必要的目录
-mkdir "%PROJECT_DIR%\ext\NeuralHaircut\diffusion_prior" 2>nul
+mkdir "%PROJECT_DIR%\ext\NeuralHaircut" 2>nul
+mkdir "%PROJECT_DIR%\ext\NeuralHaircut\pretrained_models" 2>nul
+mkdir "%PROJECT_DIR%\ext\NeuralHaircut\pretrained_models\diffusion_prior" 2>nul
+mkdir "%PROJECT_DIR%\ext\NeuralHaircut\pretrained_models\strand_prior" 2>nul
 mkdir "%PROJECT_DIR%\ext\PIXIE" 2>nul
 mkdir "%PROJECT_DIR%\ext\Matte-Anything\pretrained" 2>nul
 mkdir "%PROJECT_DIR%\ext\openpose\models\pose\coco" 2>nul
 mkdir "%PROJECT_DIR%\ext\hyperIQA\pretrained" 2>nul
 
-REM Neural Haircut
-xcopy /Y "%PROJECT_DIR%\resource\NeuralHaircut\diffusion_prior\model.pt" "%PROJECT_DIR%\ext\NeuralHaircut\diffusion_prior\"
-
-REM PIXIE
-cd "%PROJECT_DIR%\ext\PIXIE"
-7z x "%PROJECT_DIR%\resource\NeuralHaircut\PIXIE\pixie_data.tar.gz" -y
-7z x pixie_data.tar -y
-del pixie_data.tar
-
-REM Matte-Anything
-xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\sam_vit_h_4b8939.pth" "%PROJECT_DIR%\ext\Matte-Anything\pretrained\"
-xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\groundingdino_swint_ogc.pth" "%PROJECT_DIR%\ext\Matte-Anything\pretrained\"
-xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\model.pth" "%PROJECT_DIR%\ext\Matte-Anything\"
-
-REM OpenPose
-xcopy /Y "%PROJECT_DIR%\resource\openpose\models\pose_iter_584000.caffemodel" "%PROJECT_DIR%\ext\openpose\models\pose\coco\"
-
-REM hyperIQA
-xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\pretrained\hyperIQA.pth" "%PROJECT_DIR%\ext\hyperIQA\pretrained\"
+xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\*" "%PROJECT_DIR%\ext\NeuralHaircut\"
+xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\PIXIE\*" "%PROJECT_DIR%\ext\PIXIE"
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\*" "%PROJECT_DIR%\ext\Matte-Anything\pretrained\"
+xcopy /Y "%PROJECT_DIR%\resource\openpose\*" "%PROJECT_DIR%\ext\openpose\*"
+xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\*" "%PROJECT_DIR%\ext\hyperIQA\*"
 
 REM 安装 PIXIE 环境
 CALL activate_pixie-env.bat
@@ -266,5 +261,18 @@ if %FREE_SPACE% LSS 21474836480 (
     echo 错误：可用磁盘空间不足20GB
     exit /b 1
 )
+
+REM 创建环境激活脚本
+echo @echo off > activate_gaussian_splatting_hair.bat
+echo CALL "%%MICROMAMBA_EXE%%" activate -p %%MAMBA_ROOT_PREFIX%%\envs\gaussian_splatting_hair >> activate_gaussian_splatting_hair.bat
+
+echo @echo off > activate_matte_anything.bat
+echo CALL "%%MICROMAMBA_EXE%%" activate -p %%MAMBA_ROOT_PREFIX%%\envs\matte_anything >> activate_matte_anything.bat
+
+echo @echo off > activate_openpose.bat
+echo CALL "%%MICROMAMBA_EXE%%" activate -p %%MAMBA_ROOT_PREFIX%%\envs\openpose >> activate_openpose.bat
+
+echo @echo off > activate_pixie-env.bat
+echo CALL "%%MICROMAMBA_EXE%%" activate -p %%MAMBA_ROOT_PREFIX%%\envs\pixie-env >> activate_pixie-env.bat
 
 echo Installation completed!
