@@ -31,6 +31,7 @@ CALL "%MICROMAMBA_EXE%" shell init --prefix "%MAMBA_ROOT_PREFIX%"
 REM 检查必要的环境和依赖
 IF NOT EXIST "%CUDA_HOME%\" (
     echo ERROR: CUDA 11.8 not found at %CUDA_HOME%
+    echo Please install CUDA 11.8 from https://developer.nvidia.com/cuda-11-8-0-download-archive
     exit /b 1
 )
 IF NOT EXIST "%BLENDER_DIR%\" (
@@ -79,6 +80,14 @@ REM 检查CUDA版本
 nvcc --version 2>nul | findstr "release 11.8" >nul
 IF %ERRORLEVEL% NEQ 0 (
     echo ERROR: CUDA 11.8 not found or version mismatch
+    exit /b 1
+)
+
+REM 检查路径中是否包含空格
+echo %PROJECT_DIR% | findstr /C:" " >nul
+IF %ERRORLEVEL% EQU 0 (
+    echo ERROR: Project path contains spaces: %PROJECT_DIR%
+    echo Please move the project to a path without spaces
     exit /b 1
 )
 
@@ -187,9 +196,15 @@ xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\*" .
 cd ..
 xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\model.pth" .
 
-REM 安装 OpenPose 模型
+REM 安装 OpenPose
+CALL activate_openpose.bat
 cd %PROJECT_DIR%\ext\openpose
-xcopy /E /I /Y "%PROJECT_DIR%\resource\openpose\models\*" models\
+mkdir build 2>nul
+cd build
+CALL "%VS2019_VCVARS%"
+cmake .. -DBUILD_PYTHON=true -DUSE_CUDNN=off -DBUILD_CAFFE=false -G "Visual Studio 16 2019" -A x64
+cmake --build . --config Release
+cd %PROJECT_DIR%
 
 REM 复制 hyperIQA 模型
 cd %PROJECT_DIR%\ext\hyperIQA
@@ -199,7 +214,39 @@ xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\pretrained\*" pretrained\
 REM 安装 PIXIE 环境
 CALL activate_pixie-env.bat
 cd %PROJECT_DIR%\ext\PIXIE
+echo 正在安装PIXIE依赖...
 pip install pyyaml==5.4.1
 pip install git+https://github.com/1adrianb/face-alignment.git@54623537fd9618ca7c15688fd85aba706ad92b59
+
+REM 检查资源文件是否已下载
+IF NOT EXIST "resource" (
+    echo 错误：未找到resource目录，请先运行download_resource.bat
+    exit /b 1
+)
+
+REM 检查CUDA安装
+IF NOT EXIST "%CUDA_HOME%" (
+    echo 错误：未找到CUDA安装目录，请确保CUDA 11.8已正确安装
+    exit /b 1
+)
+
+REM 检查Python版本
+python -c "import sys; assert sys.version_info >= (3,8) and sys.version_info < (3,9), 'Python 3.8.x required'" || (
+    echo 错误：需要Python 3.8.x版本
+    exit /b 1
+)
+
+REM 检查CUDA版本
+nvcc --version | findstr "release 11.8" >nul || (
+    echo 错误：需要CUDA 11.8版本
+    exit /b 1
+)
+
+REM 检查磁盘空间
+for /f "tokens=3" %%a in ('dir /-c /w "%~d0\" ^| find "bytes free"') do set FREE_SPACE=%%a
+if %FREE_SPACE% LSS 21474836480 (
+    echo 错误：可用磁盘空间不足20GB
+    exit /b 1
+)
 
 echo Installation completed!
