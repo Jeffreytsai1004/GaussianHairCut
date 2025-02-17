@@ -47,14 +47,20 @@ resource/
 ├── NeuralHaircut/
 │   ├── pretrained_models/
 │   │   ├── diffusion_prior/
-│   │   │   └── dif_ckpt.pt          ## 扩散先验模型
+│   │   │   └── dif_ckpt.pt          # 扩散先验模型
 │   │   └── strand_prior/
-│   │       └── strand_ckpt.pt       ## 股线先验模型
+│   │       └── strand_ckpt.pt       # 股线先验模型
 │   └── PIXIE/
-│       └── pixie_data/
+│       └── pixie_data.tar.gz        # PIXIE 模型数据存档
 ├── Matte-Anything/
+│   └── pretrained/
+│       └── ViTMatte_B_DIS.pth       # Matte-Anything 模型
 ├── openpose/
+│   └── models/
+│       └── models.tar.gz            # OpenPose 模型
 └── hyperIQA/
+    └── pretrained/
+        └── koniq_pretrained.pkl     # 图像质量评估模型
 ```
 
 ## 环境配置

@@ -166,17 +166,22 @@ IF NOT EXIST "%PROJECT_DIR%\resource" (
     echo ├── NeuralHaircut/
     echo │   ├── pretrained_models/
     echo │   │   ├── diffusion_prior/
-    echo │   │   │   └── dif_ckpt.pt
+    echo │   │   │   └── dif_ckpt.pt          # 扩散先验模型
     echo │   │   └── strand_prior/
-    echo │   │       └── strand_ckpt.pt
+    echo │   │       └── strand_ckpt.pt       # 股线先验模型
     echo │   └── PIXIE/
-    echo │       └── pixie_data/
+    echo │       └── pixie_data/              # PIXIE 模型数据存档
     echo ├── Matte-Anything/
+    echo │   └── pretrained/
+    echo │       └── ViTMatte_B_DIS.pth       # Matte-Anything 模型
     echo ├── openpose/
+    echo │   └── models/
+    echo │       └── models/                  # OpenPose 模型
     echo └── hyperIQA/
+    echo     └── pretrained/
+    echo         └── koniq_pretrained.pkl     # 图像质量评估模型
     exit /b 1
 )
-
 REM 复制模型文件到对应位置
 echo 正在复制模型文件...
 
@@ -190,11 +195,18 @@ mkdir "%PROJECT_DIR%\ext\Matte-Anything\pretrained" 2>nul
 mkdir "%PROJECT_DIR%\ext\openpose\models\pose\coco" 2>nul
 mkdir "%PROJECT_DIR%\ext\hyperIQA\pretrained" 2>nul
 
-xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\*" "%PROJECT_DIR%\ext\NeuralHaircut\"
+REM 复制NeuralHaircut相关文件
+xcopy /Y "%PROJECT_DIR%\resource\NeuralHaircut\*" "%PROJECT_DIR%\ext\NeuralHaircut\"
 xcopy /E /I /Y "%PROJECT_DIR%\resource\NeuralHaircut\PIXIE\*" "%PROJECT_DIR%\ext\PIXIE"
-xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\*" "%PROJECT_DIR%\ext\Matte-Anything\pretrained\"
-xcopy /Y "%PROJECT_DIR%\resource\openpose\*" "%PROJECT_DIR%\ext\openpose\*"
-xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\*" "%PROJECT_DIR%\ext\hyperIQA\*"
+
+REM 复制Matte-Anything相关文件
+xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\*" "%PROJECT_DIR%\ext\Matte-Anything\"
+
+REM 复制OpenPose相关文件
+xcopy /E /I /Y "%PROJECT_DIR%\resource\openpose\*" "%PROJECT_DIR%\ext\openpose\"
+
+REM 复制hyperIQA相关文件
+xcopy /Y "%PROJECT_DIR%\resource\hyperIQA\*" "%PROJECT_DIR%\ext\hyperIQA\"
 
 REM 安装 PIXIE 环境
 CALL activate_pixie-env.bat
@@ -215,11 +227,6 @@ pip install -e .
 cd ..
 pip install supervision==0.22.0
 
-mkdir pretrained 2>nul
-cd pretrained
-xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\*" .
-cd ..
-xcopy /Y "%PROJECT_DIR%\resource\Matte-Anything\model.pth" .
 
 REM 安装 OpenPose
 CALL activate_openpose.bat

@@ -47,14 +47,20 @@ resource/
 ├── NeuralHaircut/
 │   ├── pretrained_models/
 │   │   ├── diffusion_prior/
-│   │   │   └── dif_ckpt.pt          ## Diffusion prior model
+│   │   │   └── dif_ckpt.pt          # Diffusion prior model
 │   │   └── strand_prior/
-│   │       └── strand_ckpt.pt       ## Strand prior model
+│   │       └── strand_ckpt.pt       # Strand prior model
 │   └── PIXIE/
-│       └── pixie_data/
+│       └── pixie_data.tar.gz        # PIXIE model data archive
 ├── Matte-Anything/
+│   └── pretrained/
+│       └── ViTMatte_B_DIS.pth       # Matte-Anything model
 ├── openpose/
+│   └── models/
+│       └── models.tar.gz            # OpenPose model archive
 └── hyperIQA/
+    └── pretrained/
+        └── koniq_pretrained.pkl     # Image quality assessment model
 ```
 
 ## Getting Started
@@ -63,17 +69,17 @@ resource/
 
 1. **Install CUDA 11.8**
 
-   按照 https://developer.nvidia.com/cuda-11-8-0-download-archive 上的说明进行操作。
+   Follow instructions at https://developer.nvidia.com/cuda-11-8-0-download-archive
 
-   确保：
-   - PATH 包含 <CUDA_DIR>/bin
-   - LD_LIBRARY_PATH 包含 <CUDA_DIR>/lib64
+   Make sure:
+   - PATH includes <CUDA_DIR>/bin
+   - LD_LIBRARY_PATH includes <CUDA_DIR>/lib64
 
-   该环境仅在此 CUDA 版本下进行了测试。
+   The environment was tested only with this CUDA version.
 
-2. **Install Blender 3.6** 以创建股线可视化
+2. **Install Blender 3.6** for strand visualization
 
-   按照 https://www.blender.org/download/lts/3-6 上的说明进行操作。
+   Follow instructions at https://www.blender.org/download/lts/3-6
 
 3. **Clone repository and run installation script**
 
@@ -87,63 +93,63 @@ resource/
 ### Windows Platform
 
 1. **Install CUDA 11.8**
-    - 从 https://developer.nvidia.com/cuda-11-8-0-download-archive 下载并安装
-    - 默认安装路径：C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
-    - 确保CUDA版本与系统兼容
+    - Download and install from https://developer.nvidia.com/cuda-11-8-0-download-archive
+    - Default installation path: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
+    - Ensure CUDA version is compatible with your system
 
 2. **Install Blender 3.6**
-    - 从 https://www.blender.org/download/lts/3-6 下载并安装
-    - 默认安装路径：C:\Program Files\Blender Foundation\Blender 3.6
+    - Download and install from https://www.blender.org/download/lts/3-6
+    - Default installation path: C:\Program Files\Blender Foundation\Blender 3.6
 
 3. **Install Visual Studio 2019 Build Tools**
-    - 从 https://visualstudio.microsoft.com/vs/older-downloads/ 下载并安装
-    - 选择"C++构建工具"工作负载
-    - 默认安装路径：C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
+    - Download and install from https://visualstudio.microsoft.com/vs/older-downloads/
+    - Select "C++ Build Tools" workload
+    - Default installation path: C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
 
 4. **Install COLMAP**
-    - 从 https://github.com/colmap/colmap/releases 下载并安装
-    - 下载CUDA版本的COLMAP (例如：COLMAP-3.8-windows-cuda.zip)
-    - 解压到不含空格的路径 (例如：C:\COLMAP)
-    - 将COLMAP目录添加到系统PATH:
-      1. 打开"系统属性" > "环境变量"
-      2. 在"系统变量"中找到"Path"
-      3. 点击"编辑" > "新建"
-      4. 添加COLMAP目录路径
-      5. 点击"确定"保存
-    - 重启终端使PATH生效
+    - Download from https://github.com/colmap/colmap/releases
+    - Download CUDA version of COLMAP (e.g., COLMAP-3.8-windows-cuda.zip)
+    - Extract to a path without spaces (e.g., C:\COLMAP)
+    - Add COLMAP directory to system PATH:
+      1. Open "System Properties" > "Environment Variables"
+      2. Under "System Variables", find "Path"
+      3. Click "Edit" > "New"
+      4. Add COLMAP directory path
+      5. Click "OK" to save
+    - Restart terminal for PATH changes to take effect
 
 5. **Install 7-Zip**
-    - 从 https://7-zip.org/ 下载并安装
-    - 将7-Zip安装目录添加到系统PATH:
-      1. 打开"系统属性" > "环境变量"
-      2. 在"系统变量"中找到"Path"
-      3. 点击"编辑" > "新建"
-      4. 添加7-Zip安装目录(默认为C:\Program Files\7-Zip)
-      5. 点击"确定"保存
-    - 重启终端使PATH生效
+    - Download and install from https://7-zip.org/
+    - Add 7-Zip installation directory to system PATH:
+      1. Open "System Properties" > "Environment Variables"
+      2. Under "System Variables", find "Path"
+      3. Click "Edit" > "New"
+      4. Add 7-Zip installation directory (default: C:\Program Files\7-Zip)
+      5. Click "OK" to save
+    - Restart terminal for PATH changes to take effect
 
 6. **Download pre-trained models and resources**
     ```cmd
     git clone https://github.com/Jeffreytsai1004/GaussianHairCut
     cd GaussianHairCut
-    # 在PowerShell中运行:
-    # 脚本会自动安装gdown并下载所需资源
+    # Run in PowerShell:
+    # The script will automatically install gdown and download required resources
     .\download_resource.bat
     ```
-    注意：
-    - 下载过程可能需要几分钟到几十分钟，取决于网络速度
-    - 如果下载失败，可以重新运行脚本
-    - 确保有稳定的网络连接
+    Note:
+    - Download time varies from minutes to tens of minutes depending on network speed
+    - If download fails, you can rerun the script
+    - Ensure stable network connection
 
-6. **Clone repository and run installation script**
+7. **Clone repository and run installation script**
     ```cmd
     git clone https://github.com/Jeffreytsai1004/GaussianHairCut
     cd GaussianHairCut
-    # 先下载所需要的资源
+    # First download required resources
     .\download_resource.bat
-    # 运行安装脚本
+    # Run installation script
     .\install.bat
-    # 运行重建脚本
+    # Run reconstruction script
     .\run.bat
     ```
 
