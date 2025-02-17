@@ -1,0 +1,13 @@
+python==3.8
+pytorch==2.0.0
+torchvision==0.15.0
+torchaudio==2.0.0
+pytorch-cuda==11.8
+fvcore
+pytorch3d==0.7.5
+kornia
+matplotlib
+pyyaml==5.4.1
+
+# Git packages
+git+https://github.com/1adrianb/face-alignment.git@54623537fd9618ca7c15688fd85aba706ad92b59 

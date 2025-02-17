@@ -1,0 +1,18 @@
+pytorch==2.0.0
+pytorch-cuda==11.8
+torchvision
+tensorboard
+timm==0.5.4
+opencv==4.5.3
+mkl==2024.0
+setuptools==58.2.0
+easydict
+wget
+scikit-image
+gradio==3.46.1
+fairscale
+
+# Git packages
+git+https://github.com/facebookresearch/segment-anything.git
+git+https://github.com/facebookresearch/detectron2.git
+supervision==0.22.0 

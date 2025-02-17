@@ -41,26 +41,41 @@
 └── visualization/            # 渲染结果和视频
 ```
 
-所需资源文件结构：
+## 目录结构
 ```
-resource/
-├── NeuralHaircut/
-│   ├── pretrained_models/
-│   │   ├── diffusion_prior/
-│   │   │   └── dif_ckpt.pt          # 扩散先验模型
-│   │   └── strand_prior/
-│   │       └── strand_ckpt.pt       # 股线先验模型
-│   └── PIXIE/
-│       └── pixie_data.tar.gz        # PIXIE 模型数据存档
-├── Matte-Anything/
-│   └── pretrained/
-│       └── ViTMatte_B_DIS.pth       # Matte-Anything 模型
-├── openpose/
-│   └── models/
-│       └── models.tar.gz            # OpenPose 模型
-└── hyperIQA/
-    └── pretrained/
-        └── koniq_pretrained.pkl     # 图像质量评估模型
+├── cache/                      # 缓存目录
+│   ├── gdown/                 # gdown缓存
+│   ├── torch/                 # PyTorch缓存
+│   └── huggingface/          # Hugging Face缓存
+├── ext/                       # 外部依赖
+│   ├── NeuralHaircut/        # NeuralHaircut仓库
+│   ├── Matte-Anything/       # Matte-Anything仓库
+│   ├── openpose/             # OpenPose仓库
+│   ├── pytorch3d/            # PyTorch3D仓库
+│   ├── simple-knn/           # Simple KNN仓库
+│   ├── kaolin/               # Kaolin仓库
+│   └── hyperIQA/             # HyperIQA仓库
+├── resource/                  # 资源文件
+│   ├── NeuralHaircut/        # NeuralHaircut模型
+│   ├── Matte-Anything/       # Matte-Anything模型
+│   ├── openpose/             # OpenPose模型
+│   ├── PIXIE/                # PIXIE模型
+│   └── hyperIQA/             # HyperIQA模型
+├── src/                      # 源代码
+├── micromamba/               # Micromamba安装目录
+├── micromamba.exe           # Micromamba可执行文件
+├── install.bat              # 安装脚本
+├── download_resource.bat    # 资源下载脚本
+└── run.bat                  # 执行脚本
+```
+
+## 环境变量
+需要设置的环境变量：
+```batch
+set "PROJECT_DIR=C:\path\to\project"              # 项目根目录
+set "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+set "BLENDER_DIR=C:\Program Files\Blender Foundation\Blender 3.6"
+set "VS_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools"
 ```
 
 ## 环境配置

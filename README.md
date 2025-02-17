@@ -41,26 +41,41 @@ Expected output:
 └── visualization/            # Rendering results and video
 ```
 
-Required resource structure:
+## Directory Structure
 ```
-resource/
-├── NeuralHaircut/
-│   ├── pretrained_models/
-│   │   ├── diffusion_prior/
-│   │   │   └── dif_ckpt.pt          # Diffusion prior model
-│   │   └── strand_prior/
-│   │       └── strand_ckpt.pt       # Strand prior model
-│   └── PIXIE/
-│       └── pixie_data.tar.gz        # PIXIE model data archive
-├── Matte-Anything/
-│   └── pretrained/
-│       └── ViTMatte_B_DIS.pth       # Matte-Anything model
-├── openpose/
-│   └── models/
-│       └── models.tar.gz            # OpenPose model archive
-└── hyperIQA/
-    └── pretrained/
-        └── koniq_pretrained.pkl     # Image quality assessment model
+├── cache/                      # Cache directory
+│   ├── gdown/                 # gdown cache
+│   ├── torch/                 # PyTorch cache
+│   └── huggingface/          # Hugging Face cache
+├── ext/                       # External dependencies
+│   ├── NeuralHaircut/        # NeuralHaircut repository
+│   ├── Matte-Anything/       # Matte-Anything repository
+│   ├── openpose/             # OpenPose repository
+│   ├── pytorch3d/            # PyTorch3D repository
+│   ├── simple-knn/           # Simple KNN repository
+│   ├── kaolin/               # Kaolin repository
+│   └── hyperIQA/             # HyperIQA repository
+├── resource/                  # Resource files
+│   ├── NeuralHaircut/        # NeuralHaircut models
+│   ├── Matte-Anything/       # Matte-Anything models
+│   ├── openpose/             # OpenPose models
+│   ├── PIXIE/                # PIXIE models
+│   └── hyperIQA/             # HyperIQA models
+├── src/                      # Source code
+├── micromamba/               # Micromamba installation
+├── micromamba.exe           # Micromamba executable
+├── install.bat              # Installation script
+├── download_resource.bat    # Resource download script
+└── run.bat                  # Execution script
+```
+
+## Environment Variables
+Required environment variables:
+```batch
+set "PROJECT_DIR=C:\path\to\project"              # Project root directory
+set "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+set "BLENDER_DIR=C:\Program Files\Blender Foundation\Blender 3.6"
+set "VS_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools"
 ```
 
 ## Getting Started
