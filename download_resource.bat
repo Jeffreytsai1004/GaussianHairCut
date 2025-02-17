@@ -9,7 +9,8 @@ cd %PROJECT_DIR%\resource\NeuralHaircut\pretrained_models\diffusion_prior
 python -m gdown 1_9EOUXHayKiGH5nkrayncln3d6m1uV7f
 mkdir %PROJECT_DIR%\resource\NeuralHaircut\PIXIE
 cd %PROJECT_DIR%\resource\NeuralHaircut\PIXIE
-python -m gdown 1mPcGu62YPc4MdkT8FFiOCP629xsENHZf && tar -xvzf pixie_data.tar.gz ./ && rm pixie_data.tar.gz
+python -m gdown 1mPcGu62YPc4MdkT8FFiOCP629xsENHZf
+7z x pixie_data.tar.gz -o./
 mkdir %PROJECT_DIR%\resource\hyperIQA\pretrained
 cd %PROJECT_DIR%\resource\hyperIQA\pretrained
 python -m gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
