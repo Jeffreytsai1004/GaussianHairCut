@@ -1,6 +1,6 @@
 # Gaussian Haircut: Human Hair Reconstruction with Strand-Aligned 3D Gaussians
 
-[**中文**](README_CN.md) | [**English**](README.md)
+[**中文**](README.md) | [**English**](README_EN.md)
 
 This repository contains the official implementation of Gaussian Haircut, a strand-based human hair reconstruction method from monocular video.
 
@@ -41,26 +41,27 @@ Expected output:
 └── visualization/            # Rendering results and video
 ```
 
-Required resource structure:
+Resource directory:
 ```
 resource/
-├── NeuralHaircut/
-│   ├── pretrained_models/
-│   │   ├── diffusion_prior/
-│   │   │   └── dif_ckpt.pt          # Diffusion prior model
-│   │   └── strand_prior/
-│   │       └── strand_ckpt.pt       # Strand prior model
-│   └── PIXIE/
-│       └── pixie_data.tar.gz        # PIXIE model data archive
-├── Matte-Anything/
-│   └── pretrained/
-│       └── ViTMatte_B_DIS.pth       # Matte-Anything model
-├── openpose/
-│   └── models/
-│       └── models.tar.gz            # OpenPose model archive
-└── hyperIQA/
-    └── pretrained/
-        └── koniq_pretrained.pkl     # Image quality assessment model
+├── NeuralHaircut/        # NeuralHaircut model
+├── Matte-Anything/       # Matte-Anything model
+├── openpose/             # OpenPose model
+├── PIXIE/                # PIXIE model
+└── hyperIQA/             # HyperIQA model
+```
+
+## Environment Variables
+
+Required environment variables:
+
+```batch
+@CALL SET PROJECT_DIR=%~dp0
+@CALL SET MICROMAMBA_EXE=%PROJECT_DIR%\micromamba.exe
+@CALL SET CUDA_HOME="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\"
+@CALL SET BLENDER_DIR="C:\Program Files\Blender Foundation\Blender 3.6\"
+@CALL SET VS_DIR="C:\Program Files\Microsoft Visual Studio\2022\Professional\"
+@CALL SET VS_VCVARS="%VS_DIR%\VC\Auxiliary\Build\vcvars64.bat"
 ```
 
 ## Getting Started
@@ -104,7 +105,7 @@ resource/
 3. **Install Visual Studio 2019 Build Tools**
     - Download and install from https://visualstudio.microsoft.com/vs/older-downloads/
     - Select "C++ Build Tools" workload
-    - Default installation path: C:\Program Files\Microsoft Visual Studio\2019\Community\
+    - Default installation path: C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
 
 4. **Install COLMAP**
     - Download from https://github.com/colmap/colmap/releases
@@ -128,14 +129,9 @@ resource/
       5. Click "OK" to save
     - Restart terminal for PATH changes to take effect
 
-6. Install Python and other basic packages
-    - Download and install the latest version of Python from https://www.python.org/downloads/
-    - Install pip using `python -m pip install --upgrade pip`
-    - Install gdown using `python -m pip install gdown`
-
-1. **Download pre-trained models and resources**
+6. **Download pre-trained models and resources**
     ```cmd
-    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
+    git clone https://gitea.cgnico.com/CGNICO/GaussianHaircut
     cd GaussianHairCut
     # Run in PowerShell:
     # The script will automatically install gdown and download required resources
@@ -146,22 +142,9 @@ resource/
     - If download fails, you can rerun the script
     - Ensure stable network connection
 
-2. **Clone repository and run installation script**
-    ```cmd
-    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
-    cd GaussianHairCut
-    # First download required resources
-    .\download_resource.bat
-    # Run installation script
-    .\install.bat
-    # Run reconstruction script
-    .\run.bat
-    ```
-
 ## Usage
 
 1. **Record Monocular Video**
-
    - Reference example videos on the project page
    - Recording requirements:
      * Subject should rotate head slowly to capture all angles
@@ -170,25 +153,36 @@ resource/
      * Maintain stable lighting conditions
      * Recommended length: 10-20 seconds
      * Recommended resolution: 1920x1080 or higher
-
-2. **Setup Scene Directory**
-
-   ```cmd
-   # In CMD:
-   set PROJECT_DIR=[path\to\]GaussianHaircut
-   set DATA_PATH=[path\to\scene\folder]
-   run.bat
-   
-   # Or in PowerShell:
-   $env:PROJECT_DIR="[path\to\]GaussianHaircut"
-   $env:DATA_PATH="[path\to\scene\folder]"
-   .\run.bat
-   ```
-   
    Note:
    - DATA_PATH should point to directory containing raw.mp4
    - Directory paths should not contain spaces or special characters
    - Ensure sufficient disk space (at least 20GB recommended)
+
+2. **Setup Scene Directory**
+   - Create a new folder, e.g., C:\path\to\scene\folder
+   - Place raw.mp4 in this folder
+
+3. **Run Installation and Reconstruction Scripts**
+   - Set environment variables PROJECT_DIR and DATA_PATH in install.bat and run.bat
+   - For example:
+   ```cmd
+   set "PROJECT_DIR=C:\path\to\project"
+   set "DATA_PATH=C:\path\to\scene\folder"
+   ```
+   - Modify environment variables CUDA_HOME, BLENDER_DIR, VS_DIR in install.bat and run.bat
+   ```cmd
+   set "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+   set "BLENDER_DIR=C:\Program Files\Blender Foundation\Blender 3.6"
+   set "VS_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools"
+   ```
+   - Run installation script
+   ```cmd
+   .\install.bat
+   ```
+   - Run reconstruction script
+   ```cmd
+   .\run.bat
+   ```
 
 ## License
 

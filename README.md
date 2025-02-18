@@ -40,27 +40,26 @@
 ├── curves_reconstruction/     # 最终头发股线结果
 └── visualization/            # 渲染结果和视频
 ```
-
-所需资源文件结构：
+资源目录：
 ```
 resource/
-├── NeuralHaircut/
-│   ├── pretrained_models/
-│   │   ├── diffusion_prior/
-│   │   │   └── dif_ckpt.pt          # 扩散先验模型
-│   │   └── strand_prior/
-│   │       └── strand_ckpt.pt       # 股线先验模型
-│   └── PIXIE/
-│       └── pixie_data.tar.gz        # PIXIE 模型数据存档
-├── Matte-Anything/
-│   └── pretrained/
-│       └── ViTMatte_B_DIS.pth       # Matte-Anything 模型
-├── openpose/
-│   └── models/
-│       └── models.tar.gz            # OpenPose 模型
-└── hyperIQA/
-    └── pretrained/
-        └── koniq_pretrained.pkl     # 图像质量评估模型
+├── NeuralHaircut/        # NeuralHaircut模型
+├── Matte-Anything/       # Matte-Anything模型
+├── openpose/             # OpenPose模型
+├── PIXIE/                # PIXIE模型
+└── hyperIQA/             # HyperIQA模型
+```
+## 环境变量
+
+需要设置的环境变量：
+
+```batch
+@CALL SET PROJECT_DIR=%~dp0
+@CALL SET MICROMAMBA_EXE=%PROJECT_DIR%\micromamba.exe
+@CALL SET CUDA_HOME="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\"
+@CALL SET BLENDER_DIR="C:\Program Files\Blender Foundation\Blender 3.6\"
+@CALL SET VS_DIR="C:\Program Files\Microsoft Visual Studio\2022\Professional\"
+@CALL SET VS_VCVARS="%VS_DIR%\VC\Auxiliary\Build\vcvars64.bat"
 ```
 
 ## 环境配置
@@ -104,7 +103,7 @@ resource/
 3. **安装 Visual Studio 2019 Build Tools**
     - 从 https://visualstudio.microsoft.com/vs/older-downloads/ 下载并安装
     - 选择"C++构建工具"工作负载
-    - 默认安装路径：C:\Program Files\Microsoft Visual Studio\2019\Community\
+    - 默认安装路径：C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
 
 4. **安装 COLMAP**
     - 从 https://github.com/colmap/colmap/releases 下载并安装
@@ -128,14 +127,9 @@ resource/
       5. 点击"确定"保存
     - 重启终端使PATH生效
 
-6. 安装Python以及其他基础包
-    - 从 https://www.python.org/downloads/ 下载并安装最新的Python版本
-    - 安装pip `python -m pip install --upgrade pip`
-    - 安装gdown `python -m pip install gdown`
-
-7. **下载预训练模型和资源**
+6. **下载预训练模型和资源**
     ```cmd
-    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
+    git clone https://gitea.cgnico.com/CGNICO/GaussianHaircut
     cd GaussianHairCut
     # 在PowerShell中运行:
     # 脚本会自动安装gdown并下载所需资源
@@ -145,14 +139,6 @@ resource/
     - 下载过程可能需要几分钟到几十分钟，取决于网络速度
     - 如果下载失败，可以重新运行脚本
     - 确保有稳定的网络连接
-
-8. **运行安装和重建脚本**
-    ```cmd
-    # 运行安装脚本
-    .\install.bat
-    # 运行重建脚本
-    .\run.bat
-    ```
 
 ## 使用说明
 
@@ -165,24 +151,36 @@ resource/
      * 保持光照条件稳定
      * 建议视频长度：10-20秒
      * 建议分辨率：1920x1080或更高
-
-2. **设置重建场景目录**
-   ```cmd
-   # 在CMD中运行:
-   set PROJECT_DIR=[path\to\]GaussianHaircut
-   set DATA_PATH=[path\to\scene\folder]
-   run.bat
-   
-   # 或在PowerShell中运行:
-   $env:PROJECT_DIR="[path\to\]GaussianHaircut"
-   $env:DATA_PATH="[path\to\scene\folder]"
-   .\run.bat
-   ```
-   
    注意：
    - DATA_PATH 应指向包含 raw.mp4 的目录
    - 目录路径不应包含空格或特殊字符
    - 确保有足够的磁盘空间(建议至少20GB)
+
+2. **设置重建场景目录**
+   - 新建一个文件夹，例如：C:\path\to\scene\folder
+   - 将 raw.mp4 放入该文件夹
+
+3. **运行安装和重建脚本**
+   - 在 install.bat 和 run.bat 中设置环境变量 PROJECT_DIR 和 DATA_PATH
+   - 例如：
+   ```cmd
+   set "PROJECT_DIR=C:\path\to\project"
+   set "DATA_PATH=C:\path\to\scene\folder"
+   ```
+   - 在 install.bat 和 run.bat 中修改环境变量 CUDA_HOME,BLENDER_DIR,VS_DIR
+   ```cmd
+   set "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+   set "BLENDER_DIR=C:\Program Files\Blender Foundation\Blender 3.6"
+   set "VS_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools"
+   ```
+   - 运行安装脚本
+   ```cmd
+   .\install.bat
+   ```
+   - 运行重建脚本
+   ```cmd
+   .\run.bat
+   ```
 
 ## 许可证
 
