@@ -1,7 +1,7 @@
-# Core dependencies from environment.yml
-python==3.9
-pip==23.3.1
 setuptools==69.5.1
+gcc==10.4.0
+gxx==10.4.0
+gxx_linux-64==10.4.0
 plyfile==0.8.1
 pytorch==2.1.1
 torchvision==0.16.1
@@ -23,7 +23,6 @@ tqdm==4.66.5
 gdown==5.2.0
 colmap==3.10
 
-# Pip packages
 pysdf==0.1.9
 clean-fid==0.1.35
 face-alignment==1.4.1
@@ -31,16 +30,3 @@ clip==0.2.0
 torchdiffeq==0.2.3
 torchsde==0.2.5
 resize-right==0.0.2
-
-# Local packages
--e ./ext/pytorch3d
--e ./ext/NeuralHaircut/npbgpp
--e ./ext/simple-knn
--e ./ext/diff_gaussian_rasterization_hair
--e ./ext/kaolin 
-
-# Development tools
-pytest
-black
-flake8
-ipython 

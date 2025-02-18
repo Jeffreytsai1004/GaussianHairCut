@@ -1,212 +1,196 @@
-# Gaussian Haircut: Human Hair Reconstruction with Strand-Aligned 3D Gaussians
+# Gaussian Haircut：使用股线对齐 3D 高斯模型进行人体头发重建
 
-[**中文**](README_CN.md) | [**English**](README.md)
+[**中文**](README.md) | [**English**](README_EN.md)
 
-This repository contains the official implementation of Gaussian Haircut, a strand-based human hair reconstruction method from monocular video.
+本仓库包含了 Gaussian Haircut 的官方实现，这是一种基于股线的人体头发重建方法，用于单目视频。
 
-[**Paper**](https://arxiv.org/abs/2409.14778) | [**Project Page**](https://eth-ait.github.io/GaussianHaircut/)
+[**论文**](https://arxiv.org/abs/2409.14778) | [**项目页面**](https://eth-ait.github.io/GaussianHaircut/)
 
-## Overview
+## 概述
 
-The reconstruction process includes the following main stages:
+重建过程包括以下主要阶段：
 
-1. **Preprocessing Stage**
-   - Video frame extraction and organization
-   - COLMAP camera reconstruction
-   - Hair and body segmentation
-   - Image quality assessment and filtering
-   - Orientation map calculation
-   - Facial keypoint detection
-   - FLAME head model fitting
+1. **预处理阶段**
+   - 视频帧提取和整理
+   - COLMAP相机重建
+   - 头发和身体分割
+   - 图像质量评估和筛选
+   - 方向图计算
+   - 人脸关键点检测
+   - FLAME头部模型拟合
 
-2. **Reconstruction Stage**
-   - 3D Gaussian reconstruction
-   - FLAME mesh fitting
-   - Scene cropping and optimization
-   - Hair strand reconstruction
+2. **重建阶段**
+   - 3D高斯体重建
+   - FLAME网格拟合
+   - 场景裁剪和优化
+   - 头发股线重建
 
-3. **Visualization Stage**
-   - Export reconstructed strands
-   - Blender rendering visualization
-   - Generate result video
+3. **可视化阶段**
+   - 导出重建的股线
+   - Blender渲染可视化
+   - 生成结果视频
 
-Expected output:
+预期输出：
 ```
 [your_scene_folder]/
-├── raw.mp4                    # Input video
-├── 3d_gaussian_splatting/     # 3D Gaussian reconstruction results
-├── flame_fitting/             # FLAME head model fitting results
-├── strands_reconstruction/    # Hair strand reconstruction intermediate results
-├── curves_reconstruction/     # Final hair strand results
-└── visualization/            # Rendering results and video
+├── raw.mp4                    # 输入视频
+├── 3d_gaussian_splatting/     # 3D高斯体重建结果
+├── flame_fitting/             # FLAME头部模型拟合结果
+├── strands_reconstruction/    # 头发股线重建中间结果
+├── curves_reconstruction/     # 最终头发股线结果
+└── visualization/            # 渲染结果和视频
 ```
 
-## Directory Structure
+所需资源文件结构：
 ```
-├── cache/                      # Cache directory
-│   ├── gdown/                 # gdown cache
-│   ├── torch/                 # PyTorch cache
-│   └── huggingface/          # Hugging Face cache
-├── ext/                       # External dependencies
-│   ├── NeuralHaircut/        # NeuralHaircut repository
-│   ├── Matte-Anything/       # Matte-Anything repository
-│   ├── openpose/             # OpenPose repository
-│   ├── pytorch3d/            # PyTorch3D repository
-│   ├── simple-knn/           # Simple KNN repository
-│   ├── kaolin/               # Kaolin repository
-│   └── hyperIQA/             # HyperIQA repository
-├── resource/                  # Resource files
-│   ├── NeuralHaircut/        # NeuralHaircut models
-│   ├── Matte-Anything/       # Matte-Anything models
-│   ├── openpose/             # OpenPose models
-│   ├── PIXIE/                # PIXIE models
-│   └── hyperIQA/             # HyperIQA models
-├── src/                      # Source code
-├── micromamba/               # Micromamba installation
-├── micromamba.exe           # Micromamba executable
-├── install.bat              # Installation script
-├── download_resource.bat    # Resource download script
-└── run.bat                  # Execution script
+resource/
+├── NeuralHaircut/
+│   ├── pretrained_models/
+│   │   ├── diffusion_prior/
+│   │   │   └── dif_ckpt.pt          # 扩散先验模型
+│   │   └── strand_prior/
+│   │       └── strand_ckpt.pt       # 股线先验模型
+│   └── PIXIE/
+│       └── pixie_data.tar.gz        # PIXIE 模型数据存档
+├── Matte-Anything/
+│   └── pretrained/
+│       └── ViTMatte_B_DIS.pth       # Matte-Anything 模型
+├── openpose/
+│   └── models/
+│       └── models.tar.gz            # OpenPose 模型
+└── hyperIQA/
+    └── pretrained/
+        └── koniq_pretrained.pkl     # 图像质量评估模型
 ```
 
-## Environment Variables
-Required environment variables:
-```batch
-set "PROJECT_DIR=C:\path\to\project"              # Project root directory
-set "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
-set "BLENDER_DIR=C:\Program Files\Blender Foundation\Blender 3.6"
-set "VS_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools"
-```
+## 环境配置
 
-## Getting Started
+### Linux 平台
 
-### Linux Platform
+1. **安装 CUDA 11.8**
 
-1. **Install CUDA 11.8**
+    按照 https://developer.nvidia.com/cuda-11-8-0-download-archive 上的说明进行操作。
 
-   Follow instructions at https://developer.nvidia.com/cuda-11-8-0-download-archive
+    确保：
+    - PATH 包含 <CUDA_DIR>/bin
+    - LD_LIBRARY_PATH 包含 <CUDA_DIR>/lib64
 
-   Make sure:
-   - PATH includes <CUDA_DIR>/bin
-   - LD_LIBRARY_PATH includes <CUDA_DIR>/lib64
+    该环境仅在此 CUDA 版本下进行了测试。
 
-   The environment was tested only with this CUDA version.
+2. **安装 Blender 3.6** 以创建股线可视化
 
-2. **Install Blender 3.6** for strand visualization
+    按照 https://www.blender.org/download/lts/3-6 上的说明进行操作。
 
-   Follow instructions at https://www.blender.org/download/lts/3-6
+3. **克隆仓库并运行安装脚本**
 
-3. **Clone repository and run installation script**
+    ```bash
+    git clone git@github.com:eth-ait/GaussianHaircut.git
+    cd GaussianHaircut
+    chmod +x ./install.sh
+    ./install.sh
+    ```
 
-   ```bash
-   git clone git@github.com:eth-ait/GaussianHaircut.git
-   cd GaussianHaircut
-   chmod +x ./install.sh
-   ./install.sh
-   ```
+### Windows 平台
 
-### Windows Platform
+1. **安装 CUDA 11.8**
+    - 从 https://developer.nvidia.com/cuda-11-8-0-download-archive 下载并安装
+    - 默认安装路径：C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
+    - 确保CUDA版本与系统兼容
 
-1. **Install CUDA 11.8**
-    - Download and install from https://developer.nvidia.com/cuda-11-8-0-download-archive
-    - Default installation path: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
-    - Ensure CUDA version is compatible with your system
+2. **安装 Blender 3.6**
+    - 从 https://www.blender.org/download/lts/3-6 下载并安装
+    - 默认安装路径：C:\Program Files\Blender Foundation\Blender 3.6
 
-2. **Install Blender 3.6**
-    - Download and install from https://www.blender.org/download/lts/3-6
-    - Default installation path: C:\Program Files\Blender Foundation\Blender 3.6
+3. **安装 Visual Studio 2019 Build Tools**
+    - 从 https://visualstudio.microsoft.com/vs/older-downloads/ 下载并安装
+    - 选择"C++构建工具"工作负载
+    - 默认安装路径：C:\Program Files\Microsoft Visual Studio\2019\Community\
 
-3. **Install Visual Studio 2019 Build Tools**
-    - Download and install from https://visualstudio.microsoft.com/vs/older-downloads/
-    - Select "C++ Build Tools" workload
-    - Default installation path: C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
+4. **安装 COLMAP**
+    - 从 https://github.com/colmap/colmap/releases 下载并安装
+    - 下载CUDA版本的COLMAP (例如：COLMAP-3.8-windows-cuda.zip)
+    - 解压到不含空格的路径 (例如：C:\COLMAP)
+    - 将COLMAP目录添加到系统PATH:
+      1. 打开"系统属性" > "环境变量"
+      2. 在"系统变量"中找到"Path"
+      3. 点击"编辑" > "新建"
+      4. 添加COLMAP目录路径
+      5. 点击"确定"保存
+    - 重启终端使PATH生效
 
-4. **Install COLMAP**
-    - Download from https://github.com/colmap/colmap/releases
-    - Download CUDA version of COLMAP (e.g., COLMAP-3.8-windows-cuda.zip)
-    - Extract to a path without spaces (e.g., C:\COLMAP)
-    - Add COLMAP directory to system PATH:
-      1. Open "System Properties" > "Environment Variables"
-      2. Under "System Variables", find "Path"
-      3. Click "Edit" > "New"
-      4. Add COLMAP directory path
-      5. Click "OK" to save
-    - Restart terminal for PATH changes to take effect
+5. **安装 7-Zip**
+    - 从 https://7-zip.org/ 下载并安装
+    - 将7-Zip安装目录添加到系统PATH:
+      1. 打开"系统属性" > "环境变量"
+      2. 在"系统变量"中找到"Path"
+      3. 点击"编辑" > "新建"
+      4. 添加7-Zip安装目录(默认为C:\Program Files\7-Zip)
+      5. 点击"确定"保存
+    - 重启终端使PATH生效
 
-5. **Install 7-Zip**
-    - Download and install from https://7-zip.org/
-    - Add 7-Zip installation directory to system PATH:
-      1. Open "System Properties" > "Environment Variables"
-      2. Under "System Variables", find "Path"
-      3. Click "Edit" > "New"
-      4. Add 7-Zip installation directory (default: C:\Program Files\7-Zip)
-      5. Click "OK" to save
-    - Restart terminal for PATH changes to take effect
+6. 安装Python以及其他基础包
+    - 从 https://www.python.org/downloads/ 下载并安装最新的Python版本
+    - 安装pip `python -m pip install --upgrade pip`
+    - 安装gdown `python -m pip install gdown`
 
-6. **Download pre-trained models and resources**
+7. **下载预训练模型和资源**
     ```cmd
-    git clone https://github.com/Jeffreytsai1004/GaussianHairCut
+    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
     cd GaussianHairCut
-    # Run in PowerShell:
-    # The script will automatically install gdown and download required resources
+    # 在PowerShell中运行:
+    # 脚本会自动安装gdown并下载所需资源
     .\download_resource.bat
     ```
-    Note:
-    - Download time varies from minutes to tens of minutes depending on network speed
-    - If download fails, you can rerun the script
-    - Ensure stable network connection
+    注意：
+    - 下载过程可能需要几分钟到几十分钟，取决于网络速度
+    - 如果下载失败，可以重新运行脚本
+    - 确保有稳定的网络连接
 
-7. **Clone repository and run installation script**
+8. **运行安装和重建脚本**
     ```cmd
-    git clone https://github.com/Jeffreytsai1004/GaussianHairCut
-    cd GaussianHairCut
-    # First download required resources
-    .\download_resource.bat
-    # Run installation script
+    # 运行安装脚本
     .\install.bat
-    # Run reconstruction script
+    # 运行重建脚本
     .\run.bat
     ```
 
-## Usage
+## 使用说明
 
-1. **Record Monocular Video**
+1. **录制单目视频**
+   - 参考项目页面上的示例视频
+   - 录制要求：
+     * 拍摄对象应缓慢转动头部，确保捕捉到所有角度
+     * 保持头发和面部清晰可见
+     * 避免快速移动导致的运动模糊
+     * 保持光照条件稳定
+     * 建议视频长度：10-20秒
+     * 建议分辨率：1920x1080或更高
 
-   - Reference example videos on the project page
-   - Recording requirements:
-     * Subject should rotate head slowly to capture all angles
-     * Keep hair and face clearly visible
-     * Avoid motion blur from fast movements
-     * Maintain stable lighting conditions
-     * Recommended length: 10-20 seconds
-     * Recommended resolution: 1920x1080 or higher
-
-2. **Setup Scene Directory**
-
+2. **设置重建场景目录**
    ```cmd
-   # In CMD:
+   # 在CMD中运行:
    set PROJECT_DIR=[path\to\]GaussianHaircut
    set DATA_PATH=[path\to\scene\folder]
    run.bat
    
-   # Or in PowerShell:
+   # 或在PowerShell中运行:
    $env:PROJECT_DIR="[path\to\]GaussianHaircut"
    $env:DATA_PATH="[path\to\scene\folder]"
    .\run.bat
    ```
    
-   Note:
-   - DATA_PATH should point to directory containing raw.mp4
-   - Directory paths should not contain spaces or special characters
-   - Ensure sufficient disk space (at least 20GB recommended)
+   注意：
+   - DATA_PATH 应指向包含 raw.mp4 的目录
+   - 目录路径不应包含空格或特殊字符
+   - 确保有足够的磁盘空间(建议至少20GB)
 
-## License
+## 许可证
 
-This code is based on the 3D Gaussian Splatting project. See LICENSE_3DGS for terms and conditions. The rest of the code is distributed under CC BY-NC-SA 4.0.
+此代码基于 3D Gaussian Splatting 项目。有关条款和条件，请参阅 LICENSE_3DGS。其余代码根据 CC BY-NC-SA 4.0 分发。
 
-## Citation
+## 引用
 
-If you find this code helpful for your research, please cite our paper:
+如果此代码对您的项目有帮助，请引用以下论文：
 
 ```bibtex
 @inproceedings{zakharov2024gh,
@@ -217,11 +201,11 @@ If you find this code helpful for your research, please cite our paper:
 } 
 ```
 
-## Related Projects
+## 相关项目
 
 - [3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting)
-- [Neural Haircut](https://github.com/SamsungLabs/NeuralHaircut): FLAME fitting pipeline, strand prior and hairstyle diffusion prior
-- [HAAR](https://github.com/Vanessik/HAAR): Hair upsampling
-- [Matte-Anything](https://github.com/hustvl/Matte-Anything): Hair and body segmentation
-- [PIXIE](https://github.com/yfeng95/PIXIE): FLAME fitting initialization
-- [Face-Alignment](https://github.com/1adrianb/face-alignment), [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose): Keypoint detection for FLAME fitting
+- [Neural Haircut](https://github.com/SamsungLabs/NeuralHaircut): FLAME 拟合管线、股线先验和发型扩散先验
+- [HAAR](https://github.com/Vanessik/HAAR): 头发上采样
+- [Matte-Anything](https://github.com/hustvl/Matte-Anything): 头发和身体分割
+- [PIXIE](https://github.com/yfeng95/PIXIE): FLAME 拟合的初始化
+- [Face-Alignment](https://github.com/1adrianb/face-alignment), [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose): 用于 FLAME 拟合的关键点检测 
