@@ -14,8 +14,9 @@ ext/diff_gaussian_rasterization_hair/third_party
 .vscode
 
 # Executable files
-resource
 scripts
+*.sh
+resource
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -177,21 +178,3 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
-
-# Project specific
-resource/
-micromamba/
-cache/
-ext/
-*.exe
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# Build
-build/
-dist/
-*.egg-info/

@@ -44,11 +44,37 @@ Expected output:
 Resource directory:
 ```
 resource/
-├── NeuralHaircut/        # NeuralHaircut model
-├── Matte-Anything/       # Matte-Anything model
-├── openpose/             # OpenPose model
-├── PIXIE/                # PIXIE model
-└── hyperIQA/             # HyperIQA model
+├── hyperIQA/                                # HyperIQA model
+│   └── pretrained/
+│       └── koniq_pretrained.pkl
+├── Matte-Anything/                          # Matte-Anything models
+│   └── pretrained/
+│       ├── groundingdino_swint_ogc.pth
+│       ├── sam_vit_h_4b8939.pth
+│       └── ViTMatte_B_DIS.pth
+├── NeuralHaircut/                          # NeuralHaircut models
+│   ├── PIXIE/
+│   │   └── pixie_data.tar.gz
+│   └── pretrained_models/
+│       ├── diffusion_prior/
+│       │   ├── dif_ckpt.pth
+│       │   └── wo_bug_blender_uv_00130000.pth
+│       └── strand_prior/
+│           └── strand_ckpt.pth
+├── openpose/                               # OpenPose models
+│   ├── models/
+│   │   ├── cameraParameters/
+│   │   ├── face/
+│   │   ├── hand/
+│   │   ├── pose/
+│   │   ├── getModels.bat
+│   │   ├── getModels.sh
+│   │   └── wget-log
+│   └── models.tar.gz
+├── PIXIE/                                  # PIXIE utilities and models
+│   └── data/
+│       ├── pixie_model.tar
+│       └── utilities.zip
 ```
 
 ## Environment Variables
@@ -131,7 +157,7 @@ Required environment variables:
 
 6. **Download pre-trained models and resources**
     ```cmd
-    git clone https://gitea.cgnico.com/CGNICO/GaussianHaircut
+    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
     cd GaussianHairCut
     # Run in PowerShell:
     # The script will automatically install gdown and download required resources

@@ -43,11 +43,37 @@
 资源目录：
 ```
 resource/
-├── NeuralHaircut/        # NeuralHaircut模型
-├── Matte-Anything/       # Matte-Anything模型
-├── openpose/             # OpenPose模型
-├── PIXIE/                # PIXIE模型
-└── hyperIQA/             # HyperIQA模型
+├── hyperIQA/                                # HyperIQA model
+│   └── pretrained/
+│       └── koniq_pretrained.pkl
+├── Matte-Anything/                          # Matte-Anything models
+│   └── pretrained/
+│       ├── groundingdino_swint_ogc.pth
+│       ├── sam_vit_h_4b8939.pth
+│       └── ViTMatte_B_DIS.pth
+├── NeuralHaircut/                          # NeuralHaircut models
+│   ├── PIXIE/
+│   │   └── pixie_data.tar.gz
+│   └── pretrained_models/
+│       ├── diffusion_prior/
+│       │   ├── dif_ckpt.pth
+│       │   └── wo_bug_blender_uv_00130000.pth
+│       └── strand_prior/
+│           └── strand_ckpt.pth
+├── openpose/                               # OpenPose models
+│   ├── models/
+│   │   ├── cameraParameters/
+│   │   ├── face/
+│   │   ├── hand/
+│   │   ├── pose/
+│   │   ├── getModels.bat
+│   │   ├── getModels.sh
+│   │   └── wget-log
+│   └── models.tar.gz
+├── PIXIE/                                  # PIXIE utilities and models
+│   └── data/
+│       ├── pixie_model.tar
+│       └── utilities.zip
 ```
 ## 环境变量
 
@@ -129,7 +155,7 @@ resource/
 
 6. **下载预训练模型和资源**
     ```cmd
-    git clone https://gitea.cgnico.com/CGNICO/GaussianHaircut
+    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
     cd GaussianHairCut
     # 在PowerShell中运行:
     # 脚本会自动安装gdown并下载所需资源
