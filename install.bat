@@ -10,8 +10,9 @@
 
 @CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python=3.9 -c pytorch -c nvidia -c conda-forge -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate gaussian_splatting_hair
-@CALL python -m pip install pip==23.3.1
+@CALL python -m pip install pip --upgrade
 @CALL python -m pip install gdown==5.2.0
+@CALL python -m pip install gcc==10.4.0
 @CALL python -m pip install -r requirements.txt
 
 @CALL cd %PROJECT_DIR%\ext && git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
