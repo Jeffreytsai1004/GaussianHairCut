@@ -1,4 +1,6 @@
-﻿@CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
+@echo off
+
+@CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
 @CALL SET PROJECT_DIR=%~dp0
 @CALL SET CUDA_HOME="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\"
 @CALL SET BLENDER_DIR="C:\Program Files\Blender Foundation\Blender 3.6\"

@@ -15,8 +15,11 @@ ext/diff_gaussian_rasterization_hair/third_party
 
 # Executable files
 scripts
-*.sh
 resource
+Scripts
+pkgs
+envs
+condabin
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
