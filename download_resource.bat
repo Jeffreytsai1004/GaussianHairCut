@@ -18,7 +18,7 @@ REM 创建基本目录结构
 @CALL mkdir resource\PIXIE\data 2>nul
 
 @CALL python -m pip install --upgrade pip
-@CALL python -m pip install gdown wget py7zr unrar rarfile zipfile
+@CALL python -m pip install gdown wget
 
 echo "Downloading NeuralHaircut..."
 @CALL cd resource\NeuralHaircut

@@ -81,20 +81,21 @@ REM Create matte_anything environment
 @CALL python -m pip install -e .
 @CALL mkdir %PROJECT_DIR%\ext\Matte-Anything\pretrained
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\pretrained
-@CALL copy %PROJECT_DIR%\resource\Matte-Anything\pretrained\sam_vit_h_4b8939.pth %PROJECT_DIR%\ext\Matte-Anything\pretrained\
-@CALL copy %PROJECT_DIR%\resource\Matte-Anything\pretrained\ViTMatte_B_DIS.pth %PROJECT_DIR%\ext\Matte-Anything\pretrained\
-@CALL copy %PROJECT_DIR%\resource\Matte-Anything\pretrained\groundingdino_swint_ogc.pth %PROJECT_DIR%\ext\Matte-Anything\pretrained\
-@CALL cd %PROJECT_DIR%\ext\Matte-Anything
-
+@CALL curl -L -o sam_vit_h_4b8939.pth https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+@CALL curl -L -o groundingdino_swint_ogc.pth https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
 @CALL "%~dp0condabin\micromamba.bat" deactivate
+@CALL "%~dp0condabin\micromamba.bat" activate gaussian_splatting_hair
+@CALL python -m gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
 
 REM Create openpose environment
-@CALL cd %PROJECT_DIR%
+@CALL cd %PROJECT_DIR%\ext\openpose
+@CALL python -m gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
+@CALL tar -xvzf models.tar.gz
+@CALL "%~dp0condabin\micromamba.bat" deactivate
 @CALL git submodule update --init --recursive --remote
-@CALL "%~dp0micromamba.exe" create -n openpose cmake=3.20 -c conda-forge -r "%~dp0\" -y
+@CALL "%~dp0condabin\micromamba.exe" create -n openpose cmake=3.20 -c conda-forge -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate openpose
 @CALL cd %PROJECT_DIR%\ext\openpose
-@CALL copy %PROJECT_DIR%\resource\openpose\models.tar.gz %PROJECT_DIR%\ext\openpose\
 @CALL mkdir build
 @CALL cd build
 @CALL CALL %VS_VCVARS%
@@ -110,7 +111,6 @@ REM Create pixie-env environment
     -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate pixie-env
 @CALL cd %PROJECT_DIR%\ext\PIXIE\
-@CALL copy %PROJECT_DIR%\resource\PIXIE\data\* %PROJECT_DIR%\ext\PIXIE\data
 @CALL pip install pytorch3d==0.7.5
 @CALL pip install pyyaml==5.4.1
 @CALL pip install git+https://github.com/1adrianb/face-alignment.git@54623537fd9618ca7c15688fd85aba706ad92b59
