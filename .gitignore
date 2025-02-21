@@ -9,6 +9,9 @@ ext/pytorch3d
 ext/kaolin
 ext/PIXIE
 ext/diff_gaussian_rasterization_hair/third_party
+ext/hyperIQA
+ext/simple-knn
+ext/glm
 
 # Visual Studio Code files
 .vscode
@@ -16,10 +19,12 @@ ext/diff_gaussian_rasterization_hair/third_party
 # Executable files
 scripts
 resource
+resource1
 Scripts
 pkgs
 envs
 condabin
+cache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

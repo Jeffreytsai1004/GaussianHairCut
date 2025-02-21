@@ -74,6 +74,7 @@ resource/
 ├── PIXIE/                                  # PIXIE utilities and models
 │   └── data/
 │       ├── pixie_model.tar
+│       ├── SMPLX_NEUTRAL_2020.npz
 │       └── utilities.zip
 ```
 
@@ -157,7 +158,7 @@ Required environment variables:
 
 6. **Download pre-trained models and resources**
     ```cmd
-    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
+    git clone https://gitea.cgnico.com/CGNICO/GaussianHaircut
     cd GaussianHairCut
     # Run in PowerShell:
     # The script will automatically install gdown and download required resources

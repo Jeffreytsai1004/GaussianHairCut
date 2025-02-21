@@ -53,7 +53,6 @@ resource/
 │       └── ViTMatte_B_DIS.pth
 ├── NeuralHaircut/                          # NeuralHaircut models
 │   ├── PIXIE/
-│   │   └── pixie_data.tar.gz
 │   └── pretrained_models/
 │       ├── diffusion_prior/
 │       │   ├── dif_ckpt.pth
@@ -73,6 +72,7 @@ resource/
 ├── PIXIE/                                  # PIXIE utilities and models
 │   └── data/
 │       ├── pixie_model.tar
+│       ├── SMPLX_NEUTRAL_2020.npz
 │       └── utilities.zip
 ```
 ## 环境变量
@@ -155,7 +155,7 @@ resource/
 
 6. **下载预训练模型和资源**
     ```cmd
-    git clone http://10.72.61.59:3000/ArtGroup/GaussianHaircut
+    git clone https://gitea.cgnico.com/CGNICO/GaussianHaircut
     cd GaussianHairCut
     # 在PowerShell中运行:
     # 脚本会自动安装gdown并下载所需资源
