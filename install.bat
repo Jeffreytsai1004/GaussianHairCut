@@ -71,10 +71,11 @@ REM Create matte_anything environment
     -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate matte_anything
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\
-@CALL git clone https://github.com/facebookresearch/segment-anything.git
+@CALL git clone https://github.com/facebookresearch/segment-anything.git %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 @CALL python -m pip install -e .
-@CALL git clone https://github.com/conansherry/detectron2.git
+@CALL cd %PROJECT_DIR%\ext\Matte-Anything\
+@CALL git clone https://github.com/conansherry/detectron2.git %PROJECT_DIR%\ext\Matte-Anything\detectron2
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\detectron2
 @CALL python setup.py build develop
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
