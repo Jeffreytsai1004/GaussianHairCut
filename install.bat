@@ -2,31 +2,30 @@
 setlocal enabledelayedexpansion
 
 REM Set environment variables
-set "PYTHONDONTWRITEBYTECODE=1"
-set "GDOWN_CACHE=%PROJECT_DIR%\cache\gdown"
-set "TORCH_HOME=%PROJECT_DIR%\cache\torch"
-set "HF_HOME=%PROJECT_DIR%\cache\huggingface"
+@CALL set "PYTHONDONTWRITEBYTECODE=1"
+@CALL set "GDOWN_CACHE=%~dp0\cache\gdown"
+@CALL set "TORCH_HOME=%~dp0\cache\torch"
+@CALL set "HF_HOME=%~dp0\cache\huggingface"
 
 @CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
-@CALL SET PROJECT_DIR="%~dp0"
+@CALL SET PROJECT_DIR=%~dp0
 @CALL SET CUDA_HOME="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 @CALL SET BLENDER_DIR="C:\Program Files\Blender Foundation\Blender 3.6"
-@CALL SET VS_DIR="D:\Program Files\Microsoft Visual Studio\2022\Community"
+@CALL SET VS_DIR="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools"
 @CALL SET VS_VCVARS="%VS_DIR%\VC\Auxiliary\Build\vcvars64.bat"
 @CALL SET PATH=%CUDA_HOME%\bin;%PROJECT_DIR%\condabin;%PATH%
 
 REM Create gaussian_splatting_hair environment
 @CALL cd %PROJECT_DIR%
 @CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python=3.9 ^
-    pytorch=2.1.1 torchvision=0.16.1 torchaudio=2.1.1 pytorch-cuda=11.8 ^
-    cmake=3.28.0 pyhocon=0.3.60 icecream=2.1.3 einops=0.6.0 accelerate=0.18.0 ^
-    jsonmerge=1.9.0 easydict=1.9 iopath=0.1.10 tensorboardx=2.6 scikit-image=0.20.0 ^
-    fvcore=0.1.5 toml=0.10.2 tqdm=4.66.5 gdown=5.2.0 colmap=3.10 ^
     -c pytorch -c nvidia -c conda-forge -c anaconda -c fvcore -c iopath -c bottler -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate gaussian_splatting_hair
 @CALL cd %PROJECT_DIR%
 @CALL python -m pip install --upgrade pip
-@CALL python -m pip install pysdf==0.1.9 clean-fid==0.1.35 face-alignment==1.4.1 clip==0.2.0 torchdiffeq==0.2.3 torchsde==0.2.5 resize-right==0.0.2
+@CALL python -m pip install torch==2.1.1+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --force-reinstall --no-cache-dir
+@CALL python -m pip install cmake pyhocon icecream einops accelerate jsonmerge easydict iopath tensorboardx scikit-image gdown colmap --force-reinstall --no-cache-dir
+@CALL python -m pip install pysdf clean-fid face-alignment clip torchdiffeq torchsde resize-right
+
 
 REM Clone repositories
 @CALL cd %PROJECT_DIR%
@@ -66,11 +65,12 @@ REM Download Neural Haircut files
 REM Create matte_anything environment
 @CALL cd %PROJECT_DIR%
 @CALL "%~dp0micromamba.exe" create -n matte_anything python=3.9 ^
-    pytorch=2.0.0 pytorch-cuda=11.8 torchvision tensorboard timm=0.5.4 ^
-    opencv=4.5.3 mkl=2024.0 setuptools=58.2.0 easydict scikit-image gradio=3.46.1 ^
     -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate matte_anything
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\
+@CALL python -m pip install --upgrade pip
+@CALL python -m pip install torch==2.1.1+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --force-reinstall --no-cache-dir
+@CALL python -m pip install mkl easydict wget scikit-image gradio fairscale pyside2 future pillow setuptools future --force-reinstall --no-cache-dir
 @CALL git clone https://github.com/facebookresearch/segment-anything.git %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 @CALL cd %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 @CALL python -m pip install -e .
@@ -89,18 +89,20 @@ REM Create matte_anything environment
 @CALL python -m gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
 
 REM Create openpose environment
-@CALL cd %PROJECT_DIR%\ext\openpose
+@CALL cd %PROJECT_DIR%ext\openpose
 @CALL python -m gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
 @CALL tar -xvzf models.tar.gz
-@CALL "%~dp0condabin\micromamba.bat" deactivate
 @CALL git submodule update --init --recursive --remote
-@CALL "%~dp0condabin\micromamba.exe" create -n openpose cmake=3.20 -c conda-forge -r "%~dp0\" -y
+@CALL cd %PROJECT_DIR%
+@CALL "%~dp0micromamba.exe" create -y -n openpose python=3.9 cmake=3.20 opencv=4.5.3 -c conda-forge -r "%~dp0\"
 @CALL "%~dp0condabin\micromamba.bat" activate openpose
-@CALL cd %PROJECT_DIR%\ext\openpose
+@CALL cd %PROJECT_DIR%ext\openpose
+@CALL rmdir /s /q build 2>nul
+@CALL del /f /q CMakeCache.txt 2>nul
+@CALL rmdir /s /q CMakeFiles 2>nul
 @CALL mkdir build
-@CALL cd build
-@CALL CALL %VS_VCVARS%
-@CALL cmake .. -G "Visual Studio 17 2022" -A x64 -T host=x64 -DBUILD_PYTHON=true -DUSE_CUDNN=off
+@CALL cd %PROJECT_DIR%ext\openpose\build
+@CALL cmake %PROJECT_DIR%ext\openpose -G "Visual Studio 16 2019" -A x64 -T host=x64
 @CALL cmake --build . --config Release
 @CALL cd %PROJECT_DIR%
 @CALL "%~dp0condabin\micromamba.bat" deactivate
@@ -108,12 +110,12 @@ REM Create openpose environment
 REM Create pixie-env environment
 @CALL cd %PROJECT_DIR%
 @CALL "%~dp0micromamba.exe" create -n pixie-env python=3.8 ^
-    pytorch=2.0.0 torchvision torchaudio pytorch-cuda=11.8 fvcore kornia matplotlib ^
     -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate pixie-env
 @CALL cd %PROJECT_DIR%\ext\PIXIE\
-@CALL pip install pytorch3d==0.7.5
-@CALL pip install pyyaml==5.4.1
+@CALL python -m pip install --upgrade pip
+@CALL python -m pip install torch==2.1.1+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --force-reinstall --no-cache-dir
+@CALL python -m fvcore kornia matplotlib pytorch3d pyyaml
 @CALL pip install git+https://github.com/1adrianb/face-alignment.git@54623537fd9618ca7c15688fd85aba706ad92b59
 @CALL cd %PROJECT_DIR%
 @CALL "%~dp0condabin\micromamba.bat" deactivate
