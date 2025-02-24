@@ -109,7 +109,7 @@ REM Create openpose environment
 
 REM Create pixie-env environment
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -n pixie-env python=3.8 ^
+@CALL "%~dp0micromamba.exe" create -n pixie-env python=3.9 ^
     -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
 @CALL "%~dp0condabin\micromamba.bat" activate pixie-env
 @CALL cd %PROJECT_DIR%\ext\PIXIE\
