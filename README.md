@@ -41,6 +41,10 @@
 └── visualization/            # 渲染结果和视频
 ```
 资源目录：
+
+从 \\cnshasnas006\NASShare5\Share\AI\APP\GaussianHaircut\resource 拷贝到 resource 目录下.
+或者运行 download_resource.bat 脚本自动下载.
+
 ```
 resource/
 ├── hyperIQA/                                # HyperIQA model

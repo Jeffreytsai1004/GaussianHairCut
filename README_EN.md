@@ -31,6 +31,10 @@ The reconstruction process includes the following main stages:
    - Generate result video
 
 Expected output:
+
+Copy from \\cnshasnas006\NASShare5\Share\AI\APP\GaussianHaircut\resource to the resource directory.
+Or run download_resource.bat script to download automatically.
+
 ```
 [your_scene_folder]/
 ├── raw.mp4                    # Input video
