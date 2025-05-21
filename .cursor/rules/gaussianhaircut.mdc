@@ -1,0 +1,79 @@
+---
+description: 
+globs: 
+---
+# Gaussian Haircut
+
+## 了解项目：
+    - 了解 [GaussianHaircut](mdc:https:/eth-ait.github.io/GaussianHaircut) ;
+    - 先了解该项目: [GaussianHaircut](mdc:https:/github.com/eth-ait/GaussianHaircut) , use context7 ;
+## 把这个项目改成WIndows的项目:
+    - 参考install.sh和run.sh, 新建两个bat文件: install.bat 和 run.bat ;
+    - 安装部署的时候验证必须的软件是否正确安装, 如果没有, 则帮助下载安装 ;
+    - 重写Readme,用中文, 并标注所需要安装的软件如: Blender, CMake, CUDA, Colmap(https://github.com/colmap/colmap/releases), use context7 ;
+## Code Rules:
+    - 用./micromamba.exe 来创建和管理虚拟环境, 虚拟环境路径为%PROJECT_DIR%\envs
+    - 注意环境变量要设置正确
+    - 文件修改完成后则用命令行运行测试, 并修正Bug
+    - 不要随意新建文件导致混乱
+## 默认环境变量：
+    - PROJECT_DIR=%CD%
+    - DATA_PATH=%PROJECT_DIR%\data
+    - ENV_PATH=%PROJECT_DIR%\envs
+    - MAMBA=%PROJECT_DIR%\micromamba.exe
+    - CUDA_DIR=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
+    - BLENDER_DIR=C:\Program Files\Blender Foundation\Blender 3.6
+    - COLMAP_DIR=C:\Colmap\bin
+    - CMAKE_DIR=C:\Program Files\CMake\bin
+    - GIT_DIR=C:\Program Files\Git\bin
+    - VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build
+##  必要参考：
+    - @Gaussianhaircut, use context7 ;
+    - @NeuralHaircut, use context7 ;
+    - @micromamba, use context7 ;
+    - @diff_gaussian_rasterization_hair, use context7 ;
+    - @Matte-Anything, use context7 ;
+    - @colmap, use context7 ;
+    - @openpose, use context7 ;
+    - @pytorch3d, use context7 ;
+    - @simple-knn, use context7 ;
+    - @kaolin, use context7 ;
+    - @hyperIQA, use context7 ;
+
+## install.bat 安装主要步骤:
+    1 环境检查与设置环境变量
+    2 用micromamba设置虚拟环境,并测试
+    3 拉取代码与依赖
+    4 构建必要模块(如pytorch,openpose,pixie,detectron2 等等)
+    5 下载大模型
+    6 测试
+
+## run.bat 运行主要步骤:
+    1 预处理:
+        - 将原始图像排列成 3D 高斯 Splatting 格式
+        - 运行 COLMAP 重建并对图像和相机进行去畸变
+        - 运行 Matte-Anything
+        - 调整图像大小
+        - 使用图像的 IQA 分数进行过滤
+        - 计算方向图
+        - 运行 OpenPose
+        - 运行 Face-Alignment
+        - 运行 PIXIE
+        - 将所有 PIXIE 预测合并到一个文件中
+        - 将 COLMAP 相机转换为 txt 格式
+        - 将 COLMAP 相机转换为 H3DS 格式
+        - 删除原始文件以节省磁盘空间
+    2 重建:
+        - 运行 3D 高斯 Splatting 重建
+        - 运行 FLAME 网格拟合
+        - 裁剪重建场景
+        - 移除与 FLAME 头部网格相交的头发高斯分布
+        - 运行训练视图渲染
+        - 获取 FLAME 网格头皮图
+        - 运行潜在发束重建
+        - 运行发束重建
+    3 可视化:
+        - 将生成的发束导出为 pkl 和 ply 文件
+        - 渲染可视化效果
+        - 渲染线条
+        - 制作视频

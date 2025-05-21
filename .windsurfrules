@@ -1,0 +1,89 @@
+Gaussian Haircut
+- 了解项目:
+    - 了解 [GaussianHaircut](https://eth-ait.github.io/GaussianHaircut/) ;
+    - 先了解该项目: [GaussianHaircut](https://github.com/eth-ait/GaussianHaircut) , use context7 ;
+
+- 把这个项目改成Windows的项目:
+    - 参考install.sh和run.sh, 新建两个bat文件: install.bat 和 run.bat ;
+    - 安装部署的时候验证必须的软件是否正确安装, 如果没有, 则帮助下载安装 ;
+    - 用./micromamba.exe 来创建和管理虚拟环境 ;
+    - 重写Readme,用中文, 并标注所需要安装的软件如: Blender, CMake, CUDA, Colmap(https://github.com/colmap/colmap/releases), use context7 ;
+    - 注意环境变量要设置正确
+
+- 默认环境变量:
+    @SET "PROJECT_DIR=%~dp0"
+    @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
+    @SET "DATA_PATH=%PROJECT_DIR%data"
+    @SET "MAMBA_EXE=%PROJECT_DIR%micromamba.exe"
+    @SET "PKGS_PATH=%PROJECT_DIR%pkgs"
+    @SET "ENV_PATH=%PROJECT_DIR%envs"
+    @SET "EXT_PATH=%PROJECT_DIR%ext"
+    @SET "GDOWN_CACHE=%PROJECT_DIR%cache\gdown"
+    @SET "TORCH_HOME=%PROJECT_DIR%cache\torch"
+    @SET "HF_HOME=%PROJECT_DIR%cache\huggingface"
+    @SET "PYTHONDONTWRITEBYTECODE=1"
+    @SET "COLMAP_PATH=C:\Colmap"
+    @SET "CMAKE_PATH=C:\Program Files\CMake\bin"
+    @SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
+    @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+    @SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build"
+    @SET "PATH=%PATH%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+
+- install.bat 安装主要步骤:
+    1 环境检查与设置环境变量
+    2 用micromamba设置虚拟环境,并测试
+    3 拉取代码与依赖
+    4 构建必要模块(如pytorch,openpose,pixie,detectron2 等等)
+    5 下载大模型
+    6 测试
+
+- run.bat 运行主要步骤:
+    - 预处理:
+        - 将原始图像排列成 3D 高斯 Splatting 格式
+        - 运行 COLMAP 重建并对图像和相机进行去畸变
+        - 运行 Matte-Anything
+        - 调整图像大小
+        - 使用图像的 IQA 分数进行过滤
+        - 计算方向图
+        - 运行 OpenPose
+        - 运行 Face-Alignment
+        - 运行 PIXIE
+        - 将所有 PIXIE 预测合并到一个文件中
+        - 将 COLMAP 相机转换为 txt 格式
+        - 将 COLMAP 相机转换为 H3DS 格式
+        - 删除原始文件以节省磁盘空间
+    - 重建:
+        - 运行 3D 高斯 Splatting 重建
+        - 运行 FLAME 网格拟合
+        - 裁剪重建场景
+        - 移除与 FLAME 头部网格相交的头发高斯分布
+        - 运行训练视图渲染
+        - 获取 FLAME 网格头皮图
+        - 运行潜在发束重建
+        - 运行发束重建
+    - 可视化:
+        - 将生成的发束导出为 pkl 和 ply 文件
+        - 渲染可视化效果
+        - 渲染线条
+        - 制作视频
+
+- 必要参考:
+    - [Gaussianhaircut](https://eth-ait.github.io/GaussianHaircut/), use context7 ;
+    - [NeuralHaircut](https://github.com/egorzakharov/NeuralHaircut), use context7 ;
+    - [micromamba](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html), use context7 ;
+    - [diff_gaussian_rasterization_hair](https://github.com/g-truc/glm), use context7 ;
+    - [Matte-Anything](https://github.com/hustvl/Matte-Anything), use context7 ;
+    - [detectron2](https://github.com/facebookresearch/detectron2), use context7 ;
+    - [colmap](https://colmap.github.io/), use context7 ;
+    - [openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose), use context7 ;
+    - [pytorch3d](https://github.com/facebookresearch/pytorch3d), use context7 ;
+    - [simple-knn](https://github.com/camenduru/simple-knn), use context7 ;
+    - [kaolin](https://github.com/NVIDIA/kaolin), use context7 ;
+    - [hyperIQA](https://github.com/SSL92/hyperIQA), use context7 ;
+
+- Code Rules:
+    - 文件修改完成后则用命令行运行测试, 并修正Bug
+    - 不要随意新建文件导致混乱,只新建两个文件 install.bat 和 run.bat
+    - 使用 micromamba.exe 来创建和管理虚拟环境
+
+
