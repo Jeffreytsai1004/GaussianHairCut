@@ -40,7 +40,7 @@
 @SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 @SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
-@SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build"
+@SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 @SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
 
 @ECHO.
