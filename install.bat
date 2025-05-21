@@ -11,6 +11,11 @@
     @EXIT /B 1
 )
 
+@REM Initialize micromamba shell
+@CALL "%MAMBA_EXE%" shell init --shell=cmd.exe --prefix="%~dp0" --no-rc
+@CALL "%MAMBA_EXE%" shell hook --shell=cmd.exe --prefix="%~dp0" > "%TEMP%\mamba_hook.bat"
+@CALL "%TEMP%\mamba_hook.bat"
+
 @REM Set local paths
 @SET "PROJECT_DIR_ORIGIN=%~dp0"
 @SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
@@ -120,11 +125,11 @@
 @CALL "%MAMBA_EXE%" env list | findstr /C:"gaussian_splatting_hair" >nul
 @IF %ERRORLEVEL% EQU 0 (
     @ECHO Environment gaussian_splatting_hair already exists, activating...
-    @CALL "%MAMBA_EXE%" activate gaussian_splatting_hair
-    @IF %ERRORLEVEL% NEQ 0 (
-        @ECHO [WARNING] Failed to activate existing environment, will create a new one.
-        @CALL "%MAMBA_EXE%" create -n gaussian_splatting_hair python==3.8 git git-lfs gdown tar -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
-    )
+    @CALL "%MAMBA_EXE%" env create -n gaussian_splatting_hair -f environment.yml
+        @IF %ERRORLEVEL% EQU 0 (
+            @ECHO Activating gaussian_splatting_hair environment...
+            @CALL "%MAMBA_EXE%" activate gaussian_splatting_hair
+        )
 ) ELSE (
     @ECHO Creating main virtual environment gaussian_splatting_hair...
     @CALL cd %PROJECT_DIR%
@@ -205,11 +210,10 @@
 @CALL "%MAMBA_EXE%" env list | findstr /C:"matte_anything" >nul
 @IF %ERRORLEVEL% EQU 0 (
     @ECHO Environment matte_anything already exists, activating...
-    @CALL "%MAMBA_EXE%" deactivate
-    @CALL "%MAMBA_EXE%" activate matte_anything
-    @IF %ERRORLEVEL% NEQ 0 (
-        @ECHO [WARNING] Failed to activate existing environment, will create a new one.
-        @CALL "%MAMBA_EXE%" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -y
+    @CALL "%MAMBA_EXE%" env create -n matte_anything -f environment_matte.yml
+    @IF %ERRORLEVEL% EQU 0 (
+        @ECHO Activating matte_anything environment...
+        @CALL "%MAMBA_EXE%" activate matte_anything
     )
 ) ELSE (
     @ECHO Creating Matte-Anything virtual environment...
@@ -251,11 +255,10 @@
 @CALL "%MAMBA_EXE%" env list | findstr /C:"openpose" >nul
 @IF %ERRORLEVEL% EQU 0 (
     @ECHO Environment openpose already exists, activating...
-    @CALL "%MAMBA_EXE%" deactivate
-    @CALL "%MAMBA_EXE%" activate openpose
-    @IF %ERRORLEVEL% NEQ 0 (
-        @ECHO [WARNING] Failed to activate existing environment, will create a new one.
-        @CALL "%MAMBA_EXE%" create -y -n openpose cmake=3.20 -c conda-forge -y
+    @CALL "%MAMBA_EXE%" create -y -n openpose cmake=3.20 -c conda-forge -y
+    @IF %ERRORLEVEL% EQU 0 (
+        @ECHO Activating openpose environment...
+        @CALL "%MAMBA_EXE%" activate openpose
     )
 ) ELSE (
     @ECHO Creating openpose environment...
@@ -278,18 +281,17 @@
 @CALL "%MAMBA_EXE%" env list | findstr /C:"pixie-env" >nul
 @IF %ERRORLEVEL% EQU 0 (
     @ECHO Environment pixie-env already exists, activating...
-    @CALL "%MAMBA_EXE%" deactivate
-    @CALL "%MAMBA_EXE%" activate pixie-env
-    @IF %ERRORLEVEL% NEQ 0 (
-        @ECHO [WARNING] Failed to activate existing environment, will create a new one.
-        @CALL micromamba create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
+    @CALL "%MAMBA_EXE%" create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
+    @IF %ERRORLEVEL% EQU 0 (
+        @ECHO Activating pixie-env environment...
+        @CALL "%MAMBA_EXE%" activate pixie-env
     )
 ) ELSE (
     @ECHO Creating pixie-env environment...
-    @CALL micromamba create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
+    @CALL "%MAMBA_EXE%" create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
 )
-@CALL micromamba deactivate
-@CALL micromamba activate pixie-env
+@CALL "%MAMBA_EXE%" deactivate
+@CALL "%MAMBA_EXE%" activate pixie-env
 @CALL cd %PROJECT_DIR%\ext\PIXIE
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
