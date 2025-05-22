@@ -122,6 +122,7 @@
 @ECHO 5/8 Cloning simple-knn...
 @CALL git clone https://github.com/camenduru/simple-knn %PROJECT_DIR%\ext\simple-knn
 @ECHO 6/8 Cloning GLM...
+@IF NOT EXIST "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party" MKDIR "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party"
 @CALL git clone https://github.com/g-truc/glm %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
 @CALL cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm && git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
 @CALL cd %PROJECT_DIR%\ext
@@ -138,6 +139,7 @@
 @CALL micromamba run -n gaussian_splatting_hair pip install -e .
 @CALL cd %PROJECT_DIR%\ext\simple-knn
 @CALL micromamba run -n gaussian_splatting_hair pip install -e .
+@IF NOT EXIST "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair" MKDIR "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair"
 @CALL cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair
 @CALL micromamba run -n gaussian_splatting_hair pip install -e .
 @CALL cd %PROJECT_DIR%\ext\kaolin
