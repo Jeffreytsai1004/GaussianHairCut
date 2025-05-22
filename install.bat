@@ -1,29 +1,9 @@
 @ECHO OFF
 @SETLOCAL EnableDelayedExpansion
 
-@REM Kill any existing micromamba processes
-@CALL taskkill /F /IM micromamba.exe 2>NUL
-
-@REM Initialize micromamba for this script
-@SET "MAMBA_EXE=%~dp0micromamba.exe"
-@IF NOT EXIST "%MAMBA_EXE%" (
-    @ECHO Error: micromamba.exe not found in the current directory
-    @EXIT /B 1
-)
-
-@REM Initialize micromamba shell
-@CALL "%MAMBA_EXE%" shell init --shell=cmd.exe --prefix="%~dp0" --no-rc
-@CALL "%MAMBA_EXE%" shell hook --shell=cmd.exe --prefix="%~dp0" > "%TEMP%\mamba_hook.bat"
-@CALL "%TEMP%\mamba_hook.bat"
-
-@REM Set local paths
 @SET "PROJECT_DIR_ORIGIN=%~dp0"
+@SET "MAMBA_EXE=%~dp0micromamba.exe"
 @SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
-
-@REM Clean the lock file if exit
-@IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
-@IF EXIST "D:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "D:\AI\Anaconda\pkgs\cache\*.lock"
-
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
 @SET "MAMBA_PKGS_DIRS=%PROJECT_DIR%\pkgs"
 @SET "MAMBA_ENVS_DIRS=%PROJECT_DIR%\envs"
@@ -42,6 +22,7 @@
 @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 @SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+@IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
 
 @ECHO.
 @ECHO ===================================
@@ -49,50 +30,11 @@
 @ECHO ===================================
 @ECHO.
 
-@REM Check required software
-@ECHO Checking required software...
-@WHERE nvcc >nul 2>&1
-@IF %ERRORLEVEL% NEQ 0 (
-    @ECHO [WARNING] CUDA not found, please make sure CUDA 11.8 is installed
-    @ECHO          Download: https://developer.nvidia.com/cuda-11-8-0-download-archive
-) ELSE (
-    @ECHO [SUCCESS] CUDA found
-)
-
-@WHERE cmake >nul 2>&1
-@IF %ERRORLEVEL% NEQ 0 (
-    @ECHO [WARNING] CMake not found, please make sure CMake is installed
-    @ECHO          Download: https://cmake.org/download/
-) ELSE (
-    @ECHO [SUCCESS] CMake found
-)
-
-@WHERE colmap >nul 2>&1
-@IF %ERRORLEVEL% NEQ 0 (
-    @ECHO [WARNING] COLMAP not found, please make sure COLMAP is installed
-    @ECHO          Download: https://github.com/colmap/colmap/releases
-) ELSE (
-    @ECHO [SUCCESS] COLMAP found
-)
-
-@WHERE blender >nul 2>&1
-@IF %ERRORLEVEL% NEQ 0 (
-    @ECHO [WARNING] Blender not found, please make sure Blender 3.6 is installed
-    @ECHO          Download: https://www.blender.org/download/
-) ELSE (
-    @ECHO [SUCCESS] Blender found
-)
-
-@WHERE ffmpeg >nul 2>&1
-@IF %ERRORLEVEL% NEQ 0 (
-    @ECHO [WARNING] FFmpeg not found, please make sure FFmpeg is installed
-    @ECHO          Download: https://github.com/BtbN/FFmpeg-Builds/releases
-) ELSE (
-    @ECHO [SUCCESS] FFmpeg found
-)
-
 @REM 再次确保没有 micromamba 进程在运行
 @CALL taskkill /F /IM micromamba.exe 2>NUL
+@IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
+@IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
+@IF EXIST "H:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "H:\AI\Anaconda\pkgs\cache\*.lock"
 
 @ECHO.
 @ECHO Cleaning old environment...
@@ -111,7 +53,6 @@
 @IF EXIST "%PROJECT_DIR%\ext\PIXIE" RMDIR /S /Q "%PROJECT_DIR%\ext\PIXIE"
 @IF EXIST "%PROJECT_DIR%\ext\pytorch3d" RMDIR /S /Q "%PROJECT_DIR%\ext\pytorch3d"
 @IF EXIST "%PROJECT_DIR%\ext\simple-knn" RMDIR /S /Q "%PROJECT_DIR%\ext\simple-knn"
-
 @IF NOT EXIST "%PROJECT_DIR%\pkgs" MKDIR "%PROJECT_DIR%\pkgs"
 @IF NOT EXIST "%PROJECT_DIR%\envs" MKDIR "%PROJECT_DIR%\envs"
 @IF NOT EXIST "%PROJECT_DIR%\condabin" MKDIR "%PROJECT_DIR%\condabin"
@@ -121,27 +62,12 @@
 @IF NOT EXIST "%PROJECT_DIR%\cache\huggingface" MKDIR "%PROJECT_DIR%\cache\huggingface"
 
 @ECHO.
-@ECHO Checking if gaussian_splatting_hair environment exists...
-@CALL "%MAMBA_EXE%" env list | findstr /C:"gaussian_splatting_hair" >nul
-@IF %ERRORLEVEL% EQU 0 (
-    @ECHO Environment gaussian_splatting_hair already exists, activating...
-    @CALL "%MAMBA_EXE%" env create -n gaussian_splatting_hair -f environment.yml
-        @IF %ERRORLEVEL% EQU 0 (
-            @ECHO Activating gaussian_splatting_hair environment...
-            @CALL "%MAMBA_EXE%" activate gaussian_splatting_hair
-        )
-) ELSE (
-    @ECHO Creating main virtual environment gaussian_splatting_hair...
-    @CALL cd %PROJECT_DIR%
-    @CALL "%MAMBA_EXE%" create -n gaussian_splatting_hair python==3.8 git git-lfs gdown tar -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
-)
-@CALL "%MAMBA_EXE%" shell init --shell=cmd.exe --prefix="%PROJECT_DIR%"
-@CALL "%MAMBA_EXE%" activate gaussian_splatting_hair
-@CALL python -m pip install --upgrade pip
-
-@ECHO.
-@ECHO Installing PyTorch packages...
+@ECHO Creating gaussian_splatting_hair environment...
 @CALL cd %PROJECT_DIR%
+@CALL micromamba create -n gaussian_splatting_hair python==3.8 git git-lfs gdown tar -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
+@CALL micromamba shell init --shell cmd.exe --prefix "%~dp0\"
+@CALL micromamba activate gaussian_splatting_hair
+@CALL python -m pip install --upgrade pip
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
 @CALL pip install -r requirements.txt
@@ -203,25 +129,12 @@
 @CALL mkdir pretrained
 @CALL cd %PROJECT_DIR%\ext\hyperIQA\pretrained
 @CALL gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
-@CALL cd %PROJECT_DIR%
 
 @ECHO.
-@ECHO Checking if matte_anything environment exists...
-@CALL "%MAMBA_EXE%" env list | findstr /C:"matte_anything" >nul
-@IF %ERRORLEVEL% EQU 0 (
-    @ECHO Environment matte_anything already exists, activating...
-    @CALL "%MAMBA_EXE%" env create -n matte_anything -f environment_matte.yml
-    @IF %ERRORLEVEL% EQU 0 (
-        @ECHO Activating matte_anything environment...
-        @CALL "%MAMBA_EXE%" activate matte_anything
-    )
-) ELSE (
-    @ECHO Creating Matte-Anything virtual environment...
-    @CALL cd %PROJECT_DIR%
-    @CALL "%MAMBA_EXE%" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -y
-)
-@CALL "%MAMBA_EXE%" deactivate
-@CALL "%MAMBA_EXE%" activate matte_anything
+@ECHO Creating matte_anything environment...
+@CALL cd %PROJECT_DIR%
+@CALL micromamba create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 gdown tar -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
+@CALL micromamba activate matte_anything
 @CALL python -m pip install --upgrade pip
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
@@ -245,53 +158,30 @@
 
 @ECHO.
 @ECHO Installing OpenPose...
+@ECHO Creating openpose environment...
+@CALL cd %PROJECT_DIR%
+@CALL micromamba create -y -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 gdown tar -c conda-forge -r "%~dp0\" -y
+@CALL micromamba deactivate
+@CALL micromamba activate openpose
 @CALL cd %PROJECT_DIR%\ext\openpose
 @CALL gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
 @CALL tar -xvzf models.tar.gz
 @CALL del models.tar.gz
 @CALL git submodule update --init --recursive --remote
-@CALL cd %PROJECT_DIR%
-@ECHO Checking if openpose environment exists...
-@CALL "%MAMBA_EXE%" env list | findstr /C:"openpose" >nul
-@IF %ERRORLEVEL% EQU 0 (
-    @ECHO Environment openpose already exists, activating...
-    @CALL "%MAMBA_EXE%" create -y -n openpose cmake=3.20 -c conda-forge -y
-    @IF %ERRORLEVEL% EQU 0 (
-        @ECHO Activating openpose environment...
-        @CALL "%MAMBA_EXE%" activate openpose
-    )
-) ELSE (
-    @ECHO Creating openpose environment...
-    @CALL "%MAMBA_EXE%" create -y -n openpose cmake=3.20 -c conda-forge -y
-)
-@CALL "%MAMBA_EXE%" deactivate
-@CALL "%MAMBA_EXE%" activate openpose
-@CALL cd %PROJECT_DIR%\ext\openpose
 @CALL cmake -S %PROJECT_DIR%\ext\openpose -B %PROJECT_DIR%\ext\openpose\build -DBUILD_PYTHON=true -DUSE_CUDNN=off
 @CALL cmake --build %PROJECT_DIR%\ext\openpose\build --parallel 8
 
 @ECHO.
 @ECHO Creating PIXIE virtual environment...
+@CALL cd %PROJECT_DIR%
+@ECHO Creating pixie-env environment...
+@CALL micromamba create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 gdown tar -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
+@CALL micromamba deactivate
+@CALL micromamba activate pixie-env
 @CALL cd %PROJECT_DIR%\ext
 @CALL git clone https://github.com/Jeffreytsai1004/PIXIE
 @CALL cd %PROJECT_DIR%\ext\PIXIE
 @CALL fetch_model.bat
-@CALL cd %PROJECT_DIR%
-@ECHO Checking if pixie-env environment exists...
-@CALL "%MAMBA_EXE%" env list | findstr /C:"pixie-env" >nul
-@IF %ERRORLEVEL% EQU 0 (
-    @ECHO Environment pixie-env already exists, activating...
-    @CALL "%MAMBA_EXE%" create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
-    @IF %ERRORLEVEL% EQU 0 (
-        @ECHO Activating pixie-env environment...
-        @CALL "%MAMBA_EXE%" activate pixie-env
-    )
-) ELSE (
-    @ECHO Creating pixie-env environment...
-    @CALL "%MAMBA_EXE%" create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
-)
-@CALL "%MAMBA_EXE%" deactivate
-@CALL "%MAMBA_EXE%" activate pixie-env
 @CALL cd %PROJECT_DIR%\ext\PIXIE
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
