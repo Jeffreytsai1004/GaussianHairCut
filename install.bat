@@ -1,15 +1,24 @@
 @ECHO OFF
 @SETLOCAL EnableDelayedExpansion
 
+@REM 设置基本路径
 @SET "PROJECT_DIR=%~dp0"
 @SET "PROJECT_DIR=%PROJECT_DIR:~0,-1%"
+@SET "MAMBA_EXE=%~dp0micromamba.exe"
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
 
-@CALL "%~dp0micromamba.exe" shell init --shell=cmd.exe --prefix="%PROJECT_DIR%"
-@SET "PATH=%PROJECT_DIR%\Scripts;%PATH%"
-@SET "CONDA_PREFIX=%PROJECT_DIR%"
+@REM 确保目录存在
+@IF NOT EXIST "%MAMBA_ROOT_PREFIX%" MKDIR "%MAMBA_ROOT_PREFIX%"
+@IF NOT EXIST "%MAMBA_ROOT_PREFIX%\Scripts" MKDIR "%MAMBA_ROOT_PREFIX%\Scripts"
+@IF NOT EXIST "%MAMBA_ROOT_PREFIX%\condabin" MKDIR "%MAMBA_ROOT_PREFIX%\condabin"
 
-@SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
+@REM 初始化 micromamba（使用项目目录而不是默认的 ~/micromamba）
+@CALL "%MAMBA_EXE%" shell init --shell=cmd.exe --prefix="%MAMBA_ROOT_PREFIX%" --yes
+
+@REM 设置环境变量
+@SET "PATH=%MAMBA_ROOT_PREFIX%\Scripts;%MAMBA_ROOT_PREFIX%\condabin;%PATH%"
+
+@REM 设置其他环境变量
 @SET "MAMBA_PKGS_DIRS=%PROJECT_DIR%\pkgs"
 @SET "MAMBA_ENVS_DIRS=%PROJECT_DIR%\envs"
 @SET "DATA_PATH=%PROJECT_DIR%\data"
@@ -20,6 +29,8 @@
 @SET "TORCH_HOME=%PROJECT_DIR%\cache\torch"
 @SET "HF_HOME=%PROJECT_DIR%\cache\huggingface"
 @SET "PYTHONDONTWRITEBYTECODE=1"
+
+@REM 设置系统路径
 @SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
 @SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 @SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
@@ -28,7 +39,8 @@
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 @SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
 
-@CALL taskkill /F /IM "%~dp0micromamba.exe".exe 2>NUL
+@REM 清理旧进程和锁文件
+@CALL taskkill /F /IM micromamba.exe 2>NUL
 @IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
 @IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
 @IF EXIST "H:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "H:\AI\Anaconda\pkgs\cache\*.lock"
@@ -68,11 +80,10 @@
 @ECHO.
 @ECHO Creating gaussian_splatting_hair environment...
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
-@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
+@CALL "%MAMBA_EXE%" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
+@CALL "%MAMBA_EXE%" activate gaussian_splatting_hair
 @CALL python -m pip install --upgrade pip
 @CALL pip install gdown
-@CALL pip install wheel
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
 @CALL pip install -r requirements.txt --no-cache-dir
@@ -138,11 +149,10 @@
 @ECHO.
 @ECHO Creating matte_anything environment...
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
-@CALL "%~dp0micromamba.exe" activate matte_anything
+@CALL "%MAMBA_EXE%" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
+@CALL "%MAMBA_EXE%" activate matte_anything
 @CALL python -m pip install --upgrade pip
 @CALL pip install gdown
-@CALL pip install wheel
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
 @CALL pip install tensorboard timm opencv-python mkl setuptools easydict wget scikit-image gradio fairscale
@@ -167,9 +177,9 @@
 @ECHO Installing OpenPose...
 @ECHO Creating openpose environment...
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -y -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -r "%~dp0\" -y
-@CALL "%~dp0micromamba.exe" deactivate
-@CALL "%~dp0micromamba.exe" activate openpose
+@CALL "%MAMBA_EXE%" create -y -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -r "%~dp0\" -y
+@CALL "%MAMBA_EXE%" deactivate
+@CALL "%MAMBA_EXE%" activate openpose
 @CALL pip install gdown tar
 @CALL cd %PROJECT_DIR%\ext\openpose
 @CALL gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
@@ -183,11 +193,10 @@
 @ECHO Creating PIXIE virtual environment...
 @CALL cd %PROJECT_DIR%
 @ECHO Creating pixie-env environment...
-@CALL "%~dp0micromamba.exe" create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
-@CALL "%~dp0micromamba.exe" deactivate
-@CALL "%~dp0micromamba.exe" activate pixie-env
+@CALL "%MAMBA_EXE%" create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
+@CALL "%MAMBA_EXE%" deactivate
+@CALL "%MAMBA_EXE%" activate pixie-env
 @CALL pip install gdown
-@CALL pip install wheel
 @CALL cd %PROJECT_DIR%\ext
 @CALL git clone https://github.com/Jeffreytsai1004/PIXIE
 @CALL cd %PROJECT_DIR%\ext\PIXIE
