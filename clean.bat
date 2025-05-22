@@ -5,20 +5,27 @@
 @SET "PROJECT_DIR=%~dp0"
 @SET "PROJECT_DIR=%PROJECT_DIR:~0,-1%"
 
-@IF EXIST "%PROJECT_DIR%\cache" RMDIR /S /Q "%PROJECT_DIR%\cache"
-@IF EXIST "%PROJECT_DIR%\condabin" RMDIR /S /Q "%PROJECT_DIR%\condabin"
-@IF EXIST "%PROJECT_DIR%\pkgs" RMDIR /S /Q "%PROJECT_DIR%\pkgs"
-@IF EXIST "%PROJECT_DIR%\envs" RMDIR /S /Q "%PROJECT_DIR%\envs"
-@IF EXIST "%PROJECT_DIR%\Scripts" RMDIR /S /Q "%PROJECT_DIR%\Scripts"
-@IF EXIST "%PROJECT_DIR%\ext\hyperIQA" RMDIR /S /Q "%PROJECT_DIR%\ext\hyperIQA"
-@IF EXIST "%PROJECT_DIR%\ext\kaolin" RMDIR /S /Q "%PROJECT_DIR%\ext\kaolin"
-@IF EXIST "%PROJECT_DIR%\ext\Matte-Anything" RMDIR /S /Q "%PROJECT_DIR%\ext\Matte-Anything"
-@IF EXIST "%PROJECT_DIR%\ext\NeuralHaircut" RMDIR /S /Q "%PROJECT_DIR%\ext\NeuralHaircut"
-@IF EXIST "%PROJECT_DIR%\ext\face-alignment" RMDIR /S /Q "%PROJECT_DIR%\ext\face-alignment"
-@IF EXIST "%PROJECT_DIR%\ext\openpose" RMDIR /S /Q "%PROJECT_DIR%\ext\openpose"
-@IF EXIST "%PROJECT_DIR%\ext\PIXIE" RMDIR /S /Q "%PROJECT_DIR%\ext\PIXIE"
-@IF EXIST "%PROJECT_DIR%\ext\pytorch3d" RMDIR /S /Q "%PROJECT_DIR%\ext\pytorch3d"
-@IF EXIST "%PROJECT_DIR%\ext\simple-knn" RMDIR /S /Q "%PROJECT_DIR%\ext\simple-knn"
+FOR %%D IN (
+    "%PROJECT_DIR%\cache"
+    "%PROJECT_DIR%\condabin"
+    "%PROJECT_DIR%\pkgs"
+    "%PROJECT_DIR%\envs"
+    "%PROJECT_DIR%\Scripts"
+    "%PROJECT_DIR%\ext\hyperIQA"
+    "%PROJECT_DIR%\ext\kaolin"
+    "%PROJECT_DIR%\ext\Matte-Anything"
+    "%PROJECT_DIR%\ext\NeuralHaircut"
+    "%PROJECT_DIR%\ext\face-alignment"
+    "%PROJECT_DIR%\ext\openpose"
+    "%PROJECT_DIR%\ext\PIXIE"
+    "%PROJECT_DIR%\ext\pytorch3d"
+    "%PROJECT_DIR%\ext\simple-knn"
+) DO (
+    IF EXIST "%%~D" (
+        ECHO Removing directory %%~D...
+        RMDIR /S /Q "%%~D"
+    )
+)
 
 @ECHO.
 @ECHO Clean complete.
