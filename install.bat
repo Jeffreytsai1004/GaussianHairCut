@@ -2,7 +2,12 @@
 @SETLOCAL EnableDelayedExpansion
 
 @SET "PROJECT_DIR_ORIGIN=%~dp0"
-@SET "MAMBA_EXE=%~dp0micromamba.exe"
+@SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
+@SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
+
+@CALL "%~dp0micromamba.exe" shell init --shell=cmd.exe --prefix="%PROJECT_DIR_ORIGIN%"
+
+@SET "PROJECT_DIR_ORIGIN=%~dp0"
 @SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
 @SET "MAMBA_PKGS_DIRS=%PROJECT_DIR%\pkgs"
@@ -23,7 +28,6 @@
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 @setx "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
 @setx PATH "%PATH%;%USERPROFILE%\micromamba\Scripts" /M
-
 @CALL taskkill /F /IM "%~dp0micromamba.exe".exe 2>NUL
 @IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
 @IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
@@ -59,15 +63,16 @@
 @IF NOT EXIST "%PROJECT_DIR%\cache\gdown" MKDIR "%PROJECT_DIR%\cache\gdown"
 @IF NOT EXIST "%PROJECT_DIR%\cache\torch" MKDIR "%PROJECT_DIR%\cache\torch"
 @IF NOT EXIST "%PROJECT_DIR%\cache\huggingface" MKDIR "%PROJECT_DIR%\cache\huggingface"
+@ECHO Old path cleaned
 
 @ECHO.
 @ECHO Creating gaussian_splatting_hair environment...
 @CALL cd %PROJECT_DIR%
 @CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
-@CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
 @CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CALL python -m pip install --upgrade pip
-@CALL pip install gdown tar
+@CALL pip install gdown
+@CALL pip install wheel
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
 @CALL pip install -r requirements.txt --no-cache-dir
@@ -136,7 +141,8 @@
 @CALL "%~dp0micromamba.exe" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
 @CALL "%~dp0micromamba.exe" activate matte_anything
 @CALL python -m pip install --upgrade pip
-@CALL pip install gdown tar
+@CALL pip install gdown
+@CALL pip install wheel
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
 @CALL pip install tensorboard timm opencv-python mkl setuptools easydict wget scikit-image gradio fairscale
@@ -180,7 +186,8 @@
 @CALL "%~dp0micromamba.exe" create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
 @CALL "%~dp0micromamba.exe" deactivate
 @CALL "%~dp0micromamba.exe" activate pixie-env
-@CALL pip install gdown tar
+@CALL pip install gdown
+@CALL pip install wheel
 @CALL cd %PROJECT_DIR%\ext
 @CALL git clone https://github.com/Jeffreytsai1004/PIXIE
 @CALL cd %PROJECT_DIR%\ext\PIXIE
