@@ -21,7 +21,8 @@
 @SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
-@SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+@setx "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+@setx PATH "%PATH%;%USERPROFILE%\micromamba\Scripts" /M
 
 @CALL taskkill /F /IM "%~dp0micromamba.exe".exe 2>NUL
 @IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
@@ -62,13 +63,14 @@
 @ECHO.
 @ECHO Creating gaussian_splatting_hair environment...
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git git-lfs gdown tar -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
+@CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
 @CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
 @CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CALL python -m pip install --upgrade pip
+@CALL pip install gdown tar
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
-@CALL pip install -r requirements.txt
+@CALL pip install -r requirements.txt --no-cache-dir
 
 @ECHO.
 @ECHO Pulling external libraries...
@@ -131,9 +133,10 @@
 @ECHO.
 @ECHO Creating matte_anything environment...
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 gdown tar -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
+@CALL "%~dp0micromamba.exe" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
 @CALL "%~dp0micromamba.exe" activate matte_anything
 @CALL python -m pip install --upgrade pip
+@CALL pip install gdown tar
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 @CALL pip install torchdiffeq torchsde --no-deps
 @CALL pip install tensorboard timm opencv-python mkl setuptools easydict wget scikit-image gradio fairscale
@@ -158,9 +161,10 @@
 @ECHO Installing OpenPose...
 @ECHO Creating openpose environment...
 @CALL cd %PROJECT_DIR%
-@CALL "%~dp0micromamba.exe" create -y -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 gdown tar -c conda-forge -r "%~dp0\" -y
+@CALL "%~dp0micromamba.exe" create -y -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -r "%~dp0\" -y
 @CALL "%~dp0micromamba.exe" deactivate
 @CALL "%~dp0micromamba.exe" activate openpose
+@CALL pip install gdown tar
 @CALL cd %PROJECT_DIR%\ext\openpose
 @CALL gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
 @CALL tar -xvzf models.tar.gz
@@ -173,9 +177,10 @@
 @ECHO Creating PIXIE virtual environment...
 @CALL cd %PROJECT_DIR%
 @ECHO Creating pixie-env environment...
-@CALL "%~dp0micromamba.exe" create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 gdown tar -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
+@CALL "%~dp0micromamba.exe" create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
 @CALL "%~dp0micromamba.exe" deactivate
 @CALL "%~dp0micromamba.exe" activate pixie-env
+@CALL pip install gdown tar
 @CALL cd %PROJECT_DIR%\ext
 @CALL git clone https://github.com/Jeffreytsai1004/PIXIE
 @CALL cd %PROJECT_DIR%\ext\PIXIE
