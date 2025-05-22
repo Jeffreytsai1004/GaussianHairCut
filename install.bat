@@ -81,7 +81,7 @@
 @ECHO Creating gaussian_splatting_hair environment...
 @CALL cd %PROJECT_DIR%
 @CALL "%MAMBA_EXE%" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -r "%~dp0\" -y
-@CALL "%MAMBA_EXE%" activate gaussian_splatting_hair
+@CALL condabin\micromamba.bat gaussian_splatting_hair
 @CALL python -m pip install --upgrade pip
 @CALL pip install gdown
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
@@ -150,7 +150,7 @@
 @ECHO Creating matte_anything environment...
 @CALL cd %PROJECT_DIR%
 @CALL "%MAMBA_EXE%" create -y -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -r "%~dp0\" -y
-@CALL "%MAMBA_EXE%" activate matte_anything
+@CALL condabin\micromamba.bat matte_anything
 @CALL python -m pip install --upgrade pip
 @CALL pip install gdown
 @CALL pip install --force-reinstall torch==2.6.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
@@ -179,7 +179,7 @@
 @CALL cd %PROJECT_DIR%
 @CALL "%MAMBA_EXE%" create -y -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -r "%~dp0\" -y
 @CALL "%MAMBA_EXE%" deactivate
-@CALL "%MAMBA_EXE%" activate openpose
+@CALL condabin\micromamba.bat openpose
 @CALL pip install gdown tar
 @CALL cd %PROJECT_DIR%\ext\openpose
 @CALL gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
@@ -195,7 +195,7 @@
 @ECHO Creating pixie-env environment...
 @CALL "%MAMBA_EXE%" create -n pixie-env python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -r "%~dp0\" -y
 @CALL "%MAMBA_EXE%" deactivate
-@CALL "%MAMBA_EXE%" activate pixie-env
+@CALL condabin\micromamba.bat pixie-env
 @CALL pip install gdown
 @CALL cd %PROJECT_DIR%\ext
 @CALL git clone https://github.com/Jeffreytsai1004/PIXIE
