@@ -1,17 +1,19 @@
 @ECHO OFF
 @SETLOCAL EnableDelayedExpansion
 
-@REM Set environment variables
-@SET "PROJECT_DIR=%~dp0"
+@SET "PROJECT_DIR_ORIGIN=%~dp0"
+@SET "MAMBA_EXE=%~dp0micromamba.exe"
+@SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
-@SET "DATA_PATH=%PROJECT_DIR%data"
-@SET "MAMBA_EXE=%PROJECT_DIR%micromamba.exe"
-@SET "PKGS_PATH=%PROJECT_DIR%pkgs"
-@SET "ENV_PATH=%PROJECT_DIR%envs"
-@SET "EXT_PATH=%PROJECT_DIR%ext"
-@SET "GDOWN_CACHE=%PROJECT_DIR%cache\gdown"
-@SET "TORCH_HOME=%PROJECT_DIR%cache\torch"
-@SET "HF_HOME=%PROJECT_DIR%cache\huggingface"
+@SET "MAMBA_PKGS_DIRS=%PROJECT_DIR%\pkgs"
+@SET "MAMBA_ENVS_DIRS=%PROJECT_DIR%\envs"
+@SET "DATA_PATH=%PROJECT_DIR%\data"
+@SET "PKGS_PATH=%PROJECT_DIR%\pkgs"
+@SET "ENV_PATH=%PROJECT_DIR%\envs"
+@SET "EXT_PATH=%PROJECT_DIR%\ext"
+@SET "GDOWN_CACHE=%PROJECT_DIR%\cache\gdown"
+@SET "TORCH_HOME=%PROJECT_DIR%\cache\torch"
+@SET "HF_HOME=%PROJECT_DIR%\cache\huggingface"
 @SET "PYTHONDONTWRITEBYTECODE=1"
 @SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
 @SET "CMAKE_PATH=C:\Program Files\CMake\bin"
@@ -19,7 +21,12 @@
 @SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
-@SET "PATH=%PATH%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+@SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+
+@CALL taskkill /F /IM micromamba.exe 2>NUL
+@IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
+@IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
+@IF EXIST "H:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "H:\AI\Anaconda\pkgs\cache\*.lock"
 
 @REM Set stage variables
 @SET "GPU=0"

@@ -22,19 +22,17 @@
 @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 @SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+
+@CALL taskkill /F /IM micromamba.exe 2>NUL
 @IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
+@IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
+@IF EXIST "H:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "H:\AI\Anaconda\pkgs\cache\*.lock"
 
 @ECHO.
 @ECHO ===================================
 @ECHO  GaussianHaircut Windows Installer
 @ECHO ===================================
 @ECHO.
-
-@REM 再次确保没有 micromamba 进程在运行
-@CALL taskkill /F /IM micromamba.exe 2>NUL
-@IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
-@IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
-@IF EXIST "H:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "H:\AI\Anaconda\pkgs\cache\*.lock"
 
 @ECHO.
 @ECHO Cleaning old environment...
