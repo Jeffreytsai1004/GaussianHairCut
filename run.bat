@@ -23,7 +23,7 @@
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 @SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
 
-@CALL taskkill /F /IM micromamba.exe 2>NUL
+@CALL taskkill /F /IM "%~dp0micromamba.exe".exe 2>NUL
 @IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
 @IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
 @IF EXIST "H:\AI\Anaconda\pkgs\cache\*.lock" DEL /F /Q "H:\AI\Anaconda\pkgs\cache\*.lock"
@@ -39,38 +39,38 @@
 @REM #################
 
 @REM Convert original images to 3D Gaussian Splatting format
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python preprocess_raw_images.py --data_path "%DATA_PATH%"
 
 @REM Run COLMAP reconstruction and camera calibration
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src"
 @CALL python convert.py -s "%DATA_PATH%" --camera "OPENCV" --max_size 1024
 
 @REM Run Matte-Anything
-@CALL micromamba deactivate
-@CALL micromamba activate matte_anything
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate matte_anything
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python calc_masks.py --data_path "%DATA_PATH%" --image_format png --max_size 2048
 
 @REM Filter images using IQA scores
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python filter_extra_images.py --data_path "%DATA_PATH%" --max_imgs 128
 
 @REM Resize images
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python resize_images.py --data_path "%DATA_PATH%"
 
 @REM Calculate orientation maps
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python calc_orientation_maps.py ^^
     --img_path "%DATA_PATH%\images_2" ^^
@@ -81,7 +81,7 @@
     --vis_img_dir "%DATA_PATH%\orientations_2\vis_imgs"
 
 @REM Run OpenPose
-@CALL micromamba deactivate
+@CALL "%~dp0micromamba.exe" deactivate
 @CD "%PROJECT_DIR%\ext\openpose"
 @IF NOT EXIST "%DATA_PATH%\openpose" mkdir "%DATA_PATH%\openpose"
 @CALL "%PROJECT_DIR%\ext\openpose\build\bin\OpenPoseDemo.exe" ^^
@@ -91,14 +91,14 @@
     --write_images "%DATA_PATH%\openpose\images" --write_images_format jpg
 
 @REM Run Face-Alignment
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python calc_face_alignment.py --data_path "%DATA_PATH%" --image_dir "images_4"
 
 @REM Run PIXIE
-@CALL micromamba deactivate
-@CALL micromamba activate pixie-env
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate pixie-env
 @CD "%PROJECT_DIR%\ext\PIXIE"
 @CALL python demos\demo_fit_face.py ^^
     -i "%DATA_PATH%\images_4" -s "%DATA_PATH%\pixie" ^^
@@ -106,22 +106,22 @@
     --rasterizer_type pytorch3d
 
 @REM Merge all PIXIE predictions into a single file
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python merge_smplx_predictions.py --data_path "%DATA_PATH%"
 
 @REM Convert COLMAP cameras to txt format
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @IF NOT EXIST "%DATA_PATH%\sparse_txt" mkdir "%DATA_PATH%\sparse_txt"
 @CALL colmap model_converter ^^
     --input_path "%DATA_PATH%\sparse\0" ^^
     --output_path "%DATA_PATH%\sparse_txt" --output_type TXT
 
 @REM Convert COLMAP cameras to H3DS format
-@CALL micromamba deactivate
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" deactivate
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python colmap_parsing.py --path_to_scene "%DATA_PATH%"
 
@@ -138,7 +138,7 @@
 @SET "EXP_PATH_1=%DATA_PATH%\3d_gaussian_splatting\%EXP_NAME_1%"
 
 @REM Run 3D Gaussian Splatting
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src"
 @CALL python train_gaussians.py ^^
     -s "%DATA_PATH%" -m "%EXP_PATH_1%" -r 1 --port "888%GPU%" ^^
@@ -146,7 +146,7 @@
     --lambda_dorient 0.1
 
 @REM Run FLAME mesh fitting
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\ext\NeuralHaircut\src\multiview_optimization"
 
 @CALL python fit.py --conf confs/train_person_1.conf ^^
@@ -170,14 +170,14 @@
     --fitted_camera_path "%EXP_PATH_1%\cameras\30000_matrices.pkl"
 
 @REM Crop reconstruction scene
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python scale_scene_into_sphere.py ^^
     --path_to_data "%DATA_PATH%" ^^
     -m "%DATA_PATH%\3d_gaussian_splatting\%EXP_NAME_1%" --iter 30000
 
 @REM Remove hair Gaussian distributions intersecting with FLAME head mesh
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python filter_flame_intersections.py ^^
     --flame_mesh_dir "%DATA_PATH%\flame_fitting\%EXP_NAME_1%" ^^
@@ -185,7 +185,7 @@
     --project_dir "%PROJECT_DIR%\ext\NeuralHaircut"
 
 @REM Run training view rendering
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src"
 @CALL python render_gaussians.py ^^
     -s "%DATA_PATH%" -m "%DATA_PATH%\3d_gaussian_splatting\%EXP_NAME_1%" ^^
@@ -193,7 +193,7 @@
     --trainable_cameras --trainable_intrinsics --use_barf
 
 @REM Get FLAME mesh scalp
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python extract_non_visible_head_scalp.py ^^
     --project_dir "%PROJECT_DIR%\ext\NeuralHaircut" --data_dir "%DATA_PATH%" ^^
@@ -202,7 +202,7 @@
     -m "%DATA_PATH%\3d_gaussian_splatting\%EXP_NAME_1%"
 
 @REM Run latent strand reconstruction
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src"
 @CALL python train_latent_strands.py ^^
     -s "%DATA_PATH%" -m "%DATA_PATH%\3d_gaussian_splatting\%EXP_NAME_1%" -r 1 ^^
@@ -216,7 +216,7 @@
     --iterations 20000 --port "800%GPU%"
 
 @REM Run strand reconstruction
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src"
 @CALL python train_strands.py ^^
     -s "%DATA_PATH%" -m "%DATA_PATH%\3d_gaussian_splatting\%EXP_NAME_1%" -r 1 ^^
@@ -238,7 +238,7 @@
 @REM ##################
 
 @REM Export generated strands as pkl and ply files
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\preprocessing"
 @CALL python export_curves.py ^^
     --data_dir "%DATA_PATH%" --model_name "%EXP_NAME_3%" --iter 10000 ^^
@@ -247,14 +247,14 @@
     --hair_conf_path "%PROJECT_DIR%\src\arguments\hair_strands_textured.yaml"
 
 @REM Render visualization
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\postprocessing"
 @CALL python render_video.py ^^
     --blender_path "%BLENDER_PATH%" --input_path "%DATA_PATH%" ^^
     --exp_name_1 "%EXP_NAME_1%" --exp_name_3 "%EXP_NAME_3%"
 
 @REM Render strands
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src"
 @CALL python render_strands.py ^^
     -s "%DATA_PATH%" --data_dir "%DATA_PATH%" --data_device "cpu" --skip_test ^^
@@ -268,7 +268,7 @@
     --interpolate_cameras
 
 @REM Make video
-@CALL micromamba activate gaussian_splatting_hair
+@CALL "%~dp0micromamba.exe" activate gaussian_splatting_hair
 @CD "%PROJECT_DIR%\src\postprocessing"
 @CALL python concat_video.py ^^
     --input_path "%DATA_PATH%" --exp_name_3 "%EXP_NAME_3%"
