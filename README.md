@@ -22,45 +22,44 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
 
 在运行 GaussianHaircut 之前，请确保安装以下软件:
 
-1. **Micromamba**
-   - 下载链接:[https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html/](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html/)
-   - 默认安装路径:`C:\Program Files\mambar\micromamba.exe`
-   - 验证安装：打开命令提示符，输入`micromamba.exe --version`，确保显示版本信息
-
-2. **CUDA 11.8**
+1. **CUDA 11.8**
    - 下载链接:[https://developer.nvidia.com/cuda-11-8-0-download-archive](https://developer.nvidia.com/cuda-11-8-0-download-archive)
    - 默认安装路径:`C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8`
    - 验证安装：打开命令提示符，输入`nvcc -V`，确保显示版本信息
 
-3. **Blender 3.6**
+2. **Blender 3.6**
    - 下载链接:[https://www.blender.org/download/](https://www.blender.org/download/)
    - 默认安装路径:`C:\Program Files\Blender Foundation\Blender 3.6`
    - 安装时确保勾选“Add to PATH”选项
 
-4. **COLMAP**
+3. **COLMAP**
    - 下载链接:[https://github.com/colmap/colmap/releases](https://github.com/colmap/colmap/releases)
    - 建议安装路径:`C:\Program Files\Colmap`，将`C:\Program Files\Colmap\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`colmap help`，确保显示版本信息
 
-5. **CMake**
+4. **CMake**
    - 下载链接:[https://cmake.org/download/](https://cmake.org/download/)
    - 默认安装路径:`C:\Program Files\CMake`，将`C:\Program Files\CMake\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`cmake --version`，确保显示版本信息
 
-6. **Git**
+5. **Git**
    - Git下载链接:[https://git-scm.com/download/win](https://git-scm.com/download/win)
    - Git LFS 下载链接:[https://git-lfs.com/](https://git-lfs.com/)
    - 默认安装路径:`C:\Program Files\Git`，将`C:\Program Files\Git\cmd\`, `C:\Program Files\Git\bin\`和`C:\Program Files\Git LFS\`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`git --version`，确保显示版本信息
 
-7. **Visual Studio 2022**
+6. **Visual Studio 2022**
    - 下载链接:[https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
    - 确保安装 "使用 C++ 的桌面开发" 工作负载
 
-8. **FFmpeg**
+7. **FFmpeg**
    - 下载链接:[https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
    - 默认安装路径:`C:\Program Files\FFmpeg`, 将解压后的文件复制到此路径，并将`C:\Program Files\FFmpeg\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`ffmpeg -version`，确保显示版本信息
+
+8. **Tar**
+   - 下载地址:[http://gnuwin32.sourceforge.net/packages/gtar.htm](http://gnuwin32.sourceforge.net/packages/gtar.htm)
+   - 默认安装路径:`C:\Program Files\GnuWin32`,将`C:\Program Files\GnuWin32\bin`目录添加到系统 PATH 环境变量中
 
 ## 安装步骤
 

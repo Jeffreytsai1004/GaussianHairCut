@@ -1,14 +1,14 @@
 @ECHO OFF
 @SETLOCAL EnableDelayedExpansion
 
-@SET "PROJECT_DIR_ORIGIN=%~dp0"
-@SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
+@SET "PROJECT_DIR=%~dp0"
+@SET "PROJECT_DIR=%PROJECT_DIR:~0,-1%"
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
 
-@CALL "%~dp0micromamba.exe" shell init --shell=cmd.exe --prefix "%~dp0\"
+@CALL "%~dp0micromamba.exe" shell init --shell=cmd.exe --prefix="%PROJECT_DIR%"
+@SET "PATH=%PROJECT_DIR%\Scripts;%PATH%"
+@SET "CONDA_PREFIX=%PROJECT_DIR%"
 
-@SET "PROJECT_DIR_ORIGIN=%~dp0"
-@SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
 @SET "MAMBA_PKGS_DIRS=%PROJECT_DIR%\pkgs"
 @SET "MAMBA_ENVS_DIRS=%PROJECT_DIR%\envs"
@@ -26,8 +26,8 @@
 @SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 @SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 @SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
-@setx "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
-@setx PATH "%PATH%;%USERPROFILE%\micromamba\Scripts" /M
+@SET "PATH=%PATH%;%PROJECT_DIR%;%VCVARS_DIR%;%CUDA_HOME%;%CMAKE_PATH%;%FFMPEG_PATH%;%BLENDER_PATH%;%COLMAP_PATH%"
+
 @CALL taskkill /F /IM "%~dp0micromamba.exe".exe 2>NUL
 @IF EXIST "%PROJECT_DIR%\pkgs\cache\*.lock" DEL /F /Q "%PROJECT_DIR%\pkgs\cache\*.lock"
 @IF EXIST "C:\ProgramData\Anaconda3\pkgs\cache\*.lock" DEL /F /Q "C:\ProgramData\Anaconda3\pkgs\cache\*.lock"
