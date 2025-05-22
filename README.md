@@ -1,6 +1,6 @@
 # GaussianHaircut
 
-[English](README_EN.md) | 中文
+[English](README_EN.md) | [中文](README.md)
 
 ## 项目简介
 
@@ -22,44 +22,45 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
 
 在运行 GaussianHaircut 之前，请确保安装以下软件:
 
-1. **CUDA 11.8**
+1. **Micromamba**
+   - 下载链接:[https://micro.mamba.pm/api/micromamba/win-64/latest](https://micro.mamba.pm/api/micromamba/win-64/latest)
+   - 解压至路径:`C:\Program Files\Micromamba`, 将`C:\Program Files\Micromamba\Library\bin`添加到系统 PATH 环境变量中
+   - 验证安装：打开命令提示符，输入`micromamba --version`，确保显示版本信息
+
+2. **CUDA 11.8**
    - 下载链接:[https://developer.nvidia.com/cuda-11-8-0-download-archive](https://developer.nvidia.com/cuda-11-8-0-download-archive)
-   - 默认安装路径:`C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8`
+   - 默认安装路径:`C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8`, 确保将`C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin`添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`nvcc -V`，确保显示版本信息
 
-2. **Blender 3.6**
+3. **Blender 3.6**
    - 下载链接:[https://www.blender.org/download/](https://www.blender.org/download/)
-   - 默认安装路径:`C:\Program Files\Blender Foundation\Blender 3.6`
+   - 默认安装路径:`C:\Program Files\Blender Foundation\Blender 3.6`, 确保将`C:\Program Files\Blender Foundation\Blender 3.6\bin`添加到系统 PATH 环境变量中
    - 安装时确保勾选“Add to PATH”选项
 
-3. **COLMAP**
+4. **COLMAP**
    - 下载链接:[https://github.com/colmap/colmap/releases](https://github.com/colmap/colmap/releases)
    - 建议安装路径:`C:\Program Files\Colmap`，将`C:\Program Files\Colmap\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`colmap help`，确保显示版本信息
 
-4. **CMake**
+5. **CMake**
    - 下载链接:[https://cmake.org/download/](https://cmake.org/download/)
    - 默认安装路径:`C:\Program Files\CMake`，将`C:\Program Files\CMake\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`cmake --version`，确保显示版本信息
 
-5. **Git**
+6. **Git**
    - Git下载链接:[https://git-scm.com/download/win](https://git-scm.com/download/win)
    - Git LFS 下载链接:[https://git-lfs.com/](https://git-lfs.com/)
    - 默认安装路径:`C:\Program Files\Git`，将`C:\Program Files\Git\cmd\`, `C:\Program Files\Git\bin\`和`C:\Program Files\Git LFS\`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`git --version`，确保显示版本信息
 
-6. **Visual Studio 2022**
+7. **Visual Studio 2022**
    - 下载链接:[https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
    - 确保安装 "使用 C++ 的桌面开发" 工作负载
 
-7. **FFmpeg**
+8. **FFmpeg**
    - 下载链接:[https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
    - 默认安装路径:`C:\Program Files\FFmpeg`, 将解压后的文件复制到此路径，并将`C:\Program Files\FFmpeg\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`ffmpeg -version`，确保显示版本信息
-
-8. **Tar**
-   - 下载地址:[http://gnuwin32.sourceforge.net/packages/gtar.htm](http://gnuwin32.sourceforge.net/packages/gtar.htm)
-   - 默认安装路径:`C:\Program Files\GnuWin32`,将`C:\Program Files\GnuWin32\bin`目录添加到系统 PATH 环境变量中
 
 ## 安装步骤
 
@@ -98,28 +99,13 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
 
 ## 环境变量
 
-默认环境变量设置如下:
-设置本地路径
-PROJECT_DIR=%~dp0
-PROJECT_DIR=%PROJECT_DIR:~0,-1%
-MAMBA_ROOT_PREFIX=%PROJECT_DIR%
-MAMBA_PKGS_DIRS=%PROJECT_DIR%\pkgs
-MAMBA_ENVS_DIRS=%PROJECT_DIR%\envs
-DATA_PATH=%PROJECT_DIR%\data
-MAMBA_EXE=%~dp0micromamba.exe
-PKGS_PATH=%PROJECT_DIR%\pkgs
-ENV_PATH=%PROJECT_DIR%\envs
-EXT_PATH=%PROJECT_DIR%\ext
-GDOWN_CACHE=%PROJECT_DIR%\cache\gdown
-TORCH_HOME=%PROJECT_DIR%\cache\torch
-HF_HOME=%PROJECT_DIR%\cache\huggingface
-PYTHONDONTWRITEBYTECODE=1
+默认环境变量设置如下,可以根据需要修改,请确保您的系统 PATH 环境变量包含这些路径:
 COLMAP_PATH=C:\Program Files\Colmap\bin
 CMAKE_PATH=C:\Program Files\CMake\bin
 FFMPEG_PATH=C:\Program Files\FFmpeg\bin
 BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6
 CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
-VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build
+VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build
 
 如果您的软件安装在不同的位置，请在 `install.bat` 和 `run.bat` 文件中修改相应的路径。
 
