@@ -5,7 +5,7 @@
 @SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
 @SET "MAMBA_ROOT_PREFIX=%PROJECT_DIR%"
 
-@CALL "%~dp0micromamba.exe" shell init --shell=cmd.exe --prefix="%PROJECT_DIR_ORIGIN%"
+@CALL "%~dp0micromamba.exe" shell init --shell=cmd.exe --prefix "%~dp0\"
 
 @SET "PROJECT_DIR_ORIGIN=%~dp0"
 @SET "PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%"
