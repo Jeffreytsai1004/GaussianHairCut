@@ -22,7 +22,7 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
 
 在运行 GaussianHaircut 之前，请确保安装以下软件:
 
-1. **Micromamba**
+1. **Micromamba** (可选)
    - 下载链接:[https://micro.mamba.pm/api/micromamba/win-64/latest](https://micro.mamba.pm/api/micromamba/win-64/latest)
    - 解压至路径:`C:\Program Files\Micromamba`, 将`C:\Program Files\Micromamba\Library\bin`添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`micromamba --version`，确保显示版本信息

@@ -6,7 +6,7 @@ setuptools==69.5.1
 # 用于读写 PLY 3D 文件格式，在头发模型导入导出中使用
 plyfile==0.8.1
 # 跨平台构建系统，用于编译项目中的 C++ 组件和扩展
-cmake==3.28.0
+cmake==3.28.1
 # HOCON 配置文件解析器，用于处理项目复杂配置
 pyhocon==0.3.60
 # 调试工具，用于简化 print 调试和日志输出
@@ -34,6 +34,7 @@ tqdm==4.66.5
 # Google Drive 下载工具，用于下载预训练模型和数据集
 gdown==5.2.0
 # 用于计算有符号距离场(SDF)，在头发重建过程中用于表面重建和碰撞检测
+# 注意：pysdf 需要特殊安装方式，已在 install.bat 中处理
 pysdf
 # 用于计算清洁的 FID 分数，用于评估生成图像的质量和多样性
 clean-fid==0.1.35
@@ -54,7 +55,7 @@ imageio==2.31.1
 
 # 科学计算和数据处理
 # 科学计算基础库，提供高效的数组操作
-numpy==1.24.3
+numpy==1.24.1
 # 绘图库，用于数据可视化和图表生成
 matplotlib==3.7.2
 # 科学计算库，提供数值积分、优化、插值等功能
@@ -79,18 +80,12 @@ pyrender==0.1.45
 open3d==0.17.0
 
 # 深度学习相关 - 使用 CUDA 11.8 版本
-# 注意: 这些包需要通过以下命令安装
-# pip install --force-reinstall torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 torchdiffeq==0.2.3 torchsde==0.2.5 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-# PyTorch深度学习框架，提供张量计算和自动微分
-# torch==2.1.0+cu118
-# PyTorch视觉库，提供计算机视觉模型和工具
-# torchvision==0.16.0+cu118
-# PyTorch音频库，提供音频处理功能
-# torchaudio==2.1.0+cu118
-# 用于求解常微分方程的PyTorch库，在生成模型中使用
-# torchdiffeq==0.2.3
-# 用于求解随机微分方程的PyTorch库，在生成模型中使用
-# torchsde==0.2.5
+# 注意: 这些包已通过 install.bat 安装，不要在这里重复安装
+# PyTorch深度学习框架，提供张量计算和自动微分 - torch==2.1.0+cu118
+# PyTorch视觉库，提供计算机视觉模型和工具 - torchvision==0.16.0+cu118
+# PyTorch音频库，提供音频处理功能 - torchaudio==2.1.0+cu118
+# 用于求解常微分方程的PyTorch库，在生成模型中使用 - torchdiffeq==0.2.5
+# 用于求解随机微分方程的PyTorch库，在生成模型中使用 - torchsde==0.2.6
 # 用于感知相似度度量的库，评估生成图像质量
 lpips==0.1.4
 # 计算机视觉库，提供微分图像处理操作
@@ -111,19 +106,14 @@ pyglm==2.7.0
 PyYAML==6.0.1
 # 序列化数据结构，用于模型序列化
 protobuf>=3.8.0,<4.0.0
-# 符号数学库，用于数学计算
-sympy==1.12
+# 符号数学库，用于数学计算 - 已通过 PyTorch 安装
+# sympy==1.12
 # 实验跟踪工具，用于记录实验结果
 wandb==0.15.5
-
-# 视频处理
-# 注意: Windows 上需要单独安装 ffmpeg 并添加到 PATH
-# 下载地址: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip
 # Python FFmpeg 绑定，用于视频处理
 ffmpeg-python==0.2.0
 # 视频编辑库，用于创建和编辑视频
 moviepy==1.0.3
 
-# CUDA 相关
-# 确保系统已安装 CUDA 11.8
-# 验证: nvcc -V
+torchdiffeq
+torchsde

@@ -1,25 +1,27 @@
 @ECHO OFF
-@SETLOCAL EnableDelayedExpansion
+SETLOCAL EnableDelayedExpansion
 
-@REM Set local paths
-@SET "PROJECT_DIR=%~dp0"
-@SET "PROJECT_DIR=%PROJECT_DIR:~0,-1%"
-
+REM =======================================
+REM Clear old cache and environment folders
+REM =======================================
+ECHO.
+ECHO Cleaning old environment and cache directories...
 FOR %%D IN (
-    "%PROJECT_DIR%\cache"
-    "%PROJECT_DIR%\condabin"
-    "%PROJECT_DIR%\pkgs"
-    "%PROJECT_DIR%\envs"
-    "%PROJECT_DIR%\Scripts"
-    "%PROJECT_DIR%\ext\hyperIQA"
-    "%PROJECT_DIR%\ext\kaolin"
-    "%PROJECT_DIR%\ext\Matte-Anything"
-    "%PROJECT_DIR%\ext\NeuralHaircut"
-    "%PROJECT_DIR%\ext\face-alignment"
-    "%PROJECT_DIR%\ext\openpose"
-    "%PROJECT_DIR%\ext\PIXIE"
-    "%PROJECT_DIR%\ext\pytorch3d"
-    "%PROJECT_DIR%\ext\simple-knn"
+    "cache"
+    "condabin"
+    "pkgs"
+    "envs"
+    "Scripts"
+    "ext\PIXIE"
+    "ext\kaolin"
+    "ext\hyperIQA"
+    "ext\openpose"
+    "ext\pytorch3d"
+    "ext\simple-knn"
+    "ext\Matte-Anything"
+    "ext\NeuralHaircut"
+    "ext\diff_gaussian_rasterization_hair\third_party"
+    "ext\PIXIE\face-alignment"
 ) DO (
     IF EXIST "%%~D" (
         ECHO Removing directory %%~D...
@@ -27,6 +29,6 @@ FOR %%D IN (
     )
 )
 
-@ECHO.
-@ECHO Clean complete.
-@PAUSE
+ECHO.
+ECHO Clean complete.
+PAUSE
