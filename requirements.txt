@@ -2,82 +2,82 @@
 
 # 基础包
 # Python 包安装和分发工具，用于管理项目依赖
-setuptools==69.5.1
+setuptools
 # 用于读写 PLY 3D 文件格式，在头发模型导入导出中使用
-plyfile==0.8.1
+plyfile
 # 跨平台构建系统，用于编译项目中的 C++ 组件和扩展
-cmake==3.28.1
+cmake
 # HOCON 配置文件解析器，用于处理项目复杂配置
-pyhocon==0.3.60
+pyhocon
 # 调试工具，用于简化 print 调试和日志输出
-icecream==2.1.3
+icecream
 # 张量操作库，用于深度学习中的高效张量变换
-einops==0.6.0
+einops
 # Hugging Face 的加速库，用于优化深度学习模型训练
-accelerate==0.18.0
+accelerate
 # JSON 合并工具，用于处理和合并配置文件
-jsonmerge==1.9.0
+jsonmerge
 # 简化字典访问的工具，常用于配置管理
-easydict==1.9
+easydict
 # Facebook 的 I/O 库，用于高效文件操作和数据加载
-iopath==0.1.10
+iopath
 # TensorBoard 的 PyTorch 扩展，用于可视化训练过程和结果
-tensorboardx==2.6
+tensorboardx
 # 图像处理库，提供高级图像处理功能
-scikit-image==0.20.0
+scikit-image
 # Facebook 视觉库的核心功能，用于计算机视觉任务
 fvcore
 # TOML 配置文件解析器，用于处理配置文件
-toml==0.10.2
+toml
 # 进度条库，用于显示长时间运行任务的进度
-tqdm==4.66.5
+tqdm
 # Google Drive 下载工具，用于下载预训练模型和数据集
-gdown==5.2.0
+gdown
 # 用于计算有符号距离场(SDF)，在头发重建过程中用于表面重建和碰撞检测
 # 注意：pysdf 需要特殊安装方式，已在 install.bat 中处理
 # pysdf
 # 用于计算清洁的 FID 分数，用于评估生成图像的质量和多样性
-clean-fid==0.1.35
+clean-fid
 # 用于面部对齐，用于提取面部关键点和特征
-face-alignment==1.4.1
+face-alignment
 # 用于计算 CLIP 嵌入，用于文本到图像的生成和特征提取
-clip==0.2.0
+clip
 # 用于图像重采样，用于头发重建过程中调整图像分辨率
-resize-right==0.0.2
+resize-right
 
 # 图像处理
 # 计算机视觉库，提供图像处理和计算机视觉算法
-opencv-python==4.8.0.76
+opencv-python
 # Python 图像处理库，用于基本图像操作
-pillow==10.0.0
+pillow
 # 用于读写各种图像和视频格式的库
-imageio==2.31.1
+imageio
 
 # 科学计算和数据处理
 # 科学计算基础库，提供高效的数组操作
-numpy==1.24.1
+numpy
 # 绘图库，用于数据可视化和图表生成
-matplotlib==3.7.2
+matplotlib
 # 科学计算库，提供数值积分、优化、插值等功能
 scipy
 # 数据分析库，用于处理和分析结构化数据
-pandas==2.0.3
+pandas
 
 # 3D处理和渲染
 # 用于处理三角网格的库，用于3D模型操作
-trimesh==3.22.4
+trimesh
 # 用于Marching Cubes算法的库，将体素数据转换为网格
-PyMCubes==0.1.4
+PyMCubes
 # Windows 上需要额外配置
 # 安装方法: pip install pyrender
 # 可能需要安装 Microsoft Visual C++ Redistributable
 # 如果出现 OSMesa 相关错误，请参考: https://pyrender.readthedocs.io/en/latest/install/index.html
 # 用于3D渲染的库，在可视化头发模型时使用
-pyrender==0.1.45
+pyrender
 # Windows 上可能需要特定版本
 # 如果安装失败，尝试: pip install open3d==0.17.0 -f https://www.open3d.org/docs/release/getting_started.html
 # 3D数据处理库，用于点云处理和可视化
-open3d==0.17.0
+open3d
 
 # 深度学习相关 - 使用 CUDA 11.8 版本
 # 注意: 这些包已通过 install.bat 安装，不要在这里重复安装
@@ -87,33 +87,33 @@ open3d==0.17.0
 # 用于求解常微分方程的PyTorch库，在生成模型中使用 - torchdiffeq==0.2.5
 # 用于求解随机微分方程的PyTorch库，在生成模型中使用 - torchsde==0.2.6
 # 用于感知相似度度量的库，评估生成图像质量
-lpips==0.1.4
+lpips
 # 计算机视觉库，提供微分图像处理操作
-kornia==0.6.12
+kornia
 # PyTorch图像模型库，提供预训练模型
-timm==0.9.2
+timm
 
 # 构建工具
 # 快速构建系统，用于编译C++扩展
-ninja==1.11.1
+ninja
 
 # 其他实用工具
 # Windows 上需要特别注意的包
 # glm==0.0.9  # Windows 上使用 Visual Studio 自带的数学库
 # OpenGL数学库的Python绑定，用于3D变换和计算
-pyglm==2.7.0
+pyglm
 # YAML解析器，用于处理配置文件
-PyYAML==6.0.1
+PyYAML
 # 序列化数据结构，用于模型序列化
-protobuf>=3.8.0,<4.0.0
+protobuf
 # 符号数学库，用于数学计算 - 已通过 PyTorch 安装
 # sympy==1.12
 # 实验跟踪工具，用于记录实验结果
-wandb==0.15.5
+wandb
 # Python FFmpeg 绑定，用于视频处理
-ffmpeg-python==0.2.0
+ffmpeg-python
 # 视频编辑库，用于创建和编辑视频
-moviepy==1.0.3
+moviepy
 
 torchdiffeq
 torchsde

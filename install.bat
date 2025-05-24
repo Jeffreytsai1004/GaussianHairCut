@@ -125,7 +125,7 @@ CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-CALL pip install -r requirements.txt --no-cache-dir --force-reinstall
+CALL pip install -r requirements.txt
 
 ECHO Pulling external libraries...
 cd %PROJECT_DIR%\ext
