@@ -5,6 +5,8 @@ datasets
 ext/diff_gaussian_rasterization_hair/third_party
 ext/openpose
 ext/NeuralHaircut
+ext/NeuralHaircut/pretrained_models
+ext/NeuralHaircut/PIXIE
 ext/Matte-Anything
 ext/Matte-Anything/GroundingDINO
 ext/Matte-Anything/segment-anything
@@ -15,7 +17,7 @@ ext/hyperIQA
 ext/simple-knn
 ext/PIXIE
 ext/PIXIE/face-alignment
-
+ext/PIXIE/PIXIE
 condabin/
 pkgs/
 envs/
@@ -188,4 +190,3 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
-/pytorch3d

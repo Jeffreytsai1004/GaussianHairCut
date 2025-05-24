@@ -32,9 +32,8 @@ SET VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxili
 
 ECHO .
 ECHO ===========================================
-ECHO   Clear old cache and environment folders
+ECHO Clear old cache and environment folders
 ECHO ===========================================
-
 ECHO Remove old folders ...
 FOR %%D IN (
     "cache"
@@ -126,11 +125,11 @@ CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-CALL pip install -r requirements.txt
+CALL pip install -r requirements.txt --no-cache-dir --force-reinstall
 
 ECHO Pulling external libraries...
 cd %PROJECT_DIR%\ext
-CALL git clone git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
+CALL git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
 cd %PROJECT_DIR%\ext\openpose
 CALL git submodule update --init --recursive --remote
 cd %PROJECT_DIR%\ext
@@ -147,7 +146,7 @@ CALL git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
 cd %PROJECT_DIR%\ext
 CALL git clone https://github.com/camenduru/simple-knn
 cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party
-CALL git clone git clone https://github.com/g-truc/glm
+CALL git clone https://github.com/g-truc/glm
 cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
 CALL git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
 cd %PROJECT_DIR%\ext
