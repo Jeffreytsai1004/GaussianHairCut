@@ -125,39 +125,34 @@ CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-CALL pip install -r requirements.txt
+CALL pip install setuptools cmake plyfile pyhocon icecream einops accelerate jsonmerge easydict ^
+    iopath tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment clip resize-right ^
+    opencv-python pillow imageio moviepy numpy matplotlib scipy pandas moviepy torchdiffeq torchsde
 
 ECHO Pulling external libraries...
 cd %PROJECT_DIR%\ext
-CALL git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
+CALL git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1 %PROJECT_DIR%\ext\openpose
+CALL git clone https://github.com/hustvl/Matte-Anything %PROJECT_DIR%\ext\Matte-Anything
+CALL git clone https://github.com/IDEA-Research/GroundingDINO %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
+CALL git clone https://github.com/facebookresearch/segment-anything %PROJECT_DIR%\ext\Matte-Anything\segment-anything
+CALL git clone https://github.com/facebookresearch/detectron2 %PROJECT_DIR%\ext\Matte-Anything\detectron2
+CALL git clone https://github.com/egorzakharov/NeuralHaircut --recursive %PROJECT_DIR%\ext\NeuralHaircut
+CALL git clone https://github.com/facebookresearch/pytorch3d %PROJECT_DIR%\ext\pytorch3d
+CALL git clone https://github.com/camenduru/simple-knn %PROJECT_DIR%\ext\simple-knn
+CALL git clone https://github.com/g-truc/glm %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
+CALL git clone https://github.com/NVIDIAGameWorks/kaolin --recursive %PROJECT_DIR%\ext\kaolin
+CALL git clone https://github.com/SSL92/hyperIQA %PROJECT_DIR%\ext\hyperIQA
+CALL git clone https://github.com/Jeffreytsai1004/PIXIE %PROJECT_DIR%\ext\PIXIE
+CALL git clone https://github.com/1adrianb/face-alignment %PROJECT_DIR%\ext\PIXIE\face-alignment
+
 cd %PROJECT_DIR%\ext\openpose
 CALL git submodule update --init --recursive --remote
-cd %PROJECT_DIR%\ext
-CALL git clone https://github.com/hustvl/Matte-Anything
-cd %PROJECT_DIR%\ext\Matte-Anything
-CALL git clone https://github.com/IDEA-Research/GroundingDINO
-CALL git clone https://github.com/facebookresearch/segment-anything
-CALL git clone https://github.com/facebookresearch/detectron2
-cd %PROJECT_DIR%\ext
-CALL git clone https://github.com/egorzakharov/NeuralHaircut --recursive
-CALL git clone https://github.com/facebookresearch/pytorch3d
 cd %PROJECT_DIR%\ext\pytorch3d
 CALL git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
-cd %PROJECT_DIR%\ext
-CALL git clone https://github.com/camenduru/simple-knn
-cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party
-CALL git clone https://github.com/g-truc/glm
 cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
 CALL git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
-cd %PROJECT_DIR%\ext
-CALL git clone https://github.com/NVIDIAGameWorks/kaolin --recursive
 cd %PROJECT_DIR%\ext\kaolin
 CALL git checkout v0.15.0
-cd %PROJECT_DIR%\ext
-CALL git clone https://github.com/SSL92/hyperIQA
-CALL git clone https://github.com/Jeffreytsai1004/PIXIE
-cd %PROJECT_DIR%\ext\PIXIE
-CALL git clone https://github.com/1adrianb/face-alignment
 cd %PROJECT_DIR%\ext\PIXIE\face-alignment
 CALL git checkout 54623537fd9618ca7c15688fd85aba706ad92b59
 CALL pip install -e .
@@ -168,7 +163,6 @@ cd %PROJECT_DIR%\ext\NeuralHaircut
 CALL gdown --folder https://drive.google.com/drive/folders/1TCdJ0CKR3Q6LviovndOkJaKm8S1T9F_8
 cd %PROJECT_DIR%\ext\NeuralHaircut\pretrained_models\diffusion_prior
 CALL gdown 1_9EOUXHayKiGH5nkrayncln3d6m1uV7f
-cd %PROJECT_DIR%\ext\NeuralHaircut\..
 cd %PROJECT_DIR%\ext\NeuralHaircut\PIXIE
 CALL gdown 1mPcGu62YPc4MdkT8FFiOCP629xsENHZf
 CALL tar -xvzf pixie_data.tar.gz
@@ -177,20 +171,12 @@ cd %PROJECT_DIR%\ext\hyperIQA
 mkdir %PROJECT_DIR%\ext\hyperIQA\pretrained
 cd %PROJECT_DIR%\ext\hyperIQA\pretrained
 CALL gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
-cd %PROJECT_DIR%\ext\hyperIQA\..
+cd %PROJECT_DIR%\ext\
 
-REM Install pysdf
-ECHO Setting up Visual Studio environment...
-CALL "%VCVARS_DIR%\vcvarsall.bat" x64
-SET "DISTUTILS_USE_SDK=1"
-SET "CUB_HOME=%PROJECT_DIR%\ext\kaolin\third_party\cub"
-SET "FORCE_CUDA=1"
-ECHO Installing pysdf...
-CALL pip install pysdf==0.1.9 --no-cache-dir --use-pep517
-IF %ERRORLEVEL% NEQ 0 (
-    ECHO Error: Failed to install pysdf
-    EXIT /B %ERRORLEVEL%
-)
+CALL pip install numpy
+CALL pip install pysdf==0.1.9
+
+
 
 ECHO.
 ECHO ============================================

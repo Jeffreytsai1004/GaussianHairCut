@@ -23,7 +23,7 @@ FOR %%D IN (
     "ext\Matte-Anything\segment-anything"
     "ext\Matte-Anything\detectron2"
     "ext\NeuralHaircut"
-    "ext\diff_gaussian_rasterization_hair\third_party"
+    "ext\diff_gaussian_rasterization_hair\third_party\glm"
     "ext\PIXIE"
     "ext\PIXIE\face-alignment"
 ) DO (
