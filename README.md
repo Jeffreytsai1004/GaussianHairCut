@@ -60,7 +60,10 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
      - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build`
      - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64`
 
-8. **FFmpeg**
+8. **VS Build Tool**
+   - 下载链接:[https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/](https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/)
+
+9.  **FFmpeg**
    - 下载链接:[https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
    - 默认安装路径:`C:\Program Files\FFmpeg`, 将解压后的文件复制到此路径，并将`C:\Program Files\FFmpeg\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`ffmpeg -version`，确保显示版本信息
