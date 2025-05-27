@@ -183,7 +183,7 @@ CALL condabin\micromamba.bat activate matte_anything
 cd %PROJECT_DIR%\ext\Matte-Anything
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-CALL pip install gdown tensorboard timm opencv mkl supervision setuptools easydict wget scikit-image gradio fairscale
+CALL pip install gdown tensorboard timm opencv mkl supervision setuptools easydict wget scikit-image gradio fairscale catkin_pkg
 
 Echo Install Matte-Anything requirements...
 cd %PROJECT_DIR%\ext\Matte-Anything\segment-anything
