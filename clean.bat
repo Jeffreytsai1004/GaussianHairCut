@@ -9,7 +9,6 @@ ECHO Cleaning old environment and cache directories...
 FOR %%D IN (
     "cache"
     "condabin"
-    "pkgs"
     "envs"
     "Scripts"
     "ext\PIXIE"

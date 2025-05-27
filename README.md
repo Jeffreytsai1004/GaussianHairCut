@@ -81,6 +81,10 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
    - 点击`create`安装,选择`MinGW-w64/TDM64(32-bit and 64-bit)`,推荐安装路径`C:\Program Files\TDM-GCC-64`,并将`C:\Program Files\TDM-GCC-64\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`gcc --version`，确保显示版本信息
 
+12. **wget** (可选)
+   - 下载链接:[https://eternallybored.org/misc/wget/](https://eternallybored.org/misc/wget/)
+   - 下载系统对应版本的exe，并拷贝到`C:\Windows\System32`即可
+
 ## 安装步骤
 
 1. 克隆仓库:

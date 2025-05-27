@@ -20,6 +20,7 @@ SET GDOWN_CACHE=%PROJECT_DIR%\cache\gdown
 SET TORCH_HOME=%PROJECT_DIR%\cache\torch
 SET HF_HOME=%PROJECT_DIR%\cache\huggingface
 SET PYTHONDONTWRITEBYTECODE=1
+SET DISTUTILS_USE_SDK=1
 
 SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
 SET "CMAKE_PATH=C:\Program Files\CMake\bin"
@@ -37,7 +38,6 @@ ECHO Remove old folders ...
 FOR %%D IN (
     "cache"
     "condabin"
-    "pkgs"
     "envs"
     "Scripts"
     "ext\PIXIE"
@@ -122,9 +122,9 @@ CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-CALL pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict iopath tensorboard tensorboardx scikit-image ^^
-    fvcore toml tqdm gdown clean-fid face-alignment clip resize-right opencv-python numpy pillow imageio matplotlib scipy pandas ^^
-    trimesh PyMCubes pyrender open3d glibc lpips kornia timm ninja pyglm PyYAML protobuf wandb ffmpeg-python moviepy ^^
+CALL pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict iopath tensorboard tensorboardx scikit-image ^
+    fvcore toml tqdm gdown clean-fid face-alignment clip resize-right opencv-python numpy pillow imageio matplotlib scipy pandas ^
+    trimesh pyrender open3d glibc lpips kornia timm ninja pyglm PyYAML protobuf wandb ffmpeg-python moviepy ^
     torchdiffeq torchsde
 CALL "%VCVARS_DIR%\vcvarsall.bat" amd64
 CALL python -m pip install --upgrade pip setuptools wheel
@@ -148,14 +148,14 @@ CALL git clone https://github.com/1adrianb/face-alignment %PROJECT_DIR%\ext\PIXI
 cd %PROJECT_DIR%\openpose
 CALL git submodule update --init --recursive --remote
 cd %PROJECT_DIR%\ext\pytorch3d
-CALL git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
+@REM CALL git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
 cd %PROJECT_DIR%\ext
 cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
-CALL git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
+@REM CALL git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
 cd %PROJECT_DIR%\ext\kaolin
 CALL git checkout v0.15.0
 cd %PROJECT_DIR%\ext\PIXIE\face-alignment
-CALL git checkout 54623537fd9618ca7c15688fd85aba706ad92b59
+@REM CALL git checkout 54623537fd9618ca7c15688fd85aba706ad92b59
 cd %PROJECT_DIR%\ext
 
 ECHO Download Neural Haircut files...
@@ -186,13 +186,19 @@ CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+
 CALL pip install gdown tensorboard timm mkl supervision setuptools easydict wget scikit-image gradio fairscale catkin_pkg fvcore opencv-python libpython ninja pycocotools
 
 Echo Install Matte-Anything requirements...
+
 cd %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 CALL pip install -e .
-cd %PROJECT_DIR%\ext\Matte-Anything\detectron2
-CALL pip install -e .
-@REM CALL python setup.py build develop
 cd %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
 CALL pip install -e .
+@REM Uncomment the following line if you want to install detectron2 from a specific URL
+@REM Make sure to adjust the URL based on your CUDA and PyTorch versions
+cd %PROJECT_DIR%\ext\Matte-Anything\detectron2
+CALL pip install --upgrade setuptools wheel
+CALL pip install -e .
+@REM CALL pip install --use-pep517 .
+@REM CALL python setup.py build develop
+@REM CALL pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu117/torch2.0/index.html
 
 ECHO Download Matte-Anything files...
 mkdir %PROJECT_DIR%\ext\Matte-Anything\pretrained
