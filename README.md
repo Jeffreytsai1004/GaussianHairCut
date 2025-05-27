@@ -68,7 +68,7 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
    - 默认安装路径:`C:\Program Files\FFmpeg`, 将解压后的文件复制到此路径，并将`C:\Program Files\FFmpeg\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`ffmpeg -version`，确保显示版本信息
 
-9   **gcc**
+10   **gcc**
    - 下载链接:[https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe](https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe)
    - 点击`create`安装,选择`MinGW-w64/TDM64(32-bit and 64-bit)`,推荐安装路径`C:\Program Files\TDM-GCC-64`,并将`C:\Program Files\TDM-GCC-64\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`gcc --version`，确保显示版本信息
