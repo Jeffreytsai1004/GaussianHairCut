@@ -22,45 +22,64 @@ Project homepage: [GaussianHaircut](https://haiminluo.github.io/gaussianhair/)
 
 Before running GaussianHaircut, make sure the following software is installed:
 
-1. **Micromamba**
-- Download link: [https://micro.mamba.pm/api/micromamba/win-64/latest](https://micro.mamba.pm/api/micromamba/win-64/latest)
-- Unzip to path: `C:\Program Files\Micromamba`, add `C:\Program Files\Micromamba\Library\bin` to the system PATH environment variable
-- Verify installation: Open the command prompt, enter `micromamba --version`, and make sure the version information is displayed
+1. **Python**
+   - Download link: [https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64-webinstall.exe](https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64-webinstall.exe)
+   - Add the following paths to the environment variables, modify according to your specific situation:
+      `C:\Program Files\Python38\`
+      `C:\Program Files\Python38\Scripts\`
+      `C:\Program Files\Python38\Lib\site-packages`
 
-2. **CUDA 11.8**
-- Download link: [https://developer.nvidia.com/cuda-11-8-0-download-archive](https://developer.nvidia.com/cuda-11-8-0-download-archive)
-- Default installation path: `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8`, make sure to add `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin` to the system PATH environment variable
-- Verify installation: Open the command prompt, enter `nvcc -V`, and make sure the version information is displayed
+2. **Micromamba** (optional)
+   - Download link: [https://micro.mamba.pm/api/micromamba/win-64/latest](https://micro.mamba.pm/api/micromamba/win-64/latest)
+   - Extract to path: `C:\Program Files\Micromamba`, add `C:\Program Files\Micromamba\Library\bin` to the system PATH environment variable
+   - Verify installation: Open Command Prompt, type `micromamba --version`, ensure version information is displayed
 
-3. **Blender 3.6**
-- Download link: [https://www.blender.org/download/](https://www.blender.org/download/)
-- Default installation path: `C:\Program Files\Blender Foundation\Blender 3.6`, make sure to add `C:\Program Files\Blender Foundation\Blender 3.6\bin` to the system PATH environment variable
-- Make sure to check the "Add to PATH" option when installing
+3. **CUDA 11.8**
+   - Download link: [https://developer.nvidia.com/cuda-11-8-0-download-archive](https://developer.nvidia.com/cuda-11-8-0-download-archive)
+   - Default installation path: `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8`, ensure to add `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin` to the system PATH environment variable
+   - Verify installation: Open Command Prompt, type `nvcc -V`, ensure version information is displayed
 
-4. **COLMAP**
-- Download link: [https://github.com/colmap/colmap/releases](https://github.com/colmap/colmap/releases)
-- Recommended installation path: `C:\Program Files\Colmap`, add the `C:\Program Files\Colmap\bin` directory to the system PATH environment variable
-- Verify installation: Open the command prompt, enter `colmap help`, and make sure the version information is displayed
+4. **Blender 3.6**
+   - Download link: [https://www.blender.org/download/](https://www.blender.org/download/)
+   - Default installation path: `C:\Program Files\Blender Foundation\Blender 3.6`, ensure to add `C:\Program Files\Blender Foundation\Blender 3.6\bin` to the system PATH environment variable
+   - During installation, make sure to check the "Add to PATH" option
 
-5. **CMake**
-- Download link: [https://cmake.org/download/](https://cmake.org/download/)
-- Default installation path: `C:\Program Files\CMake`, add the `C:\Program Files\CMake\bin` directory to the system PATH environment variable
-- Verify installation: Open the command prompt, enter `cmake --version`, and make sure the version information is displayed
+5. **COLMAP**
+   - Download link: [https://github.com/colmap/colmap/releases](https://github.com/colmap/colmap/releases)
+   - Recommended installation path: `C:\Program Files\Colmap`, add the `C:\Program Files\Colmap\bin` directory to the system PATH environment variable
+   - Verify installation: Open Command Prompt, type `colmap help`, ensure version information is displayed
 
-6. **Git**
-- Git download link: [https://git-scm.com/download/win](https://git-scm.com/download/win)
-- Git LFS download link: [https://git-lfs.com/](https://git-lfs.com/)
-- Default installation path: `C:\Program Files\Git`, add `C:\Program Files\Git\cmd\`, `C:\Program Files\Git\bin\` and `C:\Program Files\Git LFS\` directories to the system PATH environment variable
-- Verify installation: Open the command prompt, enter `git --version`, and make sure the version information is displayed
+6. **CMake**
+   - Download link: [https://cmake.org/download/](https://cmake.org/download/)
+   - Default installation path: `C:\Program Files\CMake`, add the `C:\Program Files\CMake\bin` directory to the system PATH environment variable
+   - Verify installation: Open Command Prompt, type `cmake --version`, ensure version information is displayed
 
-7. **Visual Studio 2022**
-- Download link: [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
-- Make sure to install the "Desktop development with C++" workload
+7. **Git**
+   - Git download link: [https://git-scm.com/download/win](https://git-scm.com/download/win)
+   - Git LFS download link: [https://git-lfs.com/](https://git-lfs.com/)
+   - Default installation path: `C:\Program Files\Git`, add `C:\Program Files\Git\cmd\`, `C:\Program Files\Git\bin\`, and `C:\Program Files\Git LFS\` directories to the system PATH environment variable
+   - Verify installation: Open Command Prompt, type `git --version`, ensure version information is displayed
 
-8. **FFmpeg**
-- Download link: [https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
-- Default installation path: `C:\Program Files\FFmpeg`, copy the unzipped files to this path, and add the `C:\Program Files\FFmpeg\bin` directory to the system PATH environment variable
-- Verify installation: Open the command prompt, enter `ffmpeg -version`, and make sure the version information is displayed
+8. **Visual Studio 2022**
+   - Download link: [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
+   - Ensure to install "Desktop development with C++" workload
+   - Add the following paths to the environment variables, modify according to your specific situation:
+     - `C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\`
+     - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build`
+     - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64`
+
+9. **VS Build Tool** (optional)
+   - Download link: [https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/](https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/)
+
+10. **FFmpeg**
+   - Download link: [https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
+   - Default installation path: `C:\Program Files\FFmpeg`, copy the extracted files to this path, and add the `C:\Program Files\FFmpeg\bin` directory to the system PATH environment variable.
+   - Verification: Open Command Prompt, type `ffmpeg -version`, ensure version information is displayed.
+
+11. **gcc**
+   - Download link: [https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe](https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe)
+   - Click `create` to install, select `MinGW-w64/TDM64 (32-bit and 64-bit)`, recommended installation path: `C:\Program Files\TDM-GCC-64`, and add the `C:\Program Files\TDM-GCC-64\bin` directory to the system PATH environment variable.
+   - Verification: Open Command Prompt, type `gcc --version`, ensure version information is displayed.
 
 ## Installation steps
 
