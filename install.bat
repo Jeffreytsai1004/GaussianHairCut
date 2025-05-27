@@ -23,12 +23,12 @@ SET TORCH_HOME=%PROJECT_DIR%\cache\torch
 SET HF_HOME=%PROJECT_DIR%\cache\huggingface
 SET PYTHONDONTWRITEBYTECODE=1
 
-SET COLMAP_PATH=C:\Program Files\Colmap\bin
-SET CMAKE_PATH=C:\Program Files\CMake\bin
-SET FFMPEG_PATH=C:\Program Files\FFmpeg\bin
-SET BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6
-SET CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
-SET VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build
+SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
+SET "CMAKE_PATH=C:\Program Files\CMake\bin"
+SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
+SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
+SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 ECHO .
 ECHO ===========================================
@@ -127,7 +127,7 @@ CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 CALL pip install setuptools cmake plyfile pyhocon icecream einops accelerate jsonmerge easydict ^
     iopath tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment clip resize-right ^
-    opencv-python pillow imageio moviepy numpy matplotlib scipy pandas moviepy torchdiffeq torchsde
+    opencv-python pillow imageio moviepy numpy matplotlib scipy pandas moviepy torchdiffeq torchsde pysdf
 
 ECHO Pulling external libraries...
 cd %PROJECT_DIR%\ext
@@ -172,10 +172,6 @@ mkdir %PROJECT_DIR%\ext\hyperIQA\pretrained
 cd %PROJECT_DIR%\ext\hyperIQA\pretrained
 CALL gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
 cd %PROJECT_DIR%\ext\
-
-CALL pip install numpy
-CALL pip install pysdf==0.1.9
-
 
 
 ECHO.

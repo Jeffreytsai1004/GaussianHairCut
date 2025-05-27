@@ -23,12 +23,12 @@ SET TORCH_HOME=%PROJECT_DIR%\cache\torch
 SET HF_HOME=%PROJECT_DIR%\cache\huggingface
 SET PYTHONDONTWRITEBYTECODE=1
 
-SET COLMAP_PATH=C:\Program Files\Colmap\bin
-SET CMAKE_PATH=C:\Program Files\CMake\bin
-SET FFMPEG_PATH=C:\Program Files\FFmpeg\bin
-SET BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6
-SET CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8
-SET VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build
+SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
+SET "CMAKE_PATH=C:\Program Files\CMake\bin"
+SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
+SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
+SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
+SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 REM Kill any running micromamba processes
 ECHO Killing any running micromamba processes...
