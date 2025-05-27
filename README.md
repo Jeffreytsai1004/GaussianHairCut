@@ -22,53 +22,61 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
 
 在运行 GaussianHaircut 之前，请确保安装以下软件:
 
-1. **Micromamba** (可选)
+1. **Python**
+   - 下载链接:[https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64-webinstall.exe](https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64-webinstall.exe)
+   - 将下面两个路径添加到环境变量，可根据具体情况修改：
+      `C:\Program Files\Python38\`
+      `C:\Program Files\Python38\Scripts\`
+      `C:\Program Files\Python38\Lib\site-packages`
+
+2. **Micromamba** (可选)
    - 下载链接:[https://micro.mamba.pm/api/micromamba/win-64/latest](https://micro.mamba.pm/api/micromamba/win-64/latest)
    - 解压至路径:`C:\Program Files\Micromamba`, 将`C:\Program Files\Micromamba\Library\bin`添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`micromamba --version`，确保显示版本信息
 
-2. **CUDA 11.8**
+3. **CUDA 11.8**
    - 下载链接:[https://developer.nvidia.com/cuda-11-8-0-download-archive](https://developer.nvidia.com/cuda-11-8-0-download-archive)
    - 默认安装路径:`C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8`, 确保将`C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin`添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`nvcc -V`，确保显示版本信息
 
-3. **Blender 3.6**
+4. **Blender 3.6**
    - 下载链接:[https://www.blender.org/download/](https://www.blender.org/download/)
    - 默认安装路径:`C:\Program Files\Blender Foundation\Blender 3.6`, 确保将`C:\Program Files\Blender Foundation\Blender 3.6\bin`添加到系统 PATH 环境变量中
    - 安装时确保勾选“Add to PATH”选项
 
-4. **COLMAP**
+5. **COLMAP**
    - 下载链接:[https://github.com/colmap/colmap/releases](https://github.com/colmap/colmap/releases)
    - 建议安装路径:`C:\Program Files\Colmap`，将`C:\Program Files\Colmap\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`colmap help`，确保显示版本信息
 
-5. **CMake**
+6. **CMake**
    - 下载链接:[https://cmake.org/download/](https://cmake.org/download/)
    - 默认安装路径:`C:\Program Files\CMake`，将`C:\Program Files\CMake\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`cmake --version`，确保显示版本信息
 
-6. **Git**
+7. **Git**
    - Git下载链接:[https://git-scm.com/download/win](https://git-scm.com/download/win)
    - Git LFS 下载链接:[https://git-lfs.com/](https://git-lfs.com/)
    - 默认安装路径:`C:\Program Files\Git`，将`C:\Program Files\Git\cmd\`, `C:\Program Files\Git\bin\`和`C:\Program Files\Git LFS\`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`git --version`，确保显示版本信息
 
-7. **Visual Studio 2022**
+8. **Visual Studio 2022**
    - 下载链接:[https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
    - 确保安装 "使用 C++ 的桌面开发" 工作负载
    - 将下面两个路径添加到环境变量，可根据具体情况修改：
+     - `C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\`
      - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build`
      - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64`
 
-8. **VS Build Tool**
+9. **VS Build Tool**(可选)
    - 下载链接:[https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/](https://visualstudio.microsoft.com/zh-hans/visual-cpp-build-tools/)
 
-9.  **FFmpeg**
+10.  **FFmpeg**
    - 下载链接:[https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
    - 默认安装路径:`C:\Program Files\FFmpeg`, 将解压后的文件复制到此路径，并将`C:\Program Files\FFmpeg\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`ffmpeg -version`，确保显示版本信息
 
-10   **gcc**
+11.   **gcc**
    - 下载链接:[https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe](https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe)
    - 点击`create`安装,选择`MinGW-w64/TDM64(32-bit and 64-bit)`,推荐安装路径`C:\Program Files\TDM-GCC-64`,并将`C:\Program Files\TDM-GCC-64\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`gcc --version`，确保显示版本信息
