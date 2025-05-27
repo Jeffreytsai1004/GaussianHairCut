@@ -124,11 +124,11 @@ CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 CALL pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict iopath tensorboard tensorboardx scikit-image ^^
     fvcore toml tqdm gdown clean-fid face-alignment clip resize-right opencv-python numpy pillow imageio matplotlib scipy pandas ^^
-    trimesh PyMCubes pyrender open3d lpips kornia timm ninja pyglm PyYAML protobuf wandb ffmpeg-python moviepy ^^
+    trimesh PyMCubes pyrender open3d glibc lpips kornia timm ninja pyglm PyYAML protobuf wandb ffmpeg-python moviepy ^^
     torchdiffeq torchsde
 CALL "%VCVARS_DIR%\vcvarsall.bat" amd64
 CALL python -m pip install --upgrade pip setuptools wheel
-CALL pip install pysdf --index-url https://www.lfd.uci.edu/~gohlke/pythonlibs/#pysdf
+CALL pip install pysdf
 
 ECHO Pulling external libraries...
 cd %PROJECT_DIR%\ext
@@ -178,18 +178,19 @@ ECHO    Installing Matte-Anything Environment
 ECHO ============================================
 
 CALL condabin\micromamba.bat deactivate
-CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -y
+CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -c fvcore -y
 CALL condabin\micromamba.bat activate matte_anything
 cd %PROJECT_DIR%\ext\Matte-Anything
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-CALL pip install gdown tensorboard timm opencv mkl supervision setuptools easydict wget scikit-image gradio fairscale catkin_pkg
+CALL pip install gdown tensorboard timm mkl supervision setuptools easydict wget scikit-image gradio fairscale catkin_pkg fvcore opencv-python libpython ninja pycocotools
 
 Echo Install Matte-Anything requirements...
 cd %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 CALL pip install -e .
 cd %PROJECT_DIR%\ext\Matte-Anything\detectron2
 CALL pip install -e .
+@REM CALL python setup.py build develop
 cd %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
 CALL pip install -e .
 
@@ -215,6 +216,7 @@ cd %PROJECT_DIR%\ext\openpose
 gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
 tar -xvzf models.tar.gz
 rm models.tar.gz
+ECHO Build openpose...
 CALL "%VCVARS_DIR%\vcvarsall.bat" x64
 rmdir /s /q %PROJECT_DIR%\ext\openpose\build
 mkdir %PROJECT_DIR%\ext\openpose\build

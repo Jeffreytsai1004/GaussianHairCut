@@ -56,11 +56,19 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
 7. **Visual Studio 2022**
    - 下载链接:[https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/)
    - 确保安装 "使用 C++ 的桌面开发" 工作负载
+   - 将下面两个路径添加到环境变量，可根据具体情况修改：
+     - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build`
+     - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64`
 
 8. **FFmpeg**
    - 下载链接:[https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip](ffmpeg-master-latest-win64-gpl.zip)
    - 默认安装路径:`C:\Program Files\FFmpeg`, 将解压后的文件复制到此路径，并将`C:\Program Files\FFmpeg\bin`目录添加到系统 PATH 环境变量中
    - 验证安装：打开命令提示符，输入`ffmpeg -version`，确保显示版本信息
+
+9   **gcc**
+   - 下载链接:[https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe](https://github.com/jmeubank/tdm-gcc/releases/download/v10.3.0-tdm64-2/tdm64-gcc-10.3.0-2.exe)
+   - 点击`create`安装,选择`MinGW-w64/TDM64(32-bit and 64-bit)`,推荐安装路径`C:\Program Files\TDM-GCC-64`,并将`C:\Program Files\TDM-GCC-64\bin`目录添加到系统 PATH 环境变量中
+   - 验证安装：打开命令提示符，输入`gcc --version`，确保显示版本信息
 
 ## 安装步骤
 
