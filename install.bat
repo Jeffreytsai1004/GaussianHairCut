@@ -27,7 +27,7 @@ SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
-SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 ECHO .
 ECHO ===========================================
@@ -48,8 +48,6 @@ FOR %%D IN (
     "ext\simple-knn"
     "ext\Matte-Anything"
     "ext\NeuralHaircut"
-    "ext\diff_gaussian_rasterization_hair\third_party\glm"
-    "ext\PIXIE\face-alignment"
 ) DO (
     IF EXIST "%%~D" (
         ECHO Removing directory %%~D...
@@ -69,7 +67,6 @@ FOR %%D IN (
     "cache\gdown"
     "cache\torch"
     "cache\huggingface"
-    "ext\diff_gaussian_rasterization_hair\third_party\glm"
 ) DO (
     IF NOT EXIST "%%~D" (
         MKDIR "%%~D"
@@ -121,56 +118,42 @@ ECHO ===================================================
 CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
-CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-CALL pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict iopath tensorboard tensorboardx scikit-image ^
-    fvcore toml tqdm gdown clean-fid face-alignment clip resize-right opencv-python numpy pillow imageio matplotlib scipy pandas ^
-    trimesh pyrender open3d glibc lpips kornia timm ninja pyglm PyYAML protobuf wandb ffmpeg-python moviepy ^
-    torchdiffeq torchsde
-CALL "%VCVARS_DIR%\vcvarsall.bat" amd64
-CALL python -m pip install --upgrade pip setuptools wheel
-CALL pip install pysdf
+CALL pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
+CALL pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict ^
+    iopath tensorboard tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment ^
+    clip resize-right simple-knn glm kaolin torchdiffeq torchsde opencv-python==4.8.0.74 scipy trimesh
 
 ECHO Pulling external libraries...
-cd %PROJECT_DIR%\ext
+cd "%PROJECT_DIR%\ext"
 CALL git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
 CALL git clone https://github.com/hustvl/Matte-Anything %PROJECT_DIR%\ext\Matte-Anything
 CALL git clone https://github.com/IDEA-Research/GroundingDINO %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
-CALL git clone https://github.com/facebookresearch/segment-anything %PROJECT_DIR%\ext\Matte-Anything\segment-anything
 CALL git clone https://github.com/facebookresearch/detectron2 %PROJECT_DIR%\ext\Matte-Anything\detectron2
 CALL git clone https://github.com/egorzakharov/NeuralHaircut --recursive %PROJECT_DIR%\ext\NeuralHaircut
 CALL git clone https://github.com/facebookresearch/pytorch3d %PROJECT_DIR%\ext\pytorch3d
-CALL git clone https://github.com/camenduru/simple-knn %PROJECT_DIR%\ext\simple-knn
-CALL git clone https://github.com/g-truc/glm %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
-CALL git clone https://github.com/NVIDIAGameWorks/kaolin --recursive %PROJECT_DIR%\ext\kaolin
 CALL git clone https://github.com/SSL92/hyperIQA %PROJECT_DIR%\ext\hyperIQA
 CALL git clone https://github.com/Jeffreytsai1004/PIXIE %PROJECT_DIR%\ext\PIXIE
-CALL git clone https://github.com/1adrianb/face-alignment %PROJECT_DIR%\ext\PIXIE\face-alignment
-cd %PROJECT_DIR%\openpose
+ECHO Installing openpose submodules...
+cd "%PROJECT_DIR%\openpose"
 CALL git submodule update --init --recursive --remote
-cd %PROJECT_DIR%\ext\pytorch3d
-@REM CALL git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
-cd %PROJECT_DIR%\ext
-cd %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
-@REM CALL git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
-cd %PROJECT_DIR%\ext\kaolin
-CALL git checkout v0.15.0
-cd %PROJECT_DIR%\ext\PIXIE\face-alignment
-@REM CALL git checkout 54623537fd9618ca7c15688fd85aba706ad92b59
-cd %PROJECT_DIR%\ext
+ECHO Installing pytorch3d...
+cd "%PROJECT_DIR%\ext\pytorch3d"
+call pip install -e .
+cd "%PROJECT_DIR%"
 
-ECHO Download Neural Haircut files...
-cd %PROJECT_DIR%\ext\NeuralHaircut
-CALL gdown --folder https://drive.google.com/drive/folders/1TCdJ0CKR3Q6LviovndOkJaKm8S1T9F_8
-cd %PROJECT_DIR%\ext\NeuralHaircut\pretrained_models\diffusion_prior
-CALL gdown 1_9EOUXHayKiGH5nkrayncln3d6m1uV7f
-cd %PROJECT_DIR%\ext\NeuralHaircut\PIXIE
-CALL gdown 1mPcGu62YPc4MdkT8FFiOCP629xsENHZf
-CALL tar -xvzf pixie_data.tar.gz
-CALL rm pixie_data.tar.gz
-mkdir %PROJECT_DIR%\ext\hyperIQA\pretrained
-cd %PROJECT_DIR%\ext\hyperIQA\pretrained
-CALL gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
-cd %PROJECT_DIR%
+@REM ECHO Download Neural Haircut files...
+@REM cd "%PROJECT_DIR%\ext\NeuralHaircut
+@REM CALL gdown --folder https://drive.google.com/drive/folders/1TCdJ0CKR3Q6LviovndOkJaKm8S1T9F_8
+@REM cd "%PROJECT_DIR%\ext\NeuralHaircut\pretrained_models\diffusion_prior
+@REM CALL gdown 1_9EOUXHayKiGH5nkrayncln3d6m1uV7f
+@REM cd "%PROJECT_DIR%\ext\NeuralHaircut\PIXIE
+@REM CALL gdown 1mPcGu62YPc4MdkT8FFiOCP629xsENHZf
+@REM CALL tar -xvzf pixie_data.tar.gz
+@REM CALL rm pixie_data.tar.gz
+@REM mkdir %PROJECT_DIR%\ext\hyperIQA\pretrained
+@REM cd "%PROJECT_DIR%\ext\hyperIQA\pretrained
+@REM CALL gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
+@REM cd "%PROJECT_DIR%
 
 ECHO.
 ECHO ============================================
@@ -180,73 +163,65 @@ ECHO ============================================
 CALL condabin\micromamba.bat deactivate
 CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -c fvcore -y
 CALL condabin\micromamba.bat activate matte_anything
-cd %PROJECT_DIR%\ext\Matte-Anything
+cd "%PROJECT_DIR%\ext\Matte-Anything"
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-CALL pip install gdown tensorboard timm mkl supervision setuptools easydict wget scikit-image gradio fairscale catkin_pkg fvcore opencv-python libpython ninja pycocotools
+CALL pip install gdown opencv-python==4.8.0.74 libpython fvcore pycocotools tensorboard ^
+    timm mkl supervision setuptools easydict wget scikit-image gradio fairscale catkin_pkg ^
+    segment-anything
 
 Echo Install Matte-Anything requirements...
-
-cd %PROJECT_DIR%\ext\Matte-Anything\segment-anything
+cd "%PROJECT_DIR%\ext\Matte-Anything\GroundingDINO"
 CALL pip install -e .
-cd %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
-CALL pip install -e .
-@REM Uncomment the following line if you want to install detectron2 from a specific URL
-@REM Make sure to adjust the URL based on your CUDA and PyTorch versions
-cd %PROJECT_DIR%\ext\Matte-Anything\detectron2
+cd "%PROJECT_DIR%\ext\Matte-Anything\detectron2"
 CALL pip install --upgrade setuptools wheel
 CALL pip install -e .
-@REM CALL pip install --use-pep517 .
-@REM CALL python setup.py build develop
-@REM CALL pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu117/torch2.0/index.html
 
 ECHO Download Matte-Anything files...
-mkdir %PROJECT_DIR%\ext\Matte-Anything\pretrained
-cd %PROJECT_DIR%\ext\Matte-Anything\pretrained
-wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
-wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
-gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
-cd %PROJECT_DIR%\ext\Matte-Anything
+mkdir "%PROJECT_DIR%\ext\Matte-Anything\pretrained"
+cd "%PROJECT_DIR%\ext\Matte-Anything\pretrained"
+@REM wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+@REM wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+@REM gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
+cd "%PROJECT_DIR%\ext\Matte-Anything
 
 ECHO.
 ECHO =========================================
 ECHO Installing OpenPose Environment and Build
 ECHO =========================================
-cd %PROJECT_DIR%
+cd "%PROJECT_DIR%"
 CALL condabin\micromamba.bat deactivate
 CALL "%~dp0micromamba.exe" create -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -y
 CALL condabin\micromamba.bat activate openpose
 CALL python -m pip install --upgrade pip
 CALL pip install gdown opencv-python opencv-contrib-python
-cd %PROJECT_DIR%\ext\openpose
-gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
-tar -xvzf models.tar.gz
-rm models.tar.gz
+cd "%PROJECT_DIR%\ext\openpose"
+@REM gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
+@REM tar -xvzf models.tar.gz
+@REM rm models.tar.gz
 ECHO Build openpose...
 CALL "%VCVARS_DIR%\vcvarsall.bat" x64
-rmdir /s /q %PROJECT_DIR%\ext\openpose\build
-mkdir %PROJECT_DIR%\ext\openpose\build
-cd %PROJECT_DIR%\ext\openpose\build
+rmdir /s /q "%PROJECT_DIR%\ext\openpose\build"
+mkdir "%PROJECT_DIR%\ext\openpose\build"
+cd "%PROJECT_DIR%\ext\openpose\build"
 cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DBUILD_CUDA=ON ..
 cmake --build . --config Release --target INSTALL
-cd %PROJECT_DIR%\ext
+cd "%PROJECT_DIR%\ext"
 
 ECHO.
 ECHO ===================================
 ECHO    Installing PIXIE Environment
 ECHO ===================================
-cd %PROJECT_DIR%
+cd "%PROJECT_DIR%"
 CALL condabin\micromamba.bat deactivate
 CALL "%~dp0micromamba.exe" create -n pixie-env python==3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
 CALL condabin\micromamba.bat activate pixie-env
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision==0.16.0+cu118 torchaudio==2.1.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-CALL pip install gdown fvcore kornia matplotlib pyyaml
-cd %PROJECT_DIR%\ext\PIXIE\face-alignment
-CALL pip install -e .
-cd %PROJECT_DIR%\ext\PIXIE
-CALL fetch_model.bat
-cd %PROJECT_DIR%
+CALL pip install gdown fvcore kornia matplotlib pyyaml face-alignment
+cd "%PROJECT_DIR%\ext\PIXIE"
+@REM CALL fetch_model.bat
+cd "%PROJECT_DIR%"
 
 ECHO.
 ECHO =============================================
