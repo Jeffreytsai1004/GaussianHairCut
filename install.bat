@@ -28,7 +28,7 @@ SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
-SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 ECHO .
 ECHO ===========================================
@@ -220,6 +220,7 @@ gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
 tar -xvzf models.tar.gz
 rm models.tar.gz
 CALL "%VCVARS_DIR%\vcvarsall.bat" x64
+rmdir /s /q %PROJECT_DIR%\ext\openpose\build
 mkdir %PROJECT_DIR%\ext\openpose\build
 cd %PROJECT_DIR%\ext\openpose\build
 cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DBUILD_CUDA=ON ..
