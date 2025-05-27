@@ -11,8 +11,8 @@ ECHO    Set environment variables for micromamba and tools
 ECHO ==========================================================
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
-SET MAMBA_ROOT_PREFIX=%PROJECT_DIR%
 
+SET MAMBA_ROOT_PREFIX=%PROJECT_DIR%
 SET DATA_PATH=%PROJECT_DIR%\data
 SET PKGS_PATH=%PROJECT_DIR%\pkgs
 SET ENV_PATH=%PROJECT_DIR%\envs
@@ -28,7 +28,7 @@ SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
-SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 REM Kill any running micromamba processes
 ECHO Killing any running micromamba processes...

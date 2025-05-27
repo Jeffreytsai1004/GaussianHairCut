@@ -18,6 +18,8 @@ ext/simple-knn
 ext/PIXIE
 ext/PIXIE/face-alignment
 ext/PIXIE/PIXIE
+ext/hyperIQA/
+ext/simple-knn/
 condabin/
 pkgs/
 envs/
