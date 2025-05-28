@@ -85,6 +85,10 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
    - 下载链接:[https://eternallybored.org/misc/wget/](https://eternallybored.org/misc/wget/)
    - 下载系统对应版本的exe，并拷贝到`C:\Windows\System32`即可
 
+13. **CUB**
+   - 下载链接:[](https://github.com/NVlabs/cub.git)
+   - 设置环境变量`CUB_HOM`为Cub安装路径, 或直接设置变量`set CUB_HOME=C:\path\to\cub`
+
 ## 安装步骤
 
 1. 克隆仓库:

@@ -27,7 +27,10 @@ SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+SET "CUB_HOME=C:\Program Files\cub"
+SET "CUDA_PATH=%CUDA_HOME%"
 SET "PATH=%PROJECT_DIR%;%PATH%"
+SET "PATH=%PATH%;%CUDA_PATH%\bin"
 
 ECHO .
 ECHO ==========================================================
@@ -126,14 +129,13 @@ ECHO ===================================================
 ECHO    Installing GaussianSplattingHair Environment
 ECHO ===================================================
 cd "%ROOT_PREFIX%"
-CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 eigen -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
+CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git git-lfs eigen gdown -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.0+cu118 torchvision torchaudio cudatoolkit --index-url https://download.pytorch.org/whl/cu118
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools cub ^
-    opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions ^
-    imageio pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
-    scikit-image fvcore toml tqdm gdown clean-fid face-alignment jupyter resize-right simple-knn glm kaolin torchdiffeq torchsde scipy trimesh ^
-    pysdf -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidi
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools cub scikit-image ^
+    opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions pysdf pyyaml ^
+    imageio pycocotools numpy pybind11 fvcore tensorboard tensorboardx plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
+    toml tqdm clean-fid face-alignment jupyter resize-right simple-knn glm kaolin torchdiffeq torchsde scipy trimesh future
 
 ECHO Pulling external libraries...
 cd "%PROJECT_DIR%\ext"
@@ -156,17 +158,16 @@ cd "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
 cd "%PROJECT_DIR%\ext\kaolin"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout v0.15.0
-cd "%PROJECT_DIR%\ext\pytorch3d"
-SET PYTORCH3D_NO_NINJA=1
-SET DISTUTILS_USE_SDK=1
-SET MSSdk=1
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 cd "%PROJECT_DIR%\ext\NeuralHaircut\npbgpp"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
-@REM cd "%PROJECT_DIR%\ext\simple-knn"
-@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 cd "%PROJECT_DIR%\diff_gaussian_rasterization_hair"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
+cd "%PROJECT_DIR%\ext\pytorch3d"
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install --upgrade pip setuptools wheel
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install . --use-pep517
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
+@REM cd "%PROJECT_DIR%\ext\simple-knn"
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 @REM cd "%PROJECT_DIR%\ext\kaolin"
 @REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 
@@ -186,76 +187,76 @@ cd "%PROJECT_DIR%"
 @REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair gdown 1OOUmnbvpGea0LIGpIWEbOyxfWx6UCiiE
 @REM cd "%PROJECT_DIR%
 
-ECHO.
-ECHO ============================================
-ECHO    Installing Matte-Anything Environment
-ECHO ============================================
-cd "%ROOT_PREFIX%"
-CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 ninja -c pytorch -c nvidia -c conda-forge -c fvcore -y
-cd "%PROJECT_DIR%\ext\Matte-Anything"
-CALL "%~dp0micromamba.exe" run -n matte_anything python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n matte_anything pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-CALL "%~dp0micromamba.exe" run -n matte_anything pip install setuptools wheel opencv-python opencv-contrib-python libpython matplotlib pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx ^
-    gdown timm mkl supervision easydict wget scikit-image gradio fairscale catkin_pkg segment-anything
+@REM ECHO.
+@REM ECHO ============================================
+@REM ECHO    Installing Matte-Anything Environment
+@REM ECHO ============================================
+@REM cd "%ROOT_PREFIX%"
+@REM CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 ninja -c pytorch -c nvidia -c conda-forge -c fvcore -y
+@REM cd "%PROJECT_DIR%\ext\Matte-Anything"
+@REM CALL "%~dp0micromamba.exe" run -n matte_anything python -m pip install --upgrade pip
+@REM CALL "%~dp0micromamba.exe" run -n matte_anything pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+@REM CALL "%~dp0micromamba.exe" run -n matte_anything pip install setuptools wheel opencv-python opencv-contrib-python libpython matplotlib pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx ^
+@REM     gdown timm mkl supervision easydict wget scikit-image gradio fairscale catkin_pkg segment-anything
 
-Echo Install Matte-Anything requirements...
-cd "%PROJECT_DIR%\ext\Matte-Anything\GroundingDINO"
-CALL "%~dp0micromamba.exe" run -n matte_anything pip install -e .
-cd "%PROJECT_DIR%\ext\Matte-Anything\detectron2"
-CALL "%~dp0micromamba.exe" run -n matte_anything pip install setuptools wheel --upgrade
-CALL "%~dp0micromamba.exe" run -n matte_anything pip install -e .
+@REM Echo Install Matte-Anything requirements...
+@REM cd "%PROJECT_DIR%\ext\Matte-Anything\GroundingDINO"
+@REM CALL "%~dp0micromamba.exe" run -n matte_anything pip install -e .
+@REM cd "%PROJECT_DIR%\ext\Matte-Anything\detectron2"
+@REM CALL "%~dp0micromamba.exe" run -n matte_anything pip install setuptools wheel --upgrade
+@REM CALL "%~dp0micromamba.exe" run -n matte_anything pip install -e .
 
-ECHO Download Matte-Anything files...
-mkdir "%PROJECT_DIR%\ext\Matte-Anything\pretrained"
-cd "%PROJECT_DIR%\ext\Matte-Anything\pretrained"
-@REM wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
-@REM wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
-@REM CALL "%~dp0micromamba.exe" run -n matte_anything gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
-cd "%PROJECT_DIR%\ext\Matte-Anything"
+@REM ECHO Download Matte-Anything files...
+@REM mkdir "%PROJECT_DIR%\ext\Matte-Anything\pretrained"
+@REM cd "%PROJECT_DIR%\ext\Matte-Anything\pretrained"
+@REM @REM wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+@REM @REM wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+@REM @REM CALL "%~dp0micromamba.exe" run -n matte_anything gdown 1d97oKuITCeWgai2Tf3iNilt6rMSSYzkW
+@REM cd "%PROJECT_DIR%\ext\Matte-Anything"
 
-ECHO.
-ECHO =========================================
-ECHO Installing OpenPose Environment and Build
-ECHO =========================================
-cd "%ROOT_PREFIX%"
-CALL "%~dp0micromamba.exe" create -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -y
-CALL "%~dp0micromamba.exe" run -n openpose python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n openpose pip install gdown setuptools opencv-python opencv-contrib-python libpython matplotlib pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx scikit-image scipy tqdm
-cd "%PROJECT_DIR%\ext\openpose"
-@REM ECHO Download OpenPose models...
-@REM CALL "%~dp0micromamba.exe" run -n openpose gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
-@REM tar -xvzf models.tar.gz
-@REM rm models.tar.gz
-ECHO Build openpose...
-mkdir "%PROJECT_DIR%\ext\openpose\build"
-cd "%PROJECT_DIR%\ext\openpose\build"
-CALL "%~dp0micromamba.exe" run -n openpose cmake .. -G "Visual Studio 17 2022" -A x64 -T v143
-CALL "%~dp0micromamba.exe" run -n openpose cmake --build . --config Release
-mkdir "%PROJECT_DIR%\ext\openpose\bin"
-xcopy /Y /S /I "%PROJECT_DIR%\ext\openpose\build\bin\x64\Release\*" "%PROJECT_DIR%\ext\openpose\bin"
+@REM ECHO.
+@REM ECHO =========================================
+@REM ECHO Installing OpenPose Environment and Build
+@REM ECHO =========================================
+@REM cd "%ROOT_PREFIX%"
+@REM CALL "%~dp0micromamba.exe" create -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -y
+@REM CALL "%~dp0micromamba.exe" run -n openpose python -m pip install --upgrade pip
+@REM CALL "%~dp0micromamba.exe" run -n openpose pip install gdown setuptools opencv-python opencv-contrib-python libpython matplotlib pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx scikit-image scipy tqdm
+@REM cd "%PROJECT_DIR%\ext\openpose"
+@REM @REM ECHO Download OpenPose models...
+@REM @REM CALL "%~dp0micromamba.exe" run -n openpose gdown 1Yn03cKKfVOq4qXmgBMQD20UMRRRkd_tV
+@REM @REM tar -xvzf models.tar.gz
+@REM @REM rm models.tar.gz
+@REM ECHO Build openpose...
+@REM mkdir "%PROJECT_DIR%\ext\openpose\build"
+@REM cd "%PROJECT_DIR%\ext\openpose\build"
+@REM CALL "%~dp0micromamba.exe" run -n openpose cmake .. -G "Visual Studio 17 2022" -A x64 -T v143
+@REM CALL "%~dp0micromamba.exe" run -n openpose cmake --build . --config Release
+@REM mkdir "%PROJECT_DIR%\ext\openpose\bin"
+@REM xcopy /Y /S /I "%PROJECT_DIR%\ext\openpose\build\bin\x64\Release\*" "%PROJECT_DIR%\ext\openpose\bin"
 
-ECHO.
-ECHO ===================================
-ECHO    Installing PIXIE Environment
-ECHO ===================================
-cd "%ROOT_PREFIX%"
-CALL "%~dp0micromamba.exe" create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
-CALL "%~dp0micromamba.exe" run -n pixie-env python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n pixie-env pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-CALL "%~dp0micromamba.exe" run -n pixie-env pip install gdown fvcore pytorch3d==0.7.5 kornia matplotlib pyyaml face-alignment
-cd "%PROJECT_DIR%\ext\PIXIE"
-@REM CALL "%~dp0micromamba.exe" run -n pixie-env fetch_model.bat
-cd "%PROJECT_DIR%"
+@REM ECHO.
+@REM ECHO ===================================
+@REM ECHO    Installing PIXIE Environment
+@REM ECHO ===================================
+@REM cd "%ROOT_PREFIX%"
+@REM CALL "%~dp0micromamba.exe" create -n pixie-env python=3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
+@REM CALL "%~dp0micromamba.exe" run -n pixie-env python -m pip install --upgrade pip
+@REM CALL "%~dp0micromamba.exe" run -n pixie-env pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+@REM CALL "%~dp0micromamba.exe" run -n pixie-env pip install gdown fvcore pytorch3d==0.7.5 kornia matplotlib pyyaml face-alignment
+@REM cd "%PROJECT_DIR%\ext\PIXIE"
+@REM @REM CALL "%~dp0micromamba.exe" run -n pixie-env fetch_model.bat
+@REM cd "%PROJECT_DIR%"
 
-ECHO.
-ECHO =============================================
-ECHO    GaussianHaircut Installation Complete!
-ECHO =============================================
-ECHO.
-ECHO To start, run:
-ECHO   run.bat
-ECHO.
-ECHO If there are issues, please read README.md for troubleshooting.
-ECHO.
+@REM ECHO.
+@REM ECHO =============================================
+@REM ECHO    GaussianHaircut Installation Complete!
+@REM ECHO =============================================
+@REM ECHO.
+@REM ECHO To start, run:
+@REM ECHO   run.bat
+@REM ECHO.
+@REM ECHO If there are issues, please read README.md for troubleshooting.
+@REM ECHO.
 
 PAUSE
