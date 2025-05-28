@@ -7,7 +7,7 @@ ECHO    Set environment variables for micromamba and tools
 ECHO ==========================================================
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
-CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%PROJECT_DIR%"
+CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
 SET MAMBA_ROOT_PREFIX=%PROJECT_DIR%
@@ -27,10 +27,15 @@ SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
-
+ECHO .
+ECHO ==========================================================
+ECHO    Micromamba Base Info
+ECHO ==========================================================
 ECHO .
 ECHO micromamba config list:
 CALL "%~dp0micromamba.exe" config list
+ECHO micromamba info:
+CALL "%~dp0micromamba.exe" info
 
 ECHO .
 ECHO ===========================================
@@ -117,13 +122,13 @@ ECHO.
 ECHO ===================================================
 ECHO    Installing GaussianSplattingHair Environment
 ECHO ===================================================
-
+cd "%ROOT_PREFIX%"
 CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git==2.40.0 git-lfs==3.3.0 eigen -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
 CALL pip install setuptools plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
-    tensorboard tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment clip ^
+    tensorboard tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment ^
     resize-right simple-knn glm kaolin torchdiffeq torchsde opencv-python scipy trimesh pysdf
 
 ECHO Pulling external libraries...
@@ -163,7 +168,7 @@ ECHO.
 ECHO ============================================
 ECHO    Installing Matte-Anything Environment
 ECHO ============================================
-
+cd "%ROOT_PREFIX%"
 CALL condabin\micromamba.bat deactivate
 CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 ninja -c pytorch -c nvidia -c conda-forge -c fvcore -y
 CALL condabin\micromamba.bat activate matte_anything
@@ -193,7 +198,7 @@ ECHO.
 ECHO =========================================
 ECHO Installing OpenPose Environment and Build
 ECHO =========================================
-cd "%PROJECT_DIR%"
+cd "%ROOT_PREFIX%"
 CALL condabin\micromamba.bat deactivate
 CALL "%~dp0micromamba.exe" create -n openpose python==3.8 git==2.40.0 git-lfs==3.3.0 cmake=3.20 -c conda-forge -y
 CALL condabin\micromamba.bat activate openpose
@@ -230,7 +235,7 @@ ECHO.
 ECHO ===================================
 ECHO    Installing PIXIE Environment
 ECHO ===================================
-cd "%PROJECT_DIR%"
+cd "%ROOT_PREFIX%"
 CALL condabin\micromamba.bat deactivate
 CALL "%~dp0micromamba.exe" create -n pixie-env python==3.8 -c pytorch -c nvidia -c fvcore -c conda-forge -c pytorch3d -y
 CALL condabin\micromamba.bat activate pixie-env
