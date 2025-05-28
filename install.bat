@@ -148,7 +148,7 @@ CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://gith
 cd "%PROJECT_DIR%\ext\openpose"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git submodule update --init --recursive --remote
 cd "%PROJECT_DIR%\ext\pytorch3d"
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
 cd "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
 cd "%PROJECT_DIR%\ext\kaolin"
