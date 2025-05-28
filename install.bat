@@ -53,10 +53,13 @@ FOR %%D IN (
     "ext\kaolin"
     "ext\hyperIQA"
     "ext\openpose"
+    "ext\Matte-Anything"
+    "ext\NeuralHaircut"
     "ext\pytorch3d"
     "ext\simple-knn"
-    "ext\Matte-Anything"0
-    "ext\NeuralHaircut"
+    "diff_gaussian_rasterization_hair\third_party\glm"
+    "ext\hyperIQA"
+    "ext\PIXIE"
 ) DO (
     IF EXIST "%%~D" (
         ECHO Removing directory %%~D...
