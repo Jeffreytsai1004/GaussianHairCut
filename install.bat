@@ -5,7 +5,6 @@ ECHO .
 ECHO ==========================================================
 ECHO    Set environment variables for micromamba and tools
 ECHO ==========================================================
-
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
 CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%PROJECT_DIR%"
@@ -30,6 +29,10 @@ SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 ECHO .
+ECHO micromamba config list:
+CALL "%~dp0micromamba.exe" config list
+
+ECHO .
 ECHO ===========================================
 ECHO Clear old cache and environment folders
 ECHO ===========================================
@@ -46,7 +49,7 @@ FOR %%D IN (
     "ext\openpose"
     "ext\pytorch3d"
     "ext\simple-knn"
-    "ext\Matte-Anything"
+    "ext\Matte-Anything"0
     "ext\NeuralHaircut"
 ) DO (
     IF EXIST "%%~D" (
@@ -115,7 +118,7 @@ ECHO ===================================================
 ECHO    Installing GaussianSplattingHair Environment
 ECHO ===================================================
 
-CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
+CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git==2.40.0 git-lfs==3.3.0 eigen -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
@@ -125,7 +128,7 @@ CALL pip install setuptools plyfile pyhocon icecream einops accelerate jsonmerge
 
 ECHO Pulling external libraries...
 cd "%PROJECT_DIR%\ext"
-CALL git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1
+CALL git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose --depth 1  %PROJECT_DIR%\ext\openpose
 CALL git clone https://github.com/hustvl/Matte-Anything %PROJECT_DIR%\ext\Matte-Anything
 CALL git clone https://github.com/IDEA-Research/GroundingDINO %PROJECT_DIR%\ext\Matte-Anything\GroundingDINO
 CALL git clone https://github.com/facebookresearch/detectron2 %PROJECT_DIR%\ext\Matte-Anything\detectron2
@@ -135,7 +138,7 @@ CALL git clone https://github.com/SSL92/hyperIQA %PROJECT_DIR%\ext\hyperIQA
 CALL git clone https://github.com/Jeffreytsai1004/PIXIE %PROJECT_DIR%\ext\PIXIE
 
 ECHO Installing openpose submodules...
-cd "%PROJECT_DIR%\openpose"
+cd "%PROJECT_DIR%\ext\openpose"
 CALL git submodule update --init --recursive --remote
 ECHO Installing pytorch3d...
 cd "%PROJECT_DIR%\ext\pytorch3d"
@@ -162,7 +165,7 @@ ECHO    Installing Matte-Anything Environment
 ECHO ============================================
 
 CALL condabin\micromamba.bat deactivate
-CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c nvidia -c conda-forge -c fvcore -y
+CALL "%~dp0micromamba.exe" create -n matte_anything python==3.8 git==2.40.0 git-lfs==3.3.0 ninja -c pytorch -c nvidia -c conda-forge -c fvcore -y
 CALL condabin\micromamba.bat activate matte_anything
 cd "%PROJECT_DIR%\ext\Matte-Anything"
 CALL python -m pip install --upgrade pip
@@ -205,7 +208,21 @@ CALL "%VCVARS_DIR%\vcvarsall.bat" x64
 rmdir /s /q "%PROJECT_DIR%\ext\openpose\build"
 mkdir "%PROJECT_DIR%\ext\openpose\build"
 cd "%PROJECT_DIR%\ext\openpose\build"
-cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release -DBUILD_CUDA=ON ..
+cmake .. -G "Visual Studio 17 2022" -A x64 ^
+    -DCMAKE_BUILD_TYPE=Release ^
+    -DBUILD_PYTHON=ON ^
+    -DBUILD_CAFFE=OFF ^
+    -DBUILD_EXAMPLES=OFF ^
+    -DBUILD_DOCS=OFF ^
+    -DBUILD_CAFFE=OFF ^
+    -DGPU_MODE=CUDA ^
+    -DDOWNLOAD_COCO_MODEL=OFF ^
+    -DDOWNLOAD_HAND_MODEL=OFF ^
+    -DDOWNLOAD_FACE_MODEL=OFF ^
+    -DUSE_CUDNN=ON ^
+    -DCUDA_TOOLKIT_ROOT_DIR="%CUDA_HOME%" ^
+    -DCUDNN_INCLUDE_DIR="%CUDA_HOME%\include" ^
+    -DCUDNN_LIBRARY="%CUDA_HOME%\lib\x64\cudnn.lib"
 cmake --build . --config Release --target INSTALL
 cd "%PROJECT_DIR%\ext"
 

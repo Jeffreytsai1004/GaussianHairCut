@@ -5,7 +5,6 @@ ECHO .
 ECHO ==========================================================
 ECHO    Set environment variables for micromamba and tools
 ECHO ==========================================================
-
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
 CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%PROJECT_DIR%"
@@ -28,6 +27,10 @@ SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+
+ECHO .
+ECHO micromamba config list:
+CALL "%~dp0micromamba.exe" config list
 
 ECHO Killing any running micromamba processes...
 taskkill /F /IM micromamba.exe /T 2>NUL
