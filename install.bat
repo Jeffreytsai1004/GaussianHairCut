@@ -1,27 +1,27 @@
 @ECHO OFF
 SETLOCAL EnableDelayedExpansion
 
-CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
-
 ECHO .
 ECHO ==========================================================
 ECHO    Set environment variables for micromamba and tools
 ECHO ==========================================================
+
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
-
+CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%PROJECT_DIR%"
+SET PROJECT_DIR_ORIGIN=%~dp0
+SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
 SET MAMBA_ROOT_PREFIX=%PROJECT_DIR%
+SET ROOT_PREFIX=%PROJECT_DIR%
 SET DATA_PATH=%PROJECT_DIR%\data
 SET PKGS_PATH=%PROJECT_DIR%\pkgs
 SET ENV_PATH=%PROJECT_DIR%\envs
 SET EXT_PATH=%PROJECT_DIR%\ext
-
 SET GDOWN_CACHE=%PROJECT_DIR%\cache\gdown
 SET TORCH_HOME=%PROJECT_DIR%\cache\torch
 SET HF_HOME=%PROJECT_DIR%\cache\huggingface
 SET PYTHONDONTWRITEBYTECODE=1
 SET DISTUTILS_USE_SDK=1
-
 SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
 SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
@@ -115,13 +115,13 @@ ECHO ===================================================
 ECHO    Installing GaussianSplattingHair Environment
 ECHO ===================================================
 
-CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
+CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git==2.40.0 git-lfs==3.3.0 -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL condabin\micromamba.bat activate gaussian_splatting_hair
 CALL python -m pip install --upgrade pip
 CALL pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --no-cache-dir --force-reinstall
-CALL pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict ^
-    iopath tensorboard tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment ^
-    clip resize-right simple-knn glm kaolin torchdiffeq torchsde opencv-python==4.8.0.74 scipy trimesh
+CALL pip install setuptools plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
+    tensorboard tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment clip ^
+    resize-right simple-knn glm kaolin torchdiffeq torchsde opencv-python scipy trimesh pysdf
 
 ECHO Pulling external libraries...
 cd "%PROJECT_DIR%\ext"
@@ -133,6 +133,7 @@ CALL git clone https://github.com/egorzakharov/NeuralHaircut --recursive %PROJEC
 CALL git clone https://github.com/facebookresearch/pytorch3d %PROJECT_DIR%\ext\pytorch3d
 CALL git clone https://github.com/SSL92/hyperIQA %PROJECT_DIR%\ext\hyperIQA
 CALL git clone https://github.com/Jeffreytsai1004/PIXIE %PROJECT_DIR%\ext\PIXIE
+
 ECHO Installing openpose submodules...
 cd "%PROJECT_DIR%\openpose"
 CALL git submodule update --init --recursive --remote
