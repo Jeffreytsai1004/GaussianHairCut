@@ -45,6 +45,17 @@ FOR %%P IN (
     )
 )
 
+# Search and remove broken packages
+cd %USERPROFILE%\AppData\Roaming\Python\Python39\site-packages
+dir *-info
+# Remove all directories ending with "-info"
+FOR %%D IN (*-info) DO (
+    IF EXIST "%%~D" (
+        ECHO Removing directory %%~D...
+        RMDIR /S /Q "%%~D"
+    )
+)
+
 ECHO Cleaning up micromamba cache...
 SET "MAMBA_REQUEST_TIMEOUT=60"
 CALL "%~dp0micromamba.exe" clean --all --yes

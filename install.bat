@@ -107,6 +107,17 @@ FOR %%P IN (
     )
 )
 
+# Search and remove broken packages
+cd %USERPROFILE%\AppData\Roaming\Python\Python39\site-packages
+dir *-info
+# Remove all directories ending with "-info"
+FOR %%D IN (*-info) DO (
+    IF EXIST "%%~D" (
+        ECHO Removing directory %%~D...
+        RMDIR /S /Q "%%~D"
+    )
+)
+
 ECHO .
 ECHO ===========================================================
 ECHO    Remove old micromamba environments to avoid conflicts
@@ -131,7 +142,7 @@ ECHO ===================================================
 cd "%ROOT_PREFIX%"
 CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git git-lfs eigen gdown -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.1+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools cub scikit-image ^
     opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions pysdf pyyaml ^
     imageio pycocotools numpy pybind11 fvcore tensorboard tensorboardx plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
@@ -161,7 +172,10 @@ CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout v0.15.0
 
 cd "%PROJECT_DIR%\ext\pytorch3d"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install --upgrade pip setuptools wheel
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install . --use-pep517
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install fvcore iopath
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -r requirements.txt
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e . --no-build-isolation
+
 cd "%PROJECT_DIR%\ext\NeuralHaircut\npbgpp"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 @REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
