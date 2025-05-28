@@ -18,7 +18,9 @@ SET GDOWN_CACHE=%PROJECT_DIR%\cache\gdown
 SET TORCH_HOME=%PROJECT_DIR%\cache\torch
 SET HF_HOME=%PROJECT_DIR%\cache\huggingface
 SET PYTHONDONTWRITEBYTECODE=1
+SET PYTORCH3D_NO_NINJA=1
 SET DISTUTILS_USE_SDK=1
+SET MSSdk=1
 SET "COLMAP_PATH=C:\Program Files\Colmap\bin"
 SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
@@ -126,11 +128,12 @@ ECHO ===================================================
 cd "%ROOT_PREFIX%"
 CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git==2.40.0 git-lfs==3.3.0 eigen -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.0+cu118 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools opencv-python opencv-contrib-python libpython matplotlib pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx ^
-    plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
-    scikit-image fvcore toml tqdm gdown clean-fid face-alignment ^
-    resize-right simple-knn glm kaolin torchdiffeq torchsde scipy trimesh pysdf
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.0+cu118 torchvision torchaudio cudatoolkit --index-url https://download.pytorch.org/whl/cu118
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools cub ^
+    opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions ^
+    imageio pycocotools-windows numpy pybind11 fvcore tensorboard tensorboardx plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
+    scikit-image fvcore toml tqdm gdown clean-fid face-alignment jupyter resize-right simple-knn glm kaolin torchdiffeq torchsde scipy trimesh ^
+    pysdf -c pytorch -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidi
 
 ECHO Pulling external libraries...
 cd "%PROJECT_DIR%\ext"
@@ -153,8 +156,10 @@ cd "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
 cd "%PROJECT_DIR%\ext\kaolin"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout v0.15.0
-
 cd "%PROJECT_DIR%\ext\pytorch3d"
+SET PYTORCH3D_NO_NINJA=1
+SET DISTUTILS_USE_SDK=1
+SET MSSdk=1
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 cd "%PROJECT_DIR%\ext\NeuralHaircut\npbgpp"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
