@@ -1,13 +1,13 @@
 @ECHO OFF
 SETLOCAL EnableDelayedExpansion
 
+CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
 ECHO .
 ECHO ==========================================================
 ECHO    Set environment variables for micromamba and tools
 ECHO ==========================================================
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
-CALL "%~dp0micromamba.exe" shell init --shell cmd.exe --prefix "%~dp0\"
 SET PROJECT_DIR_ORIGIN=%~dp0
 SET PROJECT_DIR=%PROJECT_DIR_ORIGIN:~0,-1%
 SET MAMBA_ROOT_PREFIX=%PROJECT_DIR%
@@ -29,8 +29,14 @@ SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
 SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 
 ECHO .
+ECHO ==========================================================
+ECHO    Micromamba Base Info
+ECHO ==========================================================
+ECHO .
 ECHO micromamba config list:
 CALL "%~dp0micromamba.exe" config list
+ECHO micromamba info:
+CALL "%~dp0micromamba.exe" info
 
 ECHO Killing any running micromamba processes...
 taskkill /F /IM micromamba.exe /T 2>NUL
