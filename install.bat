@@ -26,7 +26,7 @@ SET "CMAKE_PATH=C:\Program Files\CMake\bin"
 SET "FFMPEG_PATH=C:\Program Files\FFmpeg\bin"
 SET "BLENDER_PATH=C:\Program Files\Blender Foundation\Blender 3.6"
 SET "CUDA_HOME=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8"
-SET "VCVARS_DIR=D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
+SET "VCVARS_DIR=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
 SET "CUB_HOME=C:\Program Files\cub"
 SET "CUDA_PATH=%CUDA_HOME%"
 SET "PATH=%PROJECT_DIR%;%PATH%"
@@ -140,13 +140,12 @@ ECHO ===================================================
 ECHO    Installing GaussianSplattingHair Environment
 ECHO ===================================================
 cd "%ROOT_PREFIX%"
-CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.9 git git-lfs eigen gdown -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
+CALL "%~dp0micromamba.exe" create -n gaussian_splatting_hair python==3.8 git git-lfs eigen -c conda-forge -c defaults -c anaconda -c fvcore -c iopath -c bottler -c nvidia -y
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair python -m pip install --upgrade pip
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools cub scikit-image ^
-    opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions pysdf pyyaml ^
-    imageio pycocotools numpy pybind11 fvcore tensorboard tensorboardx plyfile pyhocon icecream einops accelerate jsonmerge easydict iopath ^
-    toml tqdm clean-fid face-alignment jupyter resize-right simple-knn glm kaolin torchdiffeq torchsde scipy trimesh future
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.0+cu118 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions pyyaml tensorboard jupyter scipy trimesh future pybind11 imageio pycocotools numpy 
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict iopath ^
+    tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment torchdiffeq torchsde resize-right
 
 ECHO Pulling external libraries...
 cd "%PROJECT_DIR%\ext"
@@ -156,8 +155,9 @@ CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://gith
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/facebookresearch/detectron2 %PROJECT_DIR%\ext\Matte-Anything\detectron2
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/egorzakharov/NeuralHaircut --recursive %PROJECT_DIR%\ext\NeuralHaircut
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/facebookresearch/pytorch3d %PROJECT_DIR%\ext\pytorch3d
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/camenduru/simple-knn %PROJECT_DIR%\ext\simple-knn
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/g-truc/glm %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/camenduru/simple-knn %PROJECT_DIR%\ext\simple-knn
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/g-truc/glm %PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/NVIDIAGameWorks/kaolin --recursive %PROJECT_DIR%\ext\kaolin
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/SSL92/hyperIQA %PROJECT_DIR%\ext\hyperIQA
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git clone https://github.com/Jeffreytsai1004/PIXIE %PROJECT_DIR%\ext\PIXIE
 
@@ -167,24 +167,18 @@ cd "%PROJECT_DIR%\ext\pytorch3d"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 2f11ddc5ee7d6bd56f2fb6744a16776fab6536f7
 cd "%PROJECT_DIR%\ext\diff_gaussian_rasterization_hair\third_party\glm"
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout 5c46b9c07008ae65cb81ab79cd677ecc1934b903
-cd "%PROJECT_DIR%\ext\kaolin"
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout v0.15.0
-
-cd "%PROJECT_DIR%\ext\pytorch3d"
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install --upgrade pip setuptools wheel
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install fvcore iopath
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -r requirements.txt
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e . --no-build-isolation
-
-cd "%PROJECT_DIR%\ext\NeuralHaircut\npbgpp"
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
-@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
-@REM cd "%PROJECT_DIR%\ext\simple-knn"
-cd "%PROJECT_DIR%\diff_gaussian_rasterization_hair"
-CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
-@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
 @REM cd "%PROJECT_DIR%\ext\kaolin"
-@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e .
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair git checkout v0.15.0
+
+ECHO.
+cd "%PROJECT_DIR%"
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install glm simple-knn kaolin
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e "%PROJECT_DIR%\ext\pytorch3d"
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e "%PROJECT_DIR%\ext\NeuralHaircut\npbgpp"
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e "%PROJECT_DIR%\diff_gaussian_rasterization_hair"
+CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e pysdf
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e "%PROJECT_DIR%\ext\simple-knn"
+@REM CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install -e "%PROJECT_DIR%\ext\kaolin"
 
 cd "%PROJECT_DIR%"
 
