@@ -144,7 +144,8 @@ CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair python -m pip install 
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install torch==2.1.0+cu118 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install opencv-python opencv-contrib-python libpython matplotlib plotly flake8 flake8-bugbear flake8-comprehensions pyyaml tensorboard scipy trimesh future pybind11 imageio pycocotools numpy 
 CALL "%~dp0micromamba.exe" run -n gaussian_splatting_hair pip install setuptools plyfile cmake pyhocon icecream einops accelerate jsonmerge easydict iopath ^
-    tensorboardx scikit-image fvcore toml tqdm gdown clean-fid face-alignment torchdiffeq torchsde resize-right
+    tensorboardx scikit-image fvcore toml gdown clean-fid face-alignment torchdiffeq torchsde resize-right
+CALL "%~dp0micromamba.exe" pip install --upgrade modelscope tqdm
 
 ECHO Pulling external libraries...
 cd "%PROJECT_DIR%\ext"
