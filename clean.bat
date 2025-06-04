@@ -14,7 +14,6 @@ FOR %%D IN (
     "ext\openpose"
     "ext\Matte-Anything"
     "ext\NeuralHaircut"
-    "ext\pytorch3d"
     "ext\simple-knn"
     "ext\diff_gaussian_rasterization_hair\third_party\glm"
     "ext\hyperIQA"

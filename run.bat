@@ -100,7 +100,7 @@ ECHO Run OpenPose...
 CALL condabin\micromamba.bat activate openpose
 CD "%PROJECT_DIR%\ext\openpose"
 IF NOT EXIST "%DATA_PATH%\openpose" mkdir "%DATA_PATH%\openpose"
-CALL "%PROJECT_DIR%\ext\openpose\build\bin\OpenPoseDemo.exe" ^^
+CALL "C:\Program Files\OpenPose\OpenPose.exe" ^^
     --image_dir "%DATA_PATH%\images_4" ^^
     --scale_number 4 --scale_gap 0.25 --face --hand --display 0 ^^
     --write_json "%DATA_PATH%\openpose\json" ^^

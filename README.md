@@ -86,8 +86,12 @@ GitHub 仓库:[GaussianHaircut](https://github.com/eth-ait/GaussianHaircut)
    - 下载系统对应版本的exe，并拷贝到`C:\Windows\System32`即可
 
 13. **CUB**
-   - 下载链接:[](https://github.com/NVlabs/cub.git)
+   - 下载链接:[https://github.com/NVlabs/cub.git](https://github.com/NVlabs/cub.git)
    - 设置环境变量`CUB_HOM`为Cub安装路径, 或直接设置变量`set CUB_HOME=C:\path\to\cub`
+
+14. **openpose**
+   - 下载链接:[https://github.com/Jeffreytsai1004/Openpose](https://github.com/Jeffreytsai1004/Openpose)
+   - 默认安装路径:`C:\Program Files\OpenPose`, 将解压后的文件复制到此路径，并将`C:\Program Files\OpenPose`目录添加到系统 PATH 环境变量中
 
 ## 安装步骤
 
